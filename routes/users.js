@@ -1,12 +1,12 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-require("dotenv").config({ path: __dirname + "/./../.env"});
+require("dotenv").config({ path: "../.env"});
 
-const validateRegistration = require("./../validation/register");
-const validateLogin = require("./../validation/login");
+const validateRegistration = require("../validation/register");
+const validateLogin = require("../validation/login");
 
-const User = require("./../models/user");
+const User = require("../models/user");
 
 router.post("/register", (req, res) => {
     const { errors, isValid } = validateRegistration(req.body);
@@ -49,7 +49,6 @@ router.post("/login", (req, res) => {
         return res.status(400).json(errors);
     }
     
-    const email = req.body.email;
     const password = req.body.password;
 
     User.findOne({ email: req.body.email })
@@ -67,7 +66,7 @@ router.post("/login", (req, res) => {
 
                         jwt.sign(
                             payload,
-                            "test",
+                            process.env.secretOrKey,
                             { expiresIn: 2592000 },
                             (err, token) => {
                                 res.json({

@@ -17,7 +17,8 @@ const validateRegistration = (data) => {
     if (isEmpty(data.password) || isEmpty(data.password2)) {
         if (isEmpty(data.password)) {
             errors.password = "Password field is required";
-        } else {
+        }
+        if (isEmpty(data.password2)) {
             errors.password2 = "Confirm password field is required";
         }
     } else {
