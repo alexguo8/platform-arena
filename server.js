@@ -4,7 +4,7 @@ const passport = require("passport");
 
 require("dotenv").config();
 
-const users = require("./routes/users")
+const users = require("./routes/api/users")
 
 const app = express();
 
