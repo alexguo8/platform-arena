@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
 
 require("dotenv").config();
+
+const users = require("./routes/api/users")
 
 const app = express();
 
@@ -13,6 +16,11 @@ const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
     .then(() => console.log("MongoDB connection established successfully"))
     .catch(err => console.log(err));
+
+app.use(passport.initialize());
+require("./config/passport")(passport);
+
+app.use("/users", users)
 
 const port = process.env.PORT || 5000;
 
