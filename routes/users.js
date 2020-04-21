@@ -3,8 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config({ path: "../.env"});
 
-const validateRegistration = require("../validation/register");
-const validateLogin = require("../validation/login");
+const validateRegistration = require("../formValidation/register");
+const validateLogin = require("../formValidation/login");
 
 const User = require("../models/user");
 
