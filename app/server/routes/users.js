@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-require("dotenv").config({ path: "../.env"});
+require("dotenv").config({ path: __dirname + "/./../../../.env"});
 
 const validateRegistration = require("../formValidation/register");
 const validateLogin = require("../formValidation/login");

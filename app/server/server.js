@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 
-require("dotenv").config();
+require("dotenv").config({ path: __dirname + "/./../../.env"});
 
 const users = require("./routes/users")
 
