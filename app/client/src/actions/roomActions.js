@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 
-import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, GET_USER_ROOM } from "./types";
 
 export const joinRoom = (user, history) => dispatch => {
     axios.post("/game/join", user)
@@ -10,6 +10,13 @@ export const joinRoom = (user, history) => dispatch => {
             dispatch({
                 type: GET_ERRORS,
                 payload: {}
+            })
+            dispatch({
+                type: GET_USER_ROOM,
+                payload: {
+                    user: user.username,
+                    room: user.room,
+                }
             })
             history.push("/game");
         })
