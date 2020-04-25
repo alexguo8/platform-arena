@@ -34,11 +34,6 @@ export class Renderer {
     }
 }
 
-// // Get the canvas graphics context
-// const canvas = document.getElementById('game-canvas');
-// const context = canvas.getContext('2d');
-// setCanvasDimensions();
-
 function setCanvasDimensions(canvas) {
   // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
   // 800 in-game units of width.

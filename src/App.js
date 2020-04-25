@@ -6,13 +6,13 @@ import setAuthToken from "./client/utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./client/actions/authActions"; 
 
 import { Provider } from "react-redux";
-import store from "./store";
+import store from "./client/store";
 
 import Navbar from "./client/components/layouts/Navbar";
 import Landing from "./client/components/layouts/Landing";
 import Register from "./client/components/accounts/RegisterForm";
 import Login from "./client/components/accounts/LoginForm";
-//import UserProfile from "./client/components/accounts/UserProfile";
+import UserProfile from "./client/components/accounts/UserProfile";
 import GameCanvas from "./client/components/layouts/GameCanvas";
 import RoomSelection from "./client/components/layouts/RoomSelection";
 import PrivateRoute from "./client/components/private-route/PrivateRoute";
@@ -44,6 +44,9 @@ function App() {
                 </Switch>
                 <Switch>
                     <PrivateRoute exact path="/game" component={GameCanvas} />
+                </Switch>
+                <Switch>
+                    <PrivateRoute exact path="/profile" component={UserProfile} />
                 </Switch>
             </div>
         </Router> 

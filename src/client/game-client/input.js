@@ -1,5 +1,3 @@
-// Learn more about this file at:
-// https://victorzhou.com/blog/build-an-io-game-part-1/#6-client-input-%EF%B8%8F
 import { updateDirection, sendKeyPress, sendKeyUp } from './networking';
 
 // function onMouseInput(e) {
@@ -34,13 +32,13 @@ function onKeyUp(e) {
 export function startCapturingInput(room) {
 //   window.addEventListener('mousemove', onMouseInput);
 //   window.addEventListener('click', onMouseInput);
-  window.addEventListener('keypress', onKeyPress.bind(room));
-  window.addEventListener('keyup', onKeyUp.bind(room));
+    window.addEventListener('keypress', onKeyPress.bind(room));
+    window.addEventListener('keyup', onKeyUp.bind(room));
 }
 
 export function stopCapturingInput(room) {
 //   window.removeEventListener('mousemove', onMouseInput);
 //   window.removeEventListener('click', onMouseInput);
-  window.removeEventListener('keypress', onKeyPress);
-  window.removeEventListener('keyup', onKeyUp);
+    window.removeEventListener('keypress', onKeyPress);
+    window.removeEventListener('keyup', onKeyUp);
 }

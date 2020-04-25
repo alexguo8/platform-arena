@@ -4,8 +4,8 @@ import jwt_decode from "jwt-decode";
 
 import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING, GET_USER_ROOM } from "./types";
 
-export const joinRoom = (user, history) => dispatch => {
-    axios.post("http://localhost:5000/game/join", user)
+export const joinRoom = (user_room, history) => dispatch => {
+    axios.post("http://localhost:5000/game/join", user_room)
         .then(res => {
             dispatch({
                 type: GET_ERRORS,
@@ -14,8 +14,8 @@ export const joinRoom = (user, history) => dispatch => {
             dispatch({
                 type: GET_USER_ROOM,
                 payload: {
-                    user: user.username,
-                    room: user.room,
+                    user: user_room.username,
+                    room: user_room.room,
                 }
             })
             history.push("/game");
@@ -35,34 +35,3 @@ export const refreshErrors = () => dispatch => {
         payload: {}
     })
 }
-
-
-export const setCurrentUser = decoded => {
-    return {
-        type: SET_CURRENT_USER,
-        payload: decoded
-    };
-};
-
-export const loginUser = user => dispatch => {
-    axios.post("/users/login", user)
-        .then(res => {
-            const { token } = res.data;
-            localStorage.setItem("jwtToken", token);
-            setAuthToken(token);
-            const decoded = jwt_decode(token);
-            dispatch(setCurrentUser(decoded));
-        })
-        .catch(err => 
-            dispatch({
-                type: GET_ERRORS,
-                payload: err.response.data
-            })
-        );
-};
-
-export const setUserLoading = () => {
-    return {
-        type: USER_LOADING
-    };
-};

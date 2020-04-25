@@ -99,9 +99,9 @@ function interpolateDirection(d1, d2, ratio) {
     if (absD >= Math.PI) {
         // The angle between the directions is large - we should rotate the other way
         if (d1 > d2) {
-        return d1 + (d2 + 2 * Math.PI - d1) * ratio;
+            return d1 + (d2 + 2 * Math.PI - d1) * ratio;
         } else {
-        return d1 - (d2 - 2 * Math.PI - d1) * ratio;
+            return d1 - (d2 - 2 * Math.PI - d1) * ratio;
         }
     } else {
         // Normal interp

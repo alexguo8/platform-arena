@@ -12,8 +12,6 @@ const Constants = require("../shared/constants");
 const Game = require('./game/game');
 
 const app = express();
-//const server = require('http').Server(app);
-//const io = require('socket.io')(server);
 app.use(express.static('public'));
 
 app.use(cors({origin: '*'}));

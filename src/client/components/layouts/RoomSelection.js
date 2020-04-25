@@ -24,12 +24,12 @@ const RoomSelection = (props) => {
     const onSubmit = e => {
         e.preventDefault();
 
-        const user = {
+        const user_room = {
             username: username,
             room: room,
         }
 
-        props.joinRoom(user, props.history);
+        props.joinRoom(user_room, props.history);
     }
     
 

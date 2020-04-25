@@ -19,13 +19,18 @@ const GameCanvas = (props) => {
         Promise.all([
             connectToServer(onGameOver),
             downloadAssets(),
-          ]).then(() => {
-              play(props.room.user, props.room.room);
-              initState();
-              setRenderer(new Renderer(canvasRef.current));
-              startCapturingInput(props.room.room);
-              renderer.startRendering();
-          }).catch(console.error);
+            ])
+            .then(() => {
+                play(props.room.user, props.room.room);
+                initState();
+                if (canvasRef.current) {
+                    setRenderer(new Renderer(canvasRef.current));
+                    startCapturingInput(props.room.room);
+                    if (renderer) {
+                        renderer.startRendering();
+                    }
+                }
+            }).catch(console.error);
     }, [props.room]);
 
     function onGameOver() {
