@@ -5,28 +5,57 @@
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "node server.js",
-    "server": "nodemon app/server/server.js",
-    "client": "npm start --prefix app/client",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "nodemon src/server/server.js",
+    "client": "npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Alex Guo",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
+    "classnames": "^2.2.6",
     "concurrently": "^5.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "http": "0.0.1-security",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^2.2.0",
     "mongoose": "^5.9.9",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.1",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "shortid": "^2.2.15",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "throttle-debounce": "^2.1.0",
     "validator": "^13.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
