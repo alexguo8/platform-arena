@@ -1,0 +1,60 @@
+import axios from "axios";
+import setAuthToken from "../utils/setAuthToken";
+import jwt_decode from "jwt-decode";
+
+import { GET_ERRORS, SET_CURRENT_USER, USER_LOADING } from "./types";
+
+export const joinRoom = (user, history) => dispatch => {
+    axios.post("/game/join", user)
+        .then(res => {
+            dispatch({
+                type: GET_ERRORS,
+                payload: {}
+            })
+            history.push("/game");
+        })
+        .catch(err => 
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+export const refreshErrors = () => dispatch => {
+    dispatch({
+        type: GET_ERRORS,
+        payload: {}
+    })
+}
+
+
+export const setCurrentUser = decoded => {
+    return {
+        type: SET_CURRENT_USER,
+        payload: decoded
+    };
+};
+
+export const loginUser = user => dispatch => {
+    axios.post("/users/login", user)
+        .then(res => {
+            const { token } = res.data;
+            localStorage.setItem("jwtToken", token);
+            setAuthToken(token);
+            const decoded = jwt_decode(token);
+            dispatch(setCurrentUser(decoded));
+        })
+        .catch(err => 
+            dispatch({
+                type: GET_ERRORS,
+                payload: err.response.data
+            })
+        );
+};
+
+export const setUserLoading = () => {
+    return {
+        type: USER_LOADING
+    };
+};

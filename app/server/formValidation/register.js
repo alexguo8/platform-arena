@@ -4,7 +4,7 @@ const isEmpty = require("is-empty");
 const validateRegistration = (data) => {
     const errors = {};
 
-    if (isEmpty(data.username)) {
+    if (isEmpty(data.username.trim())) {
         errors.username = "Username field is required";
     }
 

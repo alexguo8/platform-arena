@@ -4,7 +4,8 @@ const passport = require("passport");
 
 require("dotenv").config({ path: __dirname + "/./../../.env"});
 
-const users = require("./routes/users")
+const users = require("./routes/users");
+const rooms = require("./routes/rooms");
 
 const app = express();
 
@@ -20,7 +21,8 @@ mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedT
 app.use(passport.initialize());
 require("./config/passport")(passport);
 
-app.use("/users", users)
+app.use("/users", users);
+app.use("/game", rooms);
 
 const port = process.env.PORT || 5000;
 

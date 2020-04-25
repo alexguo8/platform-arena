@@ -39,7 +39,6 @@ const RegisterForm = (props) => {
             password2: password2
         }
         props.registerUser(newUser, props.history);
-        console.log(newUser);
     }
 
     return (

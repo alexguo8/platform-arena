@@ -25,12 +25,6 @@ const LoginForm = (props) => {
         }
     }, [props.errors, props.auth.isAuthenticated, props.history]);
 
-    useEffect(() => {
-        if (props.auth.isAuthenticated) {
-            props.history.push("/join");
-        }
-    }, [props.auth.isAuthenticated, props.history]);
-
     const onSubmit = e => {
         e.preventDefault();
 
@@ -39,7 +33,6 @@ const LoginForm = (props) => {
             password: password,
         }
         props.loginUser(user);
-        console.log(user);
     }
 
     return (

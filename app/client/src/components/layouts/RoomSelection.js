@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { refreshErrors, logoutUser } from "../../actions/authActions";
+import { joinRoom } from "../../actions/roomActions";
 import classnames from "classnames";
 
 const RoomSelection = (props) => {
     const [username, setUsername] = useState("");
     const [room, setRoom] = useState("");
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        if (props.errors) {
+            setErrors(props.errors);
+        }
+    }, [props.errors]);
 
     const onLogoutClick = e => {
         e.preventDefault();
@@ -21,7 +28,10 @@ const RoomSelection = (props) => {
             username: username,
             room: room,
         }
+
+        props.joinRoom(user, props.history);
     }
+    
 
     return (
         <div style={{ height: "75vh" }} className="container valign-wrapper">
@@ -38,8 +48,8 @@ const RoomSelection = (props) => {
                                 onChange={e => setUsername(e.target.value)}
                                 value={username}
                                 error={errors.username}
-                                id="email"
-                                type="email"
+                                id="name"
+                                type="text"
                                 className={classnames("", { invalid: errors.username })}
                             />
                             <label htmlFor="username">Username</label>
@@ -50,8 +60,8 @@ const RoomSelection = (props) => {
                                 onChange={e => setRoom(e.target.value)}
                                 value={room}
                                 error={errors.room}
-                                id="password"
-                                type="password"
+                                id="email"
+                                type="email"
                                 className={classnames("", { invalid: errors.room })}
                             />
                             <label htmlFor="room">Room</label>
@@ -92,6 +102,7 @@ const RoomSelection = (props) => {
 
 RoomSelection.propTypes = {
     logoutUser: PropTypes.func.isRequired,
+    joinRoom: PropTypes.func.isRequired,
     refreshErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
@@ -104,5 +115,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { refreshErrors, logoutUser }
+    { joinRoom, refreshErrors, logoutUser }
 )(RoomSelection);
