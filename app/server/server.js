@@ -1,11 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const socketio = require('socket.io');
 
 require("dotenv").config({ path: __dirname + "/./../../.env"});
 
 const users = require("./routes/users");
 const rooms = require("./routes/rooms");
+const Constants = require("../shared/constants");
+const Game = require('./game/game');
 
 const app = express();
 
@@ -26,6 +29,47 @@ app.use("/game", rooms);
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
+const server = app.listen(port);
+console.log(`Server is running on port: ${port}`);
+
+// Setup socket.io
+const io = socketio(server);
+
+const games = [];
+
+// Listen for socket.io connections
+io.on('connection', socket => {
+    console.log('Player connected!', socket.id);
+    socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
+    socket.on(Constants.MSG_TYPES.KEYPRESS, handleKeyInput);
+    socket.on(Constants.MSG_TYPES.KEYUP, handleKeyInput);
+    socket.on('disconnect', onDisconnect);
 });
+
+function joinGame(username, room) {
+    const roomNames = games.map(g => g.room);
+    const roomIndex = roomNames.indexOf(room);
+    this.join(room);
+    if (roomIndex >= 0) {
+        games[roomIndex].addPlayer(this, username);
+    } else {
+        const game = new Game(room);
+        game.addPlayer(this, username);
+        games.push(game);
+    }
+}
+
+function handleKeyInput(key, room, msg_type) {
+    const roomNames = games.map(g => g.room);
+    const roomIndex = roomNames.indexOf(room);
+    games[roomIndex].handleKeyInput(this, key, msg_type);
+}
+
+function onDisconnect() {
+    for (let i = 0; i < games.length; i++) {
+        if (games[i].handler.players.hasOwnProperty(this.id)) {
+            games[i].removePlayer(this);
+            return;
+        }
+    }
+}

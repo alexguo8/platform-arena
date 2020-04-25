@@ -1,0 +1,17 @@
+module.exports = Object.freeze({
+   PLAYER: 1,
+   BULLET: 2,
+   PLATFORM: 3,
+   POWERUP: 4,
+   NO_POWERUP: 5,
+   SHIELD_POWERUP: 6,
+   DRILL_POWERUP: 7,
+   BOMB_POWERUP: 8,
+   MINE_POWERUP: 9,
+   REFLECT_POWERUP: 10,
+   DRILL: 11,
+   BOMB: 12,
+   MINE: 13,
+   REFLECT_BULLET: 14,
+   EXPLOSION: 15,
+});
