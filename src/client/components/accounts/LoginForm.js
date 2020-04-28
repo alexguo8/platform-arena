@@ -17,7 +17,7 @@ const LoginForm = (props) => {
 
     useEffect(() => {
         if (props.auth.isAuthenticated) {
-            props.history.push("/join");
+            props.history.push("/");
         }
 
         if (props.errors) {

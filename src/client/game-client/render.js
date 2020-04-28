@@ -24,12 +24,14 @@ export class Renderer {
     startRendering() {
         clearInterval(this.renderInterval);
         this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        console.log("Starting rendering");
     }
 
     // Replaces game rendering with main menu rendering.
     stopRendering() {
         clearInterval(this.renderInterval);
-        this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        //this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        console.log("Stopping rendering")
         //renderInterval = setInterval(renderMainMenu, 1000 / 60);
     }
 }
@@ -221,7 +223,7 @@ function renderPlatform(context, platform) {
         platform.y
     );
     platformGradient.addColorStop(0, "#1d5e8c");
-    platformGradient.addColorStop(1, "57a4da");
+    platformGradient.addColorStop(1, "#57a4da");
     context.fillStyle = platformGradient;
     context.fillRect(platform.x, platform.y, platform.width, platform.height);
 }

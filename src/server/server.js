@@ -65,13 +65,20 @@ function joinGame(username, room) {
 function handleKeyInput(key, room, msg_type) {
     const roomNames = games.map(g => g.room);
     const roomIndex = roomNames.indexOf(room);
-    games[roomIndex].handleKeyInput(this, key, msg_type);
+    if (roomIndex >= 0) {
+        games[roomIndex].handleKeyInput(this, key, msg_type);
+    }
 }
 
 function onDisconnect() {
     for (let i = 0; i < games.length; i++) {
         if (games[i].handler.players.hasOwnProperty(this.id)) {
-            games[i].removePlayer(this);
+            game = games[i];
+            game.removePlayer(this);
+            if (Object.keys(game.handler.players).length === 0) {
+                game.endGame();
+                games.splice(i, 1);
+            }
             return;
         }
     }

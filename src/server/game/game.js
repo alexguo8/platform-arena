@@ -16,7 +16,11 @@ class Game {
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
         this.createStage();
-        setInterval(this.update.bind(this), 1000 / 60);
+        this.updateInterval = setInterval(this.update.bind(this), 1000 / 60);
+    }
+
+    endGame() {
+        clearInterval(this.updateInterval);
     }
 
     createStage() {

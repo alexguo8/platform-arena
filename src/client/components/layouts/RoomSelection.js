@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { refreshErrors, logoutUser } from "../../actions/authActions";
+import { refreshErrors } from "../../actions/authActions";
 import { joinRoom } from "../../actions/roomActions";
 import classnames from "classnames";
 
@@ -11,15 +11,16 @@ const RoomSelection = (props) => {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
+        if (props.auth.isAuthenticated) {
+            setUsername(props.auth.user.username);
+        }
+    }, []);
+
+    useEffect(() => {
         if (props.errors) {
             setErrors(props.errors);
         }
     }, [props.errors]);
-
-    const onLogoutClick = e => {
-        e.preventDefault();
-        props.logoutUser();
-    };
 
     const onSubmit = e => {
         e.preventDefault();
@@ -37,24 +38,33 @@ const RoomSelection = (props) => {
         <div style={{ height: "75vh" }} className="container valign-wrapper">
             <div style={{ marginTop: "4rem" }} className="row">
                 <div className="col s8 offset-s2 center-align">
-                    <div className="col s12" style={{ paddingLeft: "11.250px" }}>
+                    <div className="col s12">
                         <h4>
-                            Join Game
+                            <span style={{ fontFamily: "Verdana, Geneva, sans-serif" }}>Platform Arena</span>
                         </h4>
+                        <p className="flow-text grey-text text-darken-1">
+                            A multiplayer fighting game.
+                        </p>
+                        <br />
                     </div>
                     <form noValidate onSubmit={onSubmit}>
-                        <div className="input-field col s12">
-                            <input
-                                onChange={e => setUsername(e.target.value)}
-                                value={username}
-                                error={errors.username}
-                                id="name"
-                                type="text"
-                                className={classnames("", { invalid: errors.username })}
-                            />
-                            <label htmlFor="username">Username</label>
-                            <span className="red-text">{errors.username}</span>
-                        </div>
+                        {props.auth.isAuthenticated 
+                            ? <p className="flow-text grey-text text-darken-1">
+                                Welcome back {props.auth.user.username}!
+                            </p>
+                            : <div className="input-field col s12">
+                                <input
+                                    onChange={e => setUsername(e.target.value)}
+                                    value={username}
+                                    error={errors.username}
+                                    id="name"
+                                    type="text"
+                                    className={classnames("", { invalid: errors.username })}
+                                />
+                                <label htmlFor="username">Username</label>
+                                <span className="red-text">{errors.username}</span>
+                            </div>
+                        }
                         <div className="input-field col s12">
                             <input
                                 onChange={e => setRoom(e.target.value)}
@@ -70,7 +80,7 @@ const RoomSelection = (props) => {
                         <div className="col s12" style={{ paddingLeft: "11.250px" }}>
                             <button
                                 style={{
-                                    width: "150px",
+                                    width: "250px",
                                     borderRadius: "3px",
                                     letterSpacing: "1.5px",
                                     marginTop: "1rem"
@@ -78,19 +88,7 @@ const RoomSelection = (props) => {
                                 type="submit"
                                 className="btn btn-large waves-effect waves-light hoverable blue accent-3"
                             >
-                                Play
-                            </button>
-                            <button
-                                style={{
-                                    width: "150px",
-                                    borderRadius: "3px",
-                                    letterSpacing: "1.5px",
-                                    marginTop: "1rem"
-                                }}
-                                onClick={onLogoutClick}
-                                className="btn btn-large waves-effect waves-light hoverable blue accent-3"
-                            >
-                                Logout
+                                {props.auth.isAuthenticated ? "Play" : "Play as Guest"}
                             </button>
                         </div>
                     </form>
@@ -101,7 +99,6 @@ const RoomSelection = (props) => {
 };
 
 RoomSelection.propTypes = {
-    logoutUser: PropTypes.func.isRequired,
     joinRoom: PropTypes.func.isRequired,
     refreshErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
@@ -115,5 +112,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { joinRoom, refreshErrors, logoutUser }
+    { joinRoom, refreshErrors }
 )(RoomSelection);

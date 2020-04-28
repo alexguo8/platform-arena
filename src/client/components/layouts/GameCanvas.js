@@ -1,57 +1,76 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { connectToServer, play } from '../../game-client/networking';
+import { NetworkHandler } from '../../game-client/networking';
 import { Renderer } from '../../game-client/render';
-import { startCapturingInput, stopCapturingInput } from '../../game-client/input';
+import { InputHandler } from '../../game-client/input';
 import { downloadAssets } from '../../game-client/assets';
 import { initState } from '../../game-client/state';
 
 const GameCanvas = (props) => {
     const canvasRef = useRef(null);
-    const [renderer, setRenderer] = useState({});
+    const renderer = useRef();
+    const networkHandler = useRef();
+    const inputHandler = useRef();
 
     useEffect(() => {
         if (props.room.room === "") {
-            props.history.push("/join");
+            props.history.push("/");
+            return;
         }
+        if (!props.auth.isAuthenticated) {
+            props.history.push("/login");
+            return;
+        }
+        networkHandler.current = new NetworkHandler();
         Promise.all([
-            connectToServer(onGameOver),
+            networkHandler.current.connectToServer(onGameOver),
             downloadAssets(),
             ])
             .then(() => {
-                play(props.room.user, props.room.room);
+                networkHandler.current.play(props.room.user, props.room.room);
                 initState();
                 if (canvasRef.current) {
-                    setRenderer(new Renderer(canvasRef.current));
-                    startCapturingInput(props.room.room);
-                    if (renderer) {
-                        renderer.startRendering();
-                    }
+                    renderer.current = new Renderer(canvasRef.current);
+                    renderer.current.startRendering();
                 }
             }).catch(console.error);
-    }, [props.room]);
+        inputHandler.current = new InputHandler(props.room.room, networkHandler.current);
+        inputHandler.current.startCapturingInput();
+        return () => {
+            if (networkHandler.current instanceof NetworkHandler) {
+                networkHandler.current.disconnect();
+            }
+            if (inputHandler.current instanceof InputHandler) {
+                inputHandler.current.stopCapturingInput();
+            }
+            if (renderer.current instanceof Renderer) {
+                renderer.current.stopRendering();
+            }
+        }
+    }, []);
 
     function onGameOver() {
-        stopCapturingInput();
-        renderer.stopRendering();
+        inputHandler.current.stopCapturingInput();
+        renderer.current.stopRendering();
     }
 
     return (
-        <canvas ref={canvasRef}></canvas>
+        <canvas ref={canvasRef} tabIndex={0}></canvas>
     );
 };
 
 GameCanvas.propTypes = {
-  room: PropTypes.object.isRequired
+    room: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  room: state.room
+    auth: state.auth,
+    room: state.room
 });
 
 export default connect(
-  mapStateToProps,
-  {},
+    mapStateToProps,
+    {},
 )(GameCanvas);

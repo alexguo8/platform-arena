@@ -33,3 +33,44 @@ function downloadAsset(assetName) {
 export const downloadAssets = () => downloadPromise;
 
 export const getAsset = assetName => assets[assetName];
+
+// const ASSET_NAMES = [
+//     'ship.svg',
+//     'bullet.svg',
+//     "greenBullet.png",
+//     "pandaRight.png",
+//     "pandaLeft.png",
+//     "explosion.png",
+//     "drillRight.png",
+//     "bomb.png",
+//     "mine.png",
+//     "drillPowerup.png",
+//     "minePowerup.png",
+//     "bombPowerup.png",
+//     "reflectPowerup.png"
+//   ];
+  
+//   export class AssetsHandler {
+//       constructor() {
+//           this.assets = {};
+//           this.downloadPromise = Promise.all(ASSET_NAMES.map(this.downloadAsset));
+//       }
+  
+//       downloadAsset(assetName) {
+//           return new Promise(resolve => {
+//               const asset = new Image();
+//               asset.onload = () => {
+//                   console.log(`Downloaded ${assetName}`);
+//                   this.assets[assetName] = asset;
+//                   resolve();
+//               };
+//               asset.src = `/assets/${assetName}`;
+//           });
+//       }
+      
+//       downloadAssets = () => this.downloadPromise;
+  
+//       getAsset = assetName => this.assets[assetName];
+  
+//   }
+  

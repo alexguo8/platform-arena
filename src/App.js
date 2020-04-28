@@ -9,7 +9,6 @@ import { Provider } from "react-redux";
 import store from "./client/store";
 
 import Navbar from "./client/components/layouts/Navbar";
-import Landing from "./client/components/layouts/Landing";
 import Register from "./client/components/accounts/RegisterForm";
 import Login from "./client/components/accounts/LoginForm";
 import UserProfile from "./client/components/accounts/UserProfile";
@@ -36,12 +35,9 @@ function App() {
         <Router>
             <div className="App">
                 <Navbar />
-                <Route exact path="/" component={Landing} />
+                <Route exact path="/" component={RoomSelection} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
-                <Switch>
-                    <PrivateRoute exact path="/join" component={RoomSelection} />
-                </Switch>
                 <Switch>
                     <PrivateRoute exact path="/game" component={GameCanvas} />
                 </Switch>

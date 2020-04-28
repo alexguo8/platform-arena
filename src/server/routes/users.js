@@ -61,7 +61,7 @@ router.post("/login", (req, res) => {
                     if (isEqual) {
                         const payload = {
                             id: user.id,
-                            name: user.username
+                            username: user.username
                         };
 
                         jwt.sign(

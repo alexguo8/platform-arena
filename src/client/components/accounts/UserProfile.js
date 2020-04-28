@@ -14,9 +14,8 @@ const UserProfile = (props) => {
             <div className="row">
             <div className="col s12 center-align">
                 <h4>
-                <b>Hey there,</b> 
                 <p className="flow-text grey-text text-darken-1">
-                    Your Profile
+                    Welcome to your profile. Stats coming soon!
                 </p>
                 </h4>
                 <button
@@ -38,15 +37,15 @@ const UserProfile = (props) => {
 };
 
 UserProfile.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+    logoutUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+    auth: state.auth
 });
 
 export default connect(
-  mapStateToProps,
-  { logoutUser }
+    mapStateToProps,
+    { logoutUser }
 )(UserProfile);
