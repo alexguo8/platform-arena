@@ -4,47 +4,39 @@ import { processGameUpdate } from './state';
 
 const Constants = require('../../shared/constants');
 
-export class NetworkHandler {
-    constructor() {
-        this.socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
-        this.socket = io(`${this.socketProtocol}://localhost:5000`, { reconnection: false });
-        
-    }
+const socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
+const socket = io(`${socketProtocol}://localhost:5000`, { reconnection: false });
+const connectedPromise = new Promise(resolve => {
+  socket.on('connect', () => {
+    console.log('Connected to server!');
+    resolve();
+  });
+});
 
-    connectToServer = onGameOver => (
-        new Promise(resolve => {
-            this.socket.on('connect', () => {
-                console.log('Connected to server!');
-                resolve();
-            });
-        }).then(() => {
-            // Register callbacks
-            this.socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
-            this.socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
-            this.socket.on('disconnect', () => {
-                console.log('Disconnected from server.');
-            });
-        })
-    );
-
-    disconnect = () => {
-        this.socket.disconnect();
-    }
-
-    play = (username, room) => {
-        this.socket.emit(Constants.MSG_TYPES.JOIN_GAME, username, room);
-    };
-
-    sendClick = throttle(20, (x, y, room) => {
-        this.socket.emit(Constants.MSG_TYPES.CLICK, x, y, room);
+export const connectToServer = onGameOver => (
+  connectedPromise.then(() => {
+    // Register callbacks
+    socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
+    socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server.');
     });
+  })
+);
 
-    sendKeyPress = throttle(20, (key, room) => {
-        this.socket.emit(Constants.MSG_TYPES.KEYPRESS, key, room, Constants.MSG_TYPES.KEYPRESS);
-    });
+export const play = (username, room) => {
+  socket.emit(Constants.MSG_TYPES.JOIN_GAME, username, room);
+};
 
-    sendKeyUp = throttle(20, (key, room) => {
-        this.socket.emit(Constants.MSG_TYPES.KEYUP, key, room, Constants.MSG_TYPES.KEYUP);
-    });
+export const updateDirection = throttle(20, dir => {
+  socket.emit(Constants.MSG_TYPES.INPUT, dir);
+});
 
-}
+export const sendKeyPress = throttle(20, (key, room) => {
+    socket.emit(Constants.MSG_TYPES.KEYPRESS, key, room, Constants.MSG_TYPES.KEYPRESS);
+});
+
+export const sendKeyUp = throttle(20, (key, room) => {
+    socket.emit(Constants.MSG_TYPES.KEYUP, key, room, Constants.MSG_TYPES.KEYUP);
+});
+

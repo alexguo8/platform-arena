@@ -1,26 +1,26 @@
-
+import { sendKeyPress, sendKeyUp } from "./networking";
 export class InputHandler {
-    constructor(room, networkHandler) {
+    constructor(room) {
         this.room = room;
-        this.networkHandler = networkHandler;
+        //this.networkHandler = networkHandler;
         this.networkAndRoom = {
             room: this.room,
-            networkHandler: this.networkHandler
+            //networkHandler: this.networkHandler
         }
-        this.onClickEvent = this.onClick.bind(this.networkAndRoom);
+        //this.onClickEvent = this.onClick.bind(this.networkAndRoom);
         this.onKeyPressEvent = this.onKeyPress.bind(this.networkAndRoom);
         this.onKeyUpEvent = this.onKeyUp.bind(this.networkAndRoom);
     }
 
-    onClick(e) {
-        this.networkHandler.sendClick(e.clientX, e.clientY, this.room);
-    }
+    // onClick(e) {
+    //     sendClick(e.clientX, e.clientY, this.room);
+    // }
 
     onKeyPress(e) {
         const keys = ['W', 'A', 'S', 'D'];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            this.networkHandler.sendKeyPress(key, this.room);
+            sendKeyPress(key, this.room);
         }
     }
 
@@ -28,7 +28,7 @@ export class InputHandler {
         const keys = ['W', 'A', 'S', 'D'];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            this.networkHandler.sendKeyUp(key, this.room);
+            sendKeyUp(key, this.room);
         }
     }
 

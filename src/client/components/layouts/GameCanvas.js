@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { NetworkHandler } from '../../game-client/networking';
+import { connectToServer, play} from '../../game-client/networking';
 import { Renderer } from '../../game-client/render';
 import { InputHandler } from '../../game-client/input';
 import { downloadAssets } from '../../game-client/assets';
@@ -11,7 +11,7 @@ import { initState } from '../../game-client/state';
 const GameCanvas = (props) => {
     const canvasRef = useRef(null);
     const renderer = useRef();
-    const networkHandler = useRef();
+    //const networkHandler = useRef();
     const inputHandler = useRef();
 
     useEffect(() => {
@@ -23,25 +23,25 @@ const GameCanvas = (props) => {
             props.history.push("/login");
             return;
         }
-        networkHandler.current = new NetworkHandler();
+        //networkHandler.current = new NetworkHandler();
         Promise.all([
-            networkHandler.current.connectToServer(onGameOver),
+            connectToServer(onGameOver),
             downloadAssets(),
             ])
             .then(() => {
-                networkHandler.current.play(props.room.user, props.room.room);
+                play(props.room.user, props.room.room);
                 initState();
                 if (canvasRef.current) {
                     renderer.current = new Renderer(canvasRef.current);
                     renderer.current.startRendering();
                 }
             }).catch(console.error);
-        inputHandler.current = new InputHandler(props.room.room, networkHandler.current);
+        inputHandler.current = new InputHandler(props.room.room);
         inputHandler.current.startCapturingInput();
         return () => {
-            if (networkHandler.current instanceof NetworkHandler) {
-                networkHandler.current.disconnect();
-            }
+            // if (networkHandler.current instanceof NetworkHandler) {
+            //     networkHandler.current.disconnect();
+            // }
             if (inputHandler.current instanceof InputHandler) {
                 inputHandler.current.stopCapturingInput();
             }
