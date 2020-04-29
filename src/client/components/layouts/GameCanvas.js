@@ -19,10 +19,6 @@ const GameCanvas = (props) => {
             props.history.push("/");
             return;
         }
-        if (!props.auth.isAuthenticated) {
-            props.history.push("/login");
-            return;
-        }
         networkHandler.current = new NetworkHandler();
         Promise.all([
             networkHandler.current.connectToServer(onGameOver),
@@ -36,7 +32,7 @@ const GameCanvas = (props) => {
                     renderer.current.startRendering();
                 }
             }).catch(console.error);
-        inputHandler.current = new InputHandler(props.room.room, networkHandler.current);
+        inputHandler.current = new InputHandler(props.room.room, networkHandler.current, canvasRef.current);
         inputHandler.current.startCapturingInput();
         return () => {
             if (networkHandler.current instanceof NetworkHandler) {
@@ -57,7 +53,7 @@ const GameCanvas = (props) => {
     }
 
     return (
-        <canvas ref={canvasRef} tabIndex={0}></canvas>
+        <canvas ref={canvasRef}></canvas>
     );
 };
 
@@ -66,11 +62,9 @@ GameCanvas.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth,
     room: state.room
 });
 
 export default connect(
     mapStateToProps,
-    {},
 )(GameCanvas);

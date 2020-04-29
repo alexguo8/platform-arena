@@ -12,6 +12,7 @@ import Navbar from "./client/components/layouts/Navbar";
 import Register from "./client/components/accounts/RegisterForm";
 import Login from "./client/components/accounts/LoginForm";
 import UserProfile from "./client/components/accounts/UserProfile";
+import Lobby from "./client/components/layouts/Lobby";
 import GameCanvas from "./client/components/layouts/GameCanvas";
 import RoomSelection from "./client/components/layouts/RoomSelection";
 import PrivateRoute from "./client/components/private-route/PrivateRoute";
@@ -34,13 +35,15 @@ function App() {
     <Provider store={store}>
         <Router>
             <div className="App">
-                <Navbar />
+                {//window.location.href !== "http://localhost:3000/lobby" && 
+                    //window.location.href !== "http://localhost:3000/game" &&
+                    <Navbar />
+                }
                 <Route exact path="/" component={RoomSelection} />
                 <Route exact path="/register" component={Register} />
                 <Route exact path="/login" component={Login} />
-                <Switch>
-                    <PrivateRoute exact path="/game" component={GameCanvas} />
-                </Switch>
+                <Route exact path="/lobby" component={Lobby} />
+                <Route exact path="/game" component={GameCanvas} />
                 <Switch>
                     <PrivateRoute exact path="/profile" component={UserProfile} />
                 </Switch>

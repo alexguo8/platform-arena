@@ -12,6 +12,5 @@ module.exports = Object.freeze({
    DRILL: 11,
    BOMB: 12,
    MINE: 13,
-   REFLECT_BULLET: 14,
-   EXPLOSION: 15,
+   EXPLOSION: 14,
 });

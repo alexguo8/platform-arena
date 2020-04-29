@@ -8,6 +8,7 @@ const Rectangle = require("./rectangle");
 class Bullet extends GameObject {
     constructor(type, x, y, width, height, speed, dir, parentID, handler) {
         super(shortid(), type, x, y, width, height);
+        this.dir = dir;
         this.velX = speed * Math.sin(dir);
         this.velY = speed * Math.cos(dir);
         this.parentID = parentID;
@@ -19,11 +20,11 @@ class Bullet extends GameObject {
     }
 
     update(dt) {
+        this.collision();
         super.update(dt);
         if (this.x < 0 || this.x > Constants.WIDTH || this.y < 0 || this.y > Constants.HEIGHT) {
             this.handler.removeWeapon(this);
         }
-        this.collision();
     }
   
     //Method to check collision with platforms, players, and other weapons
@@ -90,6 +91,7 @@ class Bullet extends GameObject {
         return {
             ...(super.serializeForUpdate()),
             type: this.type,
+            dir: this.dir
         };
     }
 }

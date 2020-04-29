@@ -10,9 +10,6 @@ class KeyInput {
         if (key === "W") {
             player.jump();
         }
-        if (key === "S") {
-            player.shoot();
-        }
         if (key === "D") {
             player.right();
         }          

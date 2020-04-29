@@ -185,16 +185,23 @@ function renderPlayerPowerup(context, player) {
 }
 
 function renderBullet(context, bullet) {
-    context.drawImage(
-        getAsset('greenBullet.png'), bullet.x, bullet.y,
+    context.save();
+    context.translate(bullet.x + (BULLET_WIDTH / 2), bullet.y + (BULLET_HEIGHT / 2));
+    context.rotate(Math.PI / 2 - bullet.dir);
+    context.drawImage(getAsset('greenBullet.png'), -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2,
         BULLET_WIDTH, BULLET_HEIGHT,
     );
+    context.restore();
 }
 
 function renderDrill(context, drill) {
-    context.drawImage(getAsset('drillRight.png'), drill.x, drill.y,
+    context.save();
+    context.translate(drill.x + (DRILL_WIDTH / 2), drill.y + (DRILL_HEIGHT / 2));
+    context.rotate(Math.PI / 2 - drill.dir);
+    context.drawImage(getAsset('drillRight.png'), -DRILL_WIDTH / 2, -DRILL_HEIGHT / 2,
         DRILL_WIDTH, DRILL_HEIGHT,
     );
+    context.restore();
 }
 
 function renderExplosion(context, explosion) {

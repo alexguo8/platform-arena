@@ -46,6 +46,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
     socket.on(Constants.MSG_TYPES.KEYPRESS, handleKeyInput);
     socket.on(Constants.MSG_TYPES.KEYUP, handleKeyInput);
+    socket.on(Constants.MSG_TYPES.CLICK, handleMouseInput);
     socket.on('disconnect', onDisconnect);
 });
 
@@ -67,6 +68,14 @@ function handleKeyInput(key, room, msg_type) {
     const roomIndex = roomNames.indexOf(room);
     if (roomIndex >= 0) {
         games[roomIndex].handleKeyInput(this, key, msg_type);
+    }
+}
+
+function handleMouseInput(x, y, room, msg_type) {
+    const roomNames = games.map(g => g.room);
+    const roomIndex = roomNames.indexOf(room);
+    if (roomIndex >= 0) {
+        games[roomIndex].handleMouseInput(this, x, y, msg_type);
     }
 }
 

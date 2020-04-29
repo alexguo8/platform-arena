@@ -2,14 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { logoutUser } from "../../actions/authActions";
 
 const Navbar = (props) => {
-    const onLogoutClick = e => {
-        e.preventDefault();
-        props.logoutUser();
-    };
-
     return (
         <div className="navbar-fixed">
             <nav className="z-depth-0">
@@ -65,14 +59,13 @@ const Navbar = (props) => {
                         {props.auth.isAuthenticated &&
                             <li>
                                 <Link
-                                    to="/"
-                                    onClick={onLogoutClick}
+                                    to="/profile"
                                     style={{
                                         fontFamily: "Verdana, Geneva, sans-serif"
                                     }}
                                     className="col s5 black-text"
                                 >
-                                    Logout
+                                    Profile
                                 </Link>
                             </li>
                         }
@@ -84,7 +77,6 @@ const Navbar = (props) => {
 };
 
 Navbar.propTypes = {
-    logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired
 };
 
@@ -94,6 +86,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { logoutUser }
 )(Navbar);
 

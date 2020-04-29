@@ -36,7 +36,7 @@ export class NetworkHandler {
     };
 
     sendClick = throttle(20, (x, y, room) => {
-        this.socket.emit(Constants.MSG_TYPES.CLICK, x, y, room);
+        this.socket.emit(Constants.MSG_TYPES.CLICK, x, y, room, Constants.MSG_TYPES.CLICK);
     });
 
     sendKeyPress = throttle(20, (key, room) => {

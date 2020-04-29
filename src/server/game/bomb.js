@@ -15,12 +15,11 @@ class Bomb extends GameObject {
 
         this.cooldown = Constants.BOMB_COOLDOWN;
         this.lifetime = Constants.BOMB_LIFETIME;
-        this.gravityCounter = 0;
     }
 
     update(dt) {
         super.update(dt);
-        this.velY += 30;  
+        this.velY += Constants.BOMB_GRAVITY;  
         if (this.x < 0 || this.x > Constants.WIDTH || this.y < 0 || this.y > Constants.HEIGHT) {
             this.handler.removeWeapon(this);
         }

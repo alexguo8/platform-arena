@@ -1,6 +1,7 @@
 const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const KeyInput = require("./keyInput")
+const MouseInput = require("./mouseInput")
 const Player = require("./player")
 const Platform = require("./platform");
 const Powerup = require("./powerup");
@@ -12,6 +13,7 @@ class Game {
         this.sockets = {};
         this.handler = new Handler();
         this.keyInput = new KeyInput(this.handler);
+        this.mouseInput = new MouseInput(this.handler);
 
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
@@ -35,7 +37,7 @@ class Game {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 192, 192, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 704, 192, 32, 16, true, this.handler));
         }
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 288, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 288, 32, 16, true, this.handler));
         }
@@ -91,6 +93,16 @@ class Game {
                 this.keyInput.handleKeyPress(socket, key);
             } else if (msg_type === Constants.MSG_TYPES.KEYUP) {
                 this.keyInput.handleKeyUp(socket, key);
+            }
+        }
+    }
+
+    handleMouseInput(socket, x, y, msg_type) {
+        if (this.handler.players[socket.id]) {
+            if (msg_type === Constants.MSG_TYPES.CLICK) {
+                this.mouseInput.handleClick(socket, x, y);
+            } else if (msg_type === Constants.MSG_TYPES.KEYUP) {
+                this.mouseInput.handleClick(socket, x, y);
             }
         }
     }
