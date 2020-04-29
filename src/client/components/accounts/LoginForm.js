@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { loginUser, refreshErrors } from "../../actions/authActions";
+import { loginUser, resetErrors } from "../../actions/authActions";
 import classnames from "classnames";
 
 const LoginForm = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({});
-    const { refreshErrors } = props;
+    const { resetErrors } = props;
 
     useEffect(() => {
-        refreshErrors();
-    }, [refreshErrors]);
+        resetErrors();
+    }, [resetErrors]);
 
     useEffect(() => {
         if (props.auth.isAuthenticated) {
@@ -27,7 +27,7 @@ const LoginForm = (props) => {
 
     const onSubmit = e => {
         e.preventDefault();
-
+        
         const user = {
             email: email,
             password: password,
@@ -99,7 +99,7 @@ const LoginForm = (props) => {
 
 LoginForm.propTypes = {
     loginUser: PropTypes.func.isRequired,
-    refreshErrors: PropTypes.func.isRequired,
+    resetErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
@@ -111,5 +111,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { loginUser, refreshErrors }
+    { loginUser, resetErrors }
 )(LoginForm);

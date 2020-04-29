@@ -2,9 +2,12 @@ const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const KeyInput = require("./keyInput")
 const MouseInput = require("./mouseInput")
-const Player = require("./player")
+const Panda = require("./panda")
+const Seal = require("./seal")
+const Dino = require("./dino")
+const Eagle = require("./eagle")
 const Platform = require("./platform");
-const Powerup = require("./powerup");
+const Powerup = require("./powerups/powerup");
 const Handler = require("./handler")
 
 class Game {            
@@ -23,6 +26,13 @@ class Game {
 
     endGame() {
         clearInterval(this.updateInterval);
+    }
+
+    loadPlayers(players) {
+        for (const key of Object.keys(players)) {
+            const player = players[key];
+            this.addPlayer(player.socket, player.username, player.character);
+        }
     }
 
     createStage() {
@@ -71,15 +81,33 @@ class Game {
         }
     }
 
-    addPlayer(socket, username) {
+    addPlayer(socket, username, character) {
         this.sockets[socket.id] = socket;
-    
+
         // Generate a position to start this player at.
         const x = Constants.WIDTH * (0.25 + Math.random() * 0.5);
         const y = Constants.HEIGHT * (0.25 + Math.random() * 0.5);
-        this.handler.players[socket.id] = 
-            new Player(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
-                username, "test", this.handler);
+        if (character === Type.PANDA) {
+            this.handler.players[socket.id] = 
+                new Panda(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.SEAL) {
+            this.handler.players[socket.id] = 
+                new Seal(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.DINO) {
+            this.handler.players[socket.id] = 
+                new Dino(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.EAGLE) {
+            this.handler.players[socket.id] = 
+                new Eagle(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else {
+            this.handler.players[socket.id] = 
+                new Panda(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        }
     }
     
     removePlayer(socket) {

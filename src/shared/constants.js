@@ -53,11 +53,13 @@ module.exports = Object.freeze({
   HEIGHT: 1024/12 * 9,
   MAP_SIZE: 3000,
   MSG_TYPES: {
-    JOIN_GAME: 'join_game',
-    GAME_UPDATE: 'update',
-    KEYPRESS: 'keypress',
+    JOIN_LOBBY: "join_lobby",
+    START_GAME: "start_game",
+    LOBBY_UPDATE: "lobby_update",
+    GAME_UPDATE: "update",
+    KEYPRESS: "keypress",
     KEYUP: "keyup",
     CLICK: "click",
-    GAME_OVER: 'dead',
+    GAME_OVER: "dead",
   },
 });

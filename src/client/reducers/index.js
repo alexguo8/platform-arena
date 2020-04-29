@@ -1,10 +1,12 @@
 import { combineReducers } from "redux";
 import authReducer from "./authReducer";
 import errorsReducer from "./errorsReducer";
-import roomReducer from "./roomReducer";
+import playerReducer from "./playerReducer";
+import networkReducer from "./networkReducer";
 
 export default combineReducers({
     auth: authReducer,
     errors: errorsReducer,
-    room: roomReducer,
+    player: playerReducer,
+    network: networkReducer,
 });

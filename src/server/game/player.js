@@ -4,9 +4,9 @@ const Type = require("../../shared/objectTypes")
 const GameObject = require("./gameObject");
 const Bullet = require("./bullet");
 const ReflectBullet = require("./reflectBullet");
-const Drill = require("./drill");
-const Bomb = require("./bomb");
-const Mine = require("./mine");
+const Drill = require("./powerups/drill");
+const Bomb = require("./powerups/bomb");
+const Mine = require("./powerups/mine");
 const { clamp } = require("./utils/utilFunctions");
 
 class Player extends GameObject {
@@ -24,7 +24,6 @@ class Player extends GameObject {
         this.shootCooldown = 0;
         this.specialAmmo = 0;
         this.abilityMeter = 0;
-        this.abilityCounter = 0;
         this.powerup = Type.NO_POWERUP;
     
         this.lP = false;
@@ -152,13 +151,8 @@ class Player extends GameObject {
         }
     }
    
-    //Method to attack corresponding to shoot button
-    shoot(dir) {
-        if (this.shootCooldown > 0) {
-            return;
-        }
-        this.shootCooldown += Constants.PLAYER_FIRE_COOLDOWN;
-
+    //Method to basic shoot
+    basicShoot(dir) {
         if (this.powerup === Type.NO_POWERUP) {
             this.handler.addWeapon(new Bullet(Type.BULLET, 
                 this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
@@ -169,6 +163,18 @@ class Player extends GameObject {
                 this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2), 
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
                 Constants.BULLET_SPEED, dir, this.id, this.handler));
+        }
+    }
+
+    //Method to attack corresponding to shoot button
+    shoot(dir) {
+        if (this.shootCooldown > 0) {
+            return;
+        }
+        this.shootCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+
+        if (this.powerup === Type.NO_POWERUP || this.powerup === Type.REFLECT_POWERUP) {
+            this.basicShoot(dir);
         } else if (this.powerup === Type.DRILL_POWERUP) {
             this.handler.addWeapon(new Drill(Type.DRILL,
                 this.x, this.y + (this.height / 2) - (Constants.DRILL_HEIGHT / 2), 
@@ -261,7 +267,7 @@ class Player extends GameObject {
     //      }        
     //   }
     //   shootCooldown += 25;
-   }
+    }
    
    //Method to attack using special ability
    ability() {
@@ -289,7 +295,7 @@ class Player extends GameObject {
     //   }
     //   shootCooldown += 25;
     //   abilityMeter = 0;
-   }
+    }
 
     serializeForUpdate() {
         return {
@@ -298,6 +304,7 @@ class Player extends GameObject {
             powerup: this.powerup,
             specialAmmo: this.specialAmmo,
             faceRight: this.faceRight,
+            character: this.character,
         };
     }
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { refreshErrors } from "../../actions/authActions";
-import { joinRoom } from "../../actions/roomActions";
+import { resetErrors } from "../../actions/authActions";
+import { joinRoom, resetRoom } from "../../actions/playerActions";
+import { resetNetworkHandler } from "../../actions/networkActions";
 import classnames from "classnames";
 
 const RoomSelection = (props) => {
@@ -14,6 +15,15 @@ const RoomSelection = (props) => {
         if (props.auth.isAuthenticated) {
             setUsername(props.auth.user.username);
         }
+        const user_room = {
+            username: username,
+            room: "",
+        }
+        props.resetRoom(user_room);
+        if (Object.keys(props.network.handler).length !== 0) {
+            props.network.handler.disconnect();
+        }
+        props.resetNetworkHandler();
     }, []);
 
     useEffect(() => {
@@ -100,17 +110,21 @@ const RoomSelection = (props) => {
 
 RoomSelection.propTypes = {
     joinRoom: PropTypes.func.isRequired,
-    refreshErrors: PropTypes.func.isRequired,
+    resetRoom: PropTypes.func.isRequired,
+    resetErrors: PropTypes.func.isRequired,
+    resetNetworkHandler: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    network: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    errors: state.errors
+    errors: state.errors,
+    network: state.network
 });
 
 export default connect(
     mapStateToProps,
-    { joinRoom, refreshErrors }
+    { joinRoom, resetErrors, resetRoom, resetNetworkHandler }
 )(RoomSelection);

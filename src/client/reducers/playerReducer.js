@@ -3,6 +3,7 @@ import  { GET_USER_ROOM } from "../actions/types";
 const initialState = {
     user: "",
     room: "",
+    character: "",
 }
 
 export default (state = initialState, action) => {

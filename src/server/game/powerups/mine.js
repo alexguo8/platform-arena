@@ -1,8 +1,8 @@
 //Mine powerup that damages when stepped on, follows gravity
 const shortid = require("shortid");
-const GameObject = require("./gameObject");
-const Constants = require("../../shared/constants");
-const Type = require("../../shared/objectTypes")
+const GameObject = require("../gameObject");
+const Constants = require("../../../shared/constants");
+const Type = require("../../../shared/objectTypes")
 const Explosion = require("./explosion");
 
 class Mine extends GameObject {
@@ -68,23 +68,16 @@ class Mine extends GameObject {
                 continue;
             }             
             if (this.getBounds().intersects(temp.getBounds())) {
-                if (temp.type === Type.BOMB) {
+                if (temp.type === Type.BULLET || temp.type === Type.MINE ||
+                    temp.type === Type.BOMB) {
                     this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
                         this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
                         this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
                         Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
                     this.handler.removeWeapon(this);
                     return;
-                } else if (temp.type === Type.BULLET || temp.type === Type.MINE) {
-                    this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
-                        this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
-                        this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
-                        Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
-                    this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
-                        temp.x - (Constants.EXPLOSION_WIDTH / 2) + (temp.width / 2), 
-                        temp.y - (Constants.EXPLOSION_HEIGHT / 2) + (temp.height / 2), 
-                        Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
-                    this.handler.removeWeapon(this);
+                }
+                if (temp.type === Type.BULLET || temp.type === Type.MINE) {
                     this.handler.removeWeapon(temp);
                     return;
                 }

@@ -1,8 +1,8 @@
 //Powerup that randomly spawns and gives player's special weapons
 const shortid = require("shortid");
-const GameObject = require("./gameObject");
-const Constants = require("../../shared/constants");
-const Type = require("../../shared/objectTypes")
+const GameObject = require("../gameObject");
+const Constants = require("../../../shared/constants");
+const Type = require("../../../shared/objectTypes")
 
 class Powerup extends GameObject {
     constructor(type, x, y, width, height, handler) {

@@ -1,6 +1,6 @@
 //Explosion object for bombs and drills that deals damage in an area and breaks platforms
 const shortid = require("shortid");
-const GameObject = require("./gameObject");
+const GameObject = require("../gameObject");
 
 class Explosion extends GameObject {
     constructor(type, x, y, width, height, handler) {

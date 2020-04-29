@@ -16,7 +16,7 @@ export const joinRoom = (user_room, history) => dispatch => {
                     room: user_room.room,
                 }
             })
-            history.push("/game");
+            history.push("/lobby");
         })
         .catch(err => {
             console.log(err.response.data);
@@ -26,6 +26,16 @@ export const joinRoom = (user_room, history) => dispatch => {
             })
         });
 };
+
+export const resetRoom = (user_room) => dispatch => {
+    dispatch({
+        type: GET_USER_ROOM,
+        payload: {
+            user: user_room.username,
+            room: ""
+        }
+    });
+}
 
 export const refreshErrors = () => dispatch => {
     dispatch({

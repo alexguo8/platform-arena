@@ -21,7 +21,7 @@ export const registerUser = (user, history) => dispatch => {
         );
 };
 
-export const refreshErrors = () => dispatch => {
+export const resetErrors = () => dispatch => {
     dispatch({
         type: GET_ERRORS,
         payload: {}

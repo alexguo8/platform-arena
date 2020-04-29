@@ -125,17 +125,36 @@ function renderBackground(canvas, context) {
 }
 
 function renderPlayer(context, player) {
-    if (player.faceRight) {
-        context.drawImage(
-            getAsset('pandaRight.png'), player.x, player.y,
-            PLAYER_WIDTH, PLAYER_HEIGHT,
-        );
-    } else {
-        context.drawImage(
-            getAsset('pandaLeft.png'), player.x, player.y,
-            PLAYER_WIDTH, PLAYER_HEIGHT,
-        );
-    }
+    let image = getAsset("pandaRight.png");
+    if (player.character === Type.PANDA) {
+        if (player.faceRight) {
+            image = getAsset("pandaRight.png")
+        } else {
+            image = getAsset("pandaLeft.png")
+        }
+    } else if (player.character === Type.SEAL) {
+        if (player.faceRight) {
+            image = getAsset("sealRight.png")
+        } else {
+            image = getAsset("sealLeft.png")
+        }
+    } else if (player.character === Type.DINO) {
+        if (player.faceRight) {
+            image = getAsset("dinoRight.png")
+        } else {
+            image = getAsset("dinoLeft.png")
+        }
+    } else if (player.character === Type.EAGLE) {
+        if (player.faceRight) {
+            image = getAsset("eagleRight.png")
+        } else {
+            image = getAsset("eagleLeft.png")
+        }
+    } 
+    context.drawImage(
+        image, player.x, player.y,
+        PLAYER_WIDTH, PLAYER_HEIGHT,
+    );
 }
 
 function renderHealthBar(context, player) {

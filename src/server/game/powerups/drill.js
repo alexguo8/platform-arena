@@ -1,9 +1,9 @@
 //Drill powerup that destroys blocks and explodes on contact
-const Constants = require("../../shared/constants");
-const Type = require("../../shared/objectTypes")
-const Bullet = require("./bullet");
+const Constants = require("../../../shared/constants");
+const Type = require("../../../shared/objectTypes")
+const Bullet = require("../bullet");
 const Explosion = require("./explosion");
-const Rectangle = require("./rectangle");
+const Rectangle = require("../rectangle");
 
 class Drill extends Bullet {
     getBounds() {

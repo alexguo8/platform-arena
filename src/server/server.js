@@ -9,6 +9,7 @@ require("dotenv").config({ path: __dirname + "/./../../.env"});
 const users = require("./routes/users");
 const rooms = require("./routes/rooms");
 const Constants = require("../shared/constants");
+const Lobby = require('./game/lobby');
 const Game = require('./game/game');
 
 const app = express();
@@ -39,27 +40,49 @@ console.log(`Server is running on port: ${port}`);
 const io = socketio(server);
 
 const games = [];
+const lobbies = [];
 
 // Listen for socket.io connections
 io.on('connection', socket => {
     console.log('Player connected!', socket.id);
-    socket.on(Constants.MSG_TYPES.JOIN_GAME, joinGame);
+    socket.on(Constants.MSG_TYPES.JOIN_LOBBY, joinLobby);
+    socket.on(Constants.MSG_TYPES.START_GAME, startGame);
+    socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, updateLobby);
     socket.on(Constants.MSG_TYPES.KEYPRESS, handleKeyInput);
     socket.on(Constants.MSG_TYPES.KEYUP, handleKeyInput);
     socket.on(Constants.MSG_TYPES.CLICK, handleMouseInput);
     socket.on('disconnect', onDisconnect);
 });
 
-function joinGame(username, room) {
-    const roomNames = games.map(g => g.room);
+function joinLobby(username, room) {
+    const roomNames = lobbies.map(lo => lo.room);
     const roomIndex = roomNames.indexOf(room);
     this.join(room);
     if (roomIndex >= 0) {
-        games[roomIndex].addPlayer(this, username);
+        lobbies[roomIndex].addPlayer(this, username);
     } else {
-        const game = new Game(room);
-        game.addPlayer(this, username);
-        games.push(game);
+        const lobby = new Lobby(room);
+        lobby.addPlayer(this, username);
+        lobbies.push(lobby);
+    }
+}
+
+function updateLobby(character, room) {
+    const roomNames = lobbies.map(lo => lo.room);
+    const roomIndex = roomNames.indexOf(room);
+    lobbies[roomIndex].updatePlayer(this, character);
+}
+
+function startGame(room) { 
+    for (let i = 0; i < lobbies.length; i++) {
+        if (lobbies[i].room === room) {
+            const game = new Game(room);
+            game.loadPlayers(lobbies[i].players)
+            games.push(game);
+            lobbies.splice(i, 1);
+            io.to(room).emit(Constants.MSG_TYPES.START_GAME)
+            return;
+        }
     }
 }
 
@@ -82,7 +105,7 @@ function handleMouseInput(x, y, room, msg_type) {
 function onDisconnect() {
     for (let i = 0; i < games.length; i++) {
         if (games[i].handler.players.hasOwnProperty(this.id)) {
-            game = games[i];
+            const game = games[i];
             game.removePlayer(this);
             if (Object.keys(game.handler.players).length === 0) {
                 game.endGame();

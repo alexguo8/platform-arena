@@ -1,8 +1,8 @@
 //Bomb powerup that launches like a projectile and explodes
 const shortid = require("shortid");
-const GameObject = require("./gameObject");
-const Constants = require("../../shared/constants");
-const Type = require("../../shared/objectTypes")
+const GameObject = require("../gameObject");
+const Constants = require("../../../shared/constants");
+const Type = require("../../../shared/objectTypes")
 const Explosion = require("./explosion");
 
 class Bomb extends GameObject {
