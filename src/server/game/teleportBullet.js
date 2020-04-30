@@ -4,24 +4,6 @@ const Type = require("../../shared/objectTypes")
 const Bullet = require("./bullet");
 
 class TeleportBullet extends Bullet {
-    constructor(type, x, y, width, height, speed, dir, parentID, handler) {
-        super(type, x, y, width, height, speed, dir, parentID, handler);
-        
-        this.cooldown = Constants.REFLECT_BULLET_COOLDOWN;
-        this.bounces = Constants.REFLECT_BULLET_BOUNCES;
-    }
-
-    update(dt) {
-        super.update(dt);
-
-        if (this.cooldown > 0) {
-            this.cooldown--;
-        }
-        if (this.bounces <= 0) {
-            this.handler.removeWeapon(this);
-        }
-    }
-
     //Method to check collision with platforms, players, and other weapons
     collision(dt) {
         for (const key of Object.keys(this.handler.players)) {

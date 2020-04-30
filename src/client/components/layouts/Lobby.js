@@ -93,7 +93,7 @@ const Lobby = (props) => {
                     </div>
 
                     <div className="col s12 center-align">
-                        <div className="card col s1 center-align hoverable">
+                        <div className="card col s1 hoverable">
                             <div className="card-image" onClick={e => selectCharacter(Type.PANDA)}>
                                 <img src={process.env.PUBLIC_URL + "/assets/pandaRight.png"} alt="Panda" />
                             </div>

@@ -39,9 +39,11 @@ export class Renderer {
 function setCanvasDimensions(canvas) {
   // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
   // 800 in-game units of width.
-  const scaleRatio = Math.max(1, 800 / window.innerWidth);
-  canvas.width = scaleRatio * window.innerWidth;
-  canvas.height = scaleRatio * window.innerHeight;
+//   const scaleRatio = Math.max(1, 800 / window.innerWidth);
+//   canvas.width = scaleRatio * window.innerWidth;
+//   canvas.height = scaleRatio * window.innerHeight;
+    canvas.width = Constants.WIDTH;
+    canvas.height = Constants.HEIGHT;
 }
 
 
@@ -52,12 +54,7 @@ function render(canvas, context) {
     }
 
     // Draw background
-    renderBackground(canvas, context);
-
-    // Draw boundaries
-    context.strokeStyle = 'black';
-    context.lineWidth = 1;
-    context.strokeRect(0, 0, WIDTH, HEIGHT);
+    renderBackground(context);
 
     // Draw all platforms
     platforms.forEach(p => {
@@ -81,6 +78,9 @@ function render(canvas, context) {
                 break;
             case Type.TELEPORT_BULLET:
                 renderTeleportBullet(context, w);
+                break;
+            case Type.FIRE_CLOUD:
+                renderFireCloud(context, w);
                 break;
             default:
                 break;
@@ -117,21 +117,21 @@ function render(canvas, context) {
     })
 }
 
-function renderBackground(canvas, context) {
-    const backgroundX = canvas.width / 2;
-    const backgroundY = canvas.height / 2;
-    const backgroundGradient = context.createRadialGradient(
-        backgroundX,
-        backgroundY,
-        WIDTH / 10,
-        backgroundX,
-        backgroundY,
-        HEIGHT / 2,
-    );
-    backgroundGradient.addColorStop(0, "#c0c0ff");
-    backgroundGradient.addColorStop(1, "#b0b0f5");
-    context.fillStyle = backgroundGradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
+function renderBackground(context) {
+    // const backgroundX = canvas.width / 2;
+    // const backgroundY = canvas.height / 2;
+    // const backgroundGradient = context.createRadialGradient(
+    //     backgroundX,
+    //     backgroundY,
+    //     WIDTH / 10,
+    //     backgroundX,
+    //     backgroundY,
+    //     HEIGHT / 2,
+    // );
+    // backgroundGradient.addColorStop(0, "#c0c0ff");
+    // backgroundGradient.addColorStop(1, "#b0b0f5");
+    context.fillStyle = "#b0b0f5";
+    context.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 }
 
 function renderPlayer(context, player) {
@@ -273,17 +273,28 @@ function renderMine(context, mine) {
 }
 
 function renderLaser(context, laser) {
-    if (laser.cooldown === 0) {
-        context.fillStyle = "blue";
-    } else {
-        context.fillStyle = "white";
+    if (laser.cooldown !== 0) {
+        context.globalAlpha = 0.5;
     }
-    context.globalAlpha = 0.5;
     if (laser.dir > 0) {
-        context.fillRect(laser.x, laser.y, laser.width, Constants.LASER_HEIGHT);
+        context.drawImage(getAsset("laser.png"), laser.x, laser.y, 
+        laser.width, Constants.LASER_HEIGHT);
     } else {
-        context.fillRect(laser.x - laser.width, laser.y, laser.width, Constants.LASER_HEIGHT);
+        context.drawImage(getAsset("laser.png"), laser.x - laser.width, laser.y, 
+        laser.width, Constants.LASER_HEIGHT);
     }
+    context.globalAlpha = 1;
+}
+
+function renderFireCloud(context, cloud) {
+    if (cloud.cooldown <= 5) {
+        context.globalAlpha = 0.75;
+    } else {
+        context.globalAlpha = 0.3;
+    }
+    context.drawImage(getAsset("fireCloud.png"), cloud.x, cloud.y,
+        cloud.width, cloud.height,
+    );
     context.globalAlpha = 1;
 }
 

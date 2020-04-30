@@ -19,6 +19,8 @@ const ASSET_NAMES = [
   "bombPowerup.png",
   "reflectPowerup.png",
   "crown.png",
+  "laser.png",
+  "fireCloud.png",
   "teleportBulletRight.png",
   "teleportBulletLeft.png",
 ];

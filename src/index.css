@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+canvas {
+    width: 1024px;
+    height: 768px;
+}
+
 img {
     vertical-align: middle;
 }

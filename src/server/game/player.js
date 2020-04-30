@@ -103,7 +103,9 @@ class Player extends GameObject {
                 this.health -= Constants.EXPLOSION_DAMAGE;
             } else if (source === Type.LASER) {
                 this.health -= Constants.LASER_DAMAGE;
-            } else if (source === Type.TELEPORT_BULLET) {
+            } else if (source === Type.FIRE_CLOUD) {
+                this.health -= Constants.FIRE_CLOUD_DAMAGE;
+            }else if (source === Type.TELEPORT_BULLET) {
                 this.health -= Constants.TELEPORT_BULLET_DAMAGE;
             }
         }

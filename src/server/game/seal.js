@@ -38,7 +38,7 @@ class Seal extends Player {
             this.handler.addWeapon(new Laser(Type.LASER, this.x, this.y, 0, Constants.LASER_HEIGHT,
                 -1, this.id, this.handler));
         }
-   }
+    }
 }
 
 module.exports = Seal;

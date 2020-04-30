@@ -1,4 +1,4 @@
-//Seal special ability that shoots a hitscan laser weapon with brief delay
+//Dino special ability that blocks weapons and damages over time
 const shortid = require("shortid");
 const GameObject = require("./gameObject");
 const Constants = require("../../shared/constants");
@@ -6,53 +6,43 @@ const Type = require("../../shared/objectTypes")
 const Explosion = require("./powerups/explosion")
 const Rectangle = require("./rectangle");
 
-class Laser extends GameObject {
-    constructor(type, x, y, width, height, dir, parentID, handler) {
+class FireCloud extends GameObject {
+    constructor(type, x, y, width, height, parentID, handler) {
         super(shortid(), type, x, y, width, height);
-        this.dir = dir;
         this.parentID = parentID;
         this.handler = handler;
 
-        this.cooldown = Constants.LASER_COOLDOWN;
-        this.lifetime = Constants.LASER_LIFETIME;
+        this.cooldown = Constants.FIRE_CLOUD_COOLDOWN;
+        this.lifetime = Constants.FIRE_CLOUD_LIFETIME;
         this.damaged = [];
-
-        let shortestDistance = Infinity;
-        for (const key of Object.keys(this.handler.platforms)) {
-            const temp = this.handler.platforms[key];
-            
-            if (!temp) {
-                continue;
-            }
-            if (this.y + this.height > temp.y && 
-                this.y < temp.y + temp.height) {
-                if (this.dir > 0 && this.x < temp.x) {
-                    shortestDistance = Math.min(temp.x - this.x, shortestDistance);
-                } else if (this.dir < 0 && this.x > temp.x + temp.width) {
-                    shortestDistance = Math.min(this.x - (temp.x + temp.width), shortestDistance);
-                }
-            }
-        }
-        this.width = shortestDistance; 
     }
 
     getBounds() {
-        if (this.dir > 0) {
-            return new Rectangle(this.x, this.y, this.width, this.height);
-        }
-        return new Rectangle(this.x - this.width, this.y, this.width, this.height);
+        const innerWidth = this.width / Math.SQRT2;
+        const margin = (this.width - innerWidth) / 2;
+        return new Rectangle(this.x + margin, this.y + margin, innerWidth, innerWidth);
     }
 
     update(dt) {
         this.collision(dt);
 
+        if (this.cooldown % 3 == 0) {
+            this.x--;
+            this.y--;
+            this.width += 2;
+            this.height += 2;
+        }
         if (this.cooldown > 0) {
             this.cooldown--;
+        } else {
+            this.cooldown = 50;
+            this.damaged = [];
         }
         if (this.lifetime > 0) {
             this.lifetime--;
         } else if (this.lifetime === 0) {
             this.handler.removeWeapon(this);
+            return;
         }
     }
   
@@ -65,9 +55,7 @@ class Laser extends GameObject {
                 continue;
             }           
             if (this.getBounds().intersects(temp.getBounds()) && 
-                temp.id !== this.parentID && this.cooldown === 0 &&
-                !this.damaged.includes(temp.id)) {
-                
+                temp.id !== this.parentID && !this.damaged.includes(temp.id)) {
                 temp.takeDamage(this.type);
                 this.damaged.push(temp.id);
                 return;   
@@ -99,11 +87,11 @@ class Laser extends GameObject {
         return {
             ...(super.serializeForUpdate()),
             cooldown: this.cooldown,
-            width: this.width,
             type: this.type,
-            dir: this.dir
+            width: this.width,
+            height: this.height,
         };
     }
 }
 
-module.exports = Laser;
+module.exports = FireCloud;

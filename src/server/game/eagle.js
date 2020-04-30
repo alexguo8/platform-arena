@@ -41,7 +41,7 @@ class Eagle extends Player {
                 Constants.TELEPORT_BULLET_WIDTH, Constants.TELEPORT_BULLET_HEIGHT,
                 Constants.TELEPORT_BULLET_SPEED, 3 * Math.PI / 2, this.id, this.handler));
         }
-   }
+    }
 }
 
 module.exports = Eagle;
