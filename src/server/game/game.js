@@ -28,10 +28,11 @@ class Game {
         clearInterval(this.updateInterval);
     }
 
-    loadPlayers(players) {
+    loadPlayers(sockets, players) {
         for (const key of Object.keys(players)) {
+            const socket = sockets[key];
             const player = players[key];
-            this.addPlayer(player.socket, player.username, player.character);
+            this.addPlayer(socket, player.username, player.character);
         }
     }
 

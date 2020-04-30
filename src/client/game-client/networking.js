@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 import { throttle } from 'throttle-debounce';
-import { processGameUpdate, processLobbyUpdate } from './state';
+import { processGameUpdate, processLobbyUpdate, processLobbyStart } from './state';
 
 const Constants = require('../../shared/constants');
 
@@ -21,7 +21,7 @@ export class NetworkHandler {
             // Register callbacks
             this.socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, processLobbyUpdate);
             this.socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
-            //this.socket.on(Constants.MSG_TYPES.START_GAME);
+            this.socket.on(Constants.MSG_TYPES.START_GAME, processLobbyStart);
             //this.socket.on(Constants.MSG_TYPES.GAME_OVER, onGameOver);
             this.socket.on('disconnect', () => {
                 console.log('Disconnected from server.');

@@ -9,6 +9,7 @@ require("dotenv").config({ path: __dirname + "/./../../.env"});
 const users = require("./routes/users");
 const rooms = require("./routes/rooms");
 const Constants = require("../shared/constants");
+const Type = require("../shared/objectTypes");
 const Lobby = require('./game/lobby');
 const Game = require('./game/game');
 
@@ -76,11 +77,17 @@ function updateLobby(character, room) {
 function startGame(room) { 
     for (let i = 0; i < lobbies.length; i++) {
         if (lobbies[i].room === room) {
+            const lobby = lobbies[i];
+            for (const key of Object.keys(lobby.players)) {
+                if (lobby.players[key].character === Type.NO_CHARACTER) {
+                    return;
+                }
+            }
             const game = new Game(room);
-            game.loadPlayers(lobbies[i].players)
+            game.loadPlayers(lobby.sockets, lobby.players)
             games.push(game);
             lobbies.splice(i, 1);
-            io.to(room).emit(Constants.MSG_TYPES.START_GAME)
+            io.to(room).emit(Constants.MSG_TYPES.START_GAME, true)
             return;
         }
     }
@@ -114,4 +121,16 @@ function onDisconnect() {
             return;
         }
     }
+    for (let i = 0; i < lobbies.length; i++) {
+        if (lobbies[i].players.hasOwnProperty(this.id)) {
+            const lobby = lobbies[i];
+            lobby.removePlayer(this);
+            if (Object.keys(lobby.players).length === 0) {
+                lobbies.splice(i, 1);
+            }
+            return;
+        }
+    }
 }
+
+module.exports = getGames = () => games;

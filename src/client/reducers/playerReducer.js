@@ -1,4 +1,4 @@
-import  { GET_USER_ROOM } from "../actions/types";
+import  { GET_USER_ROOM, RESET_ROOM } from "../actions/types";
 
 const initialState = {
     user: "",
@@ -12,6 +12,11 @@ export default (state = initialState, action) => {
             return {
                 user: action.payload.user,
                 room: action.payload.room,
+            };
+        case RESET_ROOM:
+            return {
+                ...state,
+                room: ""
             };
         default:
             return state;

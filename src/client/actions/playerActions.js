@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { GET_ERRORS, GET_USER_ROOM } from "./types";
+import { GET_ERRORS, GET_USER_ROOM, RESET_ROOM } from "./types";
 
 export const joinRoom = (user_room, history) => dispatch => {
     axios.post("http://localhost:5000/game/join", user_room)
@@ -27,13 +27,10 @@ export const joinRoom = (user_room, history) => dispatch => {
         });
 };
 
-export const resetRoom = (user_room) => dispatch => {
+export const resetRoom = () => dispatch => {
     dispatch({
-        type: GET_USER_ROOM,
-        payload: {
-            user: user_room.username,
-            room: ""
-        }
+        type: RESET_ROOM,
+        payload: {}
     });
 }
 

@@ -15,11 +15,7 @@ const RoomSelection = (props) => {
         if (props.auth.isAuthenticated) {
             setUsername(props.auth.user.username);
         }
-        const user_room = {
-            username: username,
-            room: "",
-        }
-        props.resetRoom(user_room);
+        props.resetRoom();
         if (Object.keys(props.network.handler).length !== 0) {
             props.network.handler.disconnect();
         }

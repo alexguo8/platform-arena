@@ -35,22 +35,27 @@ function App() {
     <Provider store={store}>
         <Router>
             <div className="App">
-                {//window.location.href !== "http://localhost:3000/lobby" && 
-                    //window.location.href !== "http://localhost:3000/game" &&
-                    <Navbar />
-                }
-                <Route exact path="/" component={RoomSelection} />
-                <Route exact path="/register" component={Register} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/lobby" component={Lobby} />
-                <Route exact path="/game" component={GameCanvas} />
                 <Switch>
-                    <PrivateRoute exact path="/profile" component={UserProfile} />
+                    <Route exact path="/lobby" component={Lobby} />
+                    <Route exact path="/game" component={GameCanvas} />
+                    <Route component={DefaultContainer} />
                 </Switch>
             </div>
         </Router> 
     </Provider>  
   );
 }
+  
+const DefaultContainer = () => (
+    <div>
+        <Navbar />
+        <Route exact path="/" component={RoomSelection} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <Switch>
+            <PrivateRoute exact path="/profile" component={UserProfile} />
+        </Switch>
+    </div>
+)
 
 export default App;

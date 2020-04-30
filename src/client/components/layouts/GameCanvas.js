@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { Renderer } from '../../game-client/render';
-import { InputHandler } from '../../game-client/input';
-import { downloadAssets } from '../../game-client/assets';
-import { initState } from '../../game-client/state';
+import { Renderer } from "../../game-client/render";
+import { InputHandler } from "../../game-client/input";
+import { downloadAssets } from "../../game-client/assets";
+import { initState, resetLobbyStart } from "../../game-client/state";
+import { resetRoom } from "../../actions/playerActions";
 
 const GameCanvas = (props) => {
     const canvasRef = useRef(null);
@@ -27,6 +28,8 @@ const GameCanvas = (props) => {
             }).catch(console.error);
         inputHandler.current = new InputHandler(props.player.room, props.network.handler, canvasRef.current);
         inputHandler.current.startCapturingInput();
+        props.resetRoom();
+        resetLobbyStart();
         return () => {
             if (inputHandler.current instanceof InputHandler) {
                 inputHandler.current.stopCapturingInput();
@@ -43,6 +46,7 @@ const GameCanvas = (props) => {
 };
 
 GameCanvas.propTypes = {
+    resetRoom: PropTypes.func.isRequired,
     player: PropTypes.object.isRequired,
     network: PropTypes.object.isRequired,
 };
@@ -54,4 +58,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
+    { resetRoom }
 )(GameCanvas);

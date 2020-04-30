@@ -3,7 +3,8 @@
 const RENDER_DELAY = 100;
 
 const gameUpdates = [];
-const lobbyUpdate = {};
+let lobbyUpdate = {};
+let lobbyStart = false;
 let gameStart = 0;
 let firstServerTimestamp = 0;
 
@@ -18,6 +19,18 @@ export function getLobbyState() {
 
 export function processLobbyUpdate(update) {
     lobbyUpdate = update;
+}
+
+export function getLobbyStart() {
+    return lobbyStart;
+}
+
+export function resetLobbyStart() {
+    lobbyStart = false;
+}
+
+export function processLobbyStart(update) {
+    lobbyStart = update;
 }
 
 export function processGameUpdate(update) {
