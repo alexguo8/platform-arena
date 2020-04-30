@@ -20,7 +20,7 @@ class Bullet extends GameObject {
     }
 
     update(dt) {
-        this.collision();
+        this.collision(dt);
         super.update(dt);
         if (this.x < 0 || this.x > Constants.WIDTH || this.y < 0 || this.y > Constants.HEIGHT) {
             this.handler.removeWeapon(this);
@@ -28,7 +28,7 @@ class Bullet extends GameObject {
     }
   
     //Method to check collision with platforms, players, and other weapons
-    collision() {
+    collision(dt) {
         for (const key of Object.keys(this.handler.players)) {
             const temp = this.handler.players[key];
             

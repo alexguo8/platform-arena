@@ -156,9 +156,14 @@ class Game {
     }
 
     createUpdate(player) {
+        let serializedPlayer = {};
+        if (player) {
+            serializedPlayer = player.serializeForUpdate();
+        } 
+        
         return {
             t: Date.now(),
-            me: player.serializeForUpdate(),
+            me: serializedPlayer,
             others: Object.values(this.handler.players).filter(p => p !== player).map(p => p.serializeForUpdate()),
             platforms: Object.values(this.handler.platforms).map(p => p.serializeForUpdate()),
             weapons: Object.values(this.handler.weapons).map(w => w.serializeForUpdate()),

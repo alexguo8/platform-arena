@@ -12,13 +12,11 @@ class ReflectBullet extends Bullet {
     }
 
     update(dt) {
-        this.collision(dt);
         super.update(dt);
 
         if (this.cooldown > 0) {
             this.cooldown--;
         }
-        console.log(this.bounces)
         if (this.bounces <= 0) {
             this.handler.removeWeapon(this);
         }
@@ -32,7 +30,8 @@ class ReflectBullet extends Bullet {
             if (!temp) { 
                 continue;
             }           
-            if (this.getBounds().intersects(temp.getBounds())) {
+            if (this.getBounds().intersects(temp.getBounds()) &&
+                (temp.id !== this.parentID || this.cooldown == 0)) {
                     // tempPlayer = temp;
                     // if (owner.getCharacter() == ID.Dino) {
                     //     handler.addObject(new Explosion(x - 32 + width/2, y - 32 + height/2, 64, 64, ID.Explosion, handler));
@@ -45,12 +44,8 @@ class ReflectBullet extends Bullet {
                         // tempPlayer.setHealth(tempPlayer.getHealth() - 10);
                         // }
                     // }
-                if (temp.id !== this.parentID) {
-                    temp.takeDamage(this.type);
-                }
-                if (temp.id !== this.parentID || this.cooldown == 0) {
-                    this.handler.removeWeapon(this);
-                }
+                temp.takeDamage(this.type);
+                this.handler.removeWeapon(this);
                 return;
             }    
         }

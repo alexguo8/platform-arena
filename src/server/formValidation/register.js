@@ -6,6 +6,8 @@ const validateRegistration = (data) => {
 
     if (isEmpty(data.username.trim())) {
         errors.username = "Username field is required";
+    } else if (!Validator.isLength(data.username, { min: 3, max: 10 })) {
+        errors.username = "Username must be between 3 and 10 characters";
     }
 
     if (isEmpty(data.email)) {

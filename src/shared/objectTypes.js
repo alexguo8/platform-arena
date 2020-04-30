@@ -18,4 +18,9 @@ module.exports = Object.freeze({
     SEAL: 17,
     DINO: 18,
     EAGLE: 19,
+    BAMBOO_STORM: 20,
+    BAMBOO: 21,
+    LASER: 22,
+    FIRE_CLOUD: 23,
+    TELEPORT_BULLET: 24
 });

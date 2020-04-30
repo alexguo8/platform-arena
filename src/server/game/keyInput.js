@@ -16,6 +16,9 @@ class KeyInput {
         if (key === "A") {
             player.left();
         }
+        if (key === "Q") {
+            player.qAbility();
+        }
         // if (key === KeyEvent.VK_Q && player.getAbilityMeter() === 100) {
         //     player.ability();
         // }

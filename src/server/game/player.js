@@ -40,6 +40,10 @@ class Player extends GameObject {
             this.inAir = true;
         }
         
+        if (this.abilityMeter < 100) {
+            this.abilityMeter++;
+        }
+        
         this.velY += Constants.PLAYER_GRAVITY;  
         
         if (this.rP) {
@@ -48,13 +52,10 @@ class Player extends GameObject {
             this.velX = -Constants.PLAYER_SPEED;
         }
         
-        // if (health <= 0) {
-        //     hudHandler.removeObject(healthBar);
-        //     hudHandler.removeObject(playerPowerup);
-        //     hudHandler.removeObject(abilityBar);
-        //     handler.removeObject(this);
-        //     Game.getAlive().remove(this);
-        // }          
+        if (this.health <= 0) {
+            this.handler.removePlayer(this);
+        }     
+
         if (this.shootCooldown > 0) {
             this.shootCooldown -= dt;
             this.shootCooldown = Math.max(0, this.shootCooldown);
@@ -100,6 +101,10 @@ class Player extends GameObject {
                 this.health -= Constants.BULLET_DAMAGE;
             } else if (source === Type.EXPLOSION) {
                 this.health -= Constants.EXPLOSION_DAMAGE;
+            } else if (source === Type.LASER) {
+                this.health -= Constants.LASER_DAMAGE;
+            } else if (source === Type.TELEPORT_BULLET) {
+                this.health -= Constants.TELEPORT_BULLET_DAMAGE;
             }
         }
     }
@@ -301,10 +306,12 @@ class Player extends GameObject {
         return {
             ...(super.serializeForUpdate()),
             health: this.health,
+            username: this.username,
             powerup: this.powerup,
             specialAmmo: this.specialAmmo,
             faceRight: this.faceRight,
             character: this.character,
+            abilityMeter: this.abilityMeter,
         };
     }
 }

@@ -79,6 +79,9 @@ function render(canvas, context) {
             case Type.MINE:
                 renderMine(context, w);
                 break;
+            case Type.TELEPORT_BULLET:
+                renderTeleportBullet(context, w);
+                break;
             default:
                 break;
         }
@@ -90,19 +93,26 @@ function render(canvas, context) {
     })
 
     // Draw all players
-    renderPlayer(context, me);
-    renderHealthBar(context, me);
-    renderPlayerPowerup(context, me);
+    if (Object.keys(me).length !== 0) {
+        renderPlayer(context, me);
+        renderHealthBar(context, me);
+        renderPlayerPowerup(context, me);
+        if (others.length === 0) {
+            renderCrown(context, me);
+        }
+    }
     others.forEach(p => {
         renderPlayer(context, p);
         renderHealthBar(context, p);
         renderPlayerPowerup(context, p);
     });
 
-    //Draw explosions last
+    //Draw some weapons last
     weapons.forEach(w => {
         if (w.type === Type.EXPLOSION) {
             renderExplosion(context, w);
+        } else if (w.type === Type.LASER) {
+            renderLaser(context, w);
         }
     })
 }
@@ -162,6 +172,15 @@ function renderHealthBar(context, player) {
     if (player.health <= 50) {
         colour = `rgb(155, ${155 - (135 * (50 - player.health)) / 50}, 20)`;
     }
+    if (player.abilityMeter === 100) {
+        context.fillStyle = "white";
+        context.fillRect(
+            player.x - 2, 
+            player.y - Constants.HEALTHBAR_HEIGHT - 7, 
+            (Constants.HEALTHBAR_WIDTH * player.health) / 100 + 4, 
+            Constants.HEALTHBAR_HEIGHT + 4,
+        );
+    }
     context.fillStyle = colour;
     context.fillRect(
         player.x, 
@@ -169,6 +188,10 @@ function renderHealthBar(context, player) {
         (Constants.HEALTHBAR_WIDTH * player.health) / 100, 
         Constants.HEALTHBAR_HEIGHT,
     );
+    context.fillStyle = "black";
+    context.textAlign = "center";
+    context.fillText(player.username, player.x + (Constants.PLAYER_WIDTH / 2), 
+        player.y - Constants.HEALTHBAR_HEIGHT - 10);
 }
 
 function renderPlayerPowerup(context, player) {
@@ -201,6 +224,14 @@ function renderPlayerPowerup(context, player) {
         context.fillStyle = 'black';
         context.fillText(player.specialAmmo, player.x + 20, player.y + PLAYER_HEIGHT + 15);
     }
+}
+
+function renderCrown(context, player) {
+    context.fillStyle = "yellow";
+    context.drawImage(
+        getAsset("crown.png"), player.x, player.y - Constants.HEALTHBAR_HEIGHT - 40, 
+        Constants.PLAYER_WIDTH, 18
+    );
 }
 
 function renderBullet(context, bullet) {
@@ -238,6 +269,31 @@ function renderBomb(context, bomb) {
 function renderMine(context, mine) {
     context.drawImage(getAsset('mine.png'), mine.x, mine.y,
         MINE_WIDTH, MINE_HEIGHT,
+    );
+}
+
+function renderLaser(context, laser) {
+    if (laser.cooldown === 0) {
+        context.fillStyle = "blue";
+    } else {
+        context.fillStyle = "white";
+    }
+    context.globalAlpha = 0.5;
+    if (laser.dir > 0) {
+        context.fillRect(laser.x, laser.y, laser.width, Constants.LASER_HEIGHT);
+    } else {
+        context.fillRect(laser.x - laser.width, laser.y, laser.width, Constants.LASER_HEIGHT);
+    }
+    context.globalAlpha = 1;
+}
+
+function renderTeleportBullet(context, tBullet) {
+    let image = getAsset("teleportBulletRight.png");
+    if (tBullet.dir > Math.PI) {
+        image = getAsset("teleportBulletLeft.png");
+    }
+    context.drawImage(image, tBullet.x, tBullet.y,
+        Constants.TELEPORT_BULLET_WIDTH, Constants.TELEPORT_BULLET_HEIGHT,
     );
 }
 

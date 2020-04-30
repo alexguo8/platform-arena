@@ -21,7 +21,7 @@ const Navbar = (props) => {
                     <ul className="right hide-on-med-and-down">
                             <li>
                                 <Link
-                                    to="/"
+                                    to="/how-to-play"
                                     style={{
                                         fontFamily: "Verdana, Geneva, sans-serif"
                                     }}

@@ -5,6 +5,7 @@ const Player = require("./player");
 const Bullet = require("./bullet");
 const ReflectBullet = require("./reflectBullet");
 const Drill = require("./powerups/drill");
+const Laser = require("./laser");
 
 class Seal extends Player {
     //Method to basic shoot
@@ -22,32 +23,21 @@ class Seal extends Player {
         }
     }
    
-   //Method to attack using special ability
-   qAbility() {
-    //   if (character == ID.Panda) {
-    //      handler.addObject(new BambooStorm(0, 0, 0, 0, this, ID.BambooStorm, handler));
-    //   } else if (character == ID.Seal) {
-    //      if (faceRight) {
-    //         handler.addObject(new Laser(x + width, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      } else {
-    //         handler.addObject(new Laser(x, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      }
-    //   } else if (character == ID.Dino) {
-    //      handler.addObject(new FireCloud(x + width/2 - 150, y + height/2 - 150, 
-    //            300, 300, this, ID.FireCloud, handler));
-    //   } else if (character == ID.Eagle) {
-    //      if (faceRight) {
-    //         handler.addObject(new TeleportBullet(x + width, y + height/2 - 5, 
-    //               32, 10, 25, this, ID.TeleportBullet, handler));
-    //      } else {
-    //         handler.addObject(new TeleportBullet(x - 32, y + height/2 - 5, 
-    //               32, 10, -25, this, ID.TeleportBullet, handler));         
-    //      }
-    //   }
-    //   shootCooldown += 25;
-    //   abilityMeter = 0;
+    //Method to attack using special ability
+    qAbility() {
+        if (this.abilityMeter !== 100) {
+            return;
+        }
+        this.abilityMeter = 0;
+        this.shootCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+
+        if (this.faceRight) {
+            this.handler.addWeapon(new Laser(Type.LASER, this.x + this.width, this.y, 0, Constants.LASER_HEIGHT,
+                1, this.id, this.handler));
+        } else {
+            this.handler.addWeapon(new Laser(Type.LASER, this.x, this.y, 0, Constants.LASER_HEIGHT,
+                -1, this.id, this.handler));
+        }
    }
 }
 

@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+img {
+    vertical-align: middle;
+}
+
 .card {
     min-width: 100px;
 }

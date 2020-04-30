@@ -11,7 +11,7 @@ class Drill extends Bullet {
     }
 
     //Method to check collision with platforms, players, and other weapons
-    collision() {
+    collision(dt) {
         for (const key of Object.keys(this.handler.players)) {
             const temp = this.handler.players[key];
             

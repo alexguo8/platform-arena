@@ -21,7 +21,7 @@ export class InputHandler {
     }
 
     onKeyPress(e) {
-        const keys = ["W", "A", "D"];
+        const keys = ["W", "A", "D", "Q"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
             this.networkHandler.sendKeyPress(key, this.room);
