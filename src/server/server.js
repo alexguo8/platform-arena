@@ -139,9 +139,4 @@ function onDisconnect() {
     }
 }
 
-process.on("SIGINT", () => {
-    console.log("Exiting");
-    process.exit();
-})
-
 module.exports = getGames = () => games;

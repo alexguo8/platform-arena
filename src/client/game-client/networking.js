@@ -7,7 +7,7 @@ const Constants = require('../../shared/constants');
 export class NetworkHandler {
     constructor() {
         this.socketProtocol = (window.location.protocol.includes('https')) ? 'wss' : 'ws';
-        this.socket = io(`${this.socketProtocol}://localhost:5000`, { reconnection: false });
+        this.socket = io(`${this.socketProtocol}://${window.location.host}`, { reconnection: false });
         
     }
 
