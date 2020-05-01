@@ -11,7 +11,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "nodemon src/server/server.js",
-    "client": "npm start",
+    "client": "react-scripts start",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Alex Guo",

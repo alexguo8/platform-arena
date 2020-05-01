@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require('cors');
 const passport = require("passport");
 const socketio = require('socket.io');
+const path = require("path");
 
 require("dotenv").config({ path: __dirname + "/./../../.env"});
 
@@ -14,11 +15,11 @@ const Lobby = require('./game/lobby');
 const Game = require('./game/game');
 
 const app = express();
-app.use(express.static('public'));
+//app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, "../../build")));
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + "../../build/index.html"));
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, "../../build", "index.html"));
 });
 
 app.use(cors({origin: '*'}));
@@ -137,5 +138,10 @@ function onDisconnect() {
         }
     }
 }
+
+process.on("SIGINT", () => {
+    console.log("Exiting");
+    process.exit();
+})
 
 module.exports = getGames = () => games;
