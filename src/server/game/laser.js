@@ -80,7 +80,7 @@ class Laser extends GameObject {
                 continue;           
             }
             if (this.getBounds().intersects(temp.getBounds())) {
-                if (temp.type === Type.BULLET) {
+                if (temp.type === Type.BULLET || temp.type === Type.BAMBOO) {
                     this.handler.removeWeapon(temp);
                     return;
                 } else if (temp.type === Type.MINE || temp.type === Type.BOMB ||

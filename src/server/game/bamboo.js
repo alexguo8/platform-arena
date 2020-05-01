@@ -1,49 +1,36 @@
-//Dino special ability that blocks weapons and damages over time
+//Panda special ability weapon
 const shortid = require("shortid");
 const GameObject = require("./gameObject");
 const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const Explosion = require("./powerups/explosion")
-const Rectangle = require("./rectangle");
 
-class FireCloud extends GameObject {
-    constructor(type, x, y, width, height, parentID, handler) {
+class Bamboo extends GameObject {
+    constructor(type, x, y, width, height, speed, dir, parentID, handler) {
         super(shortid(), type, x, y, width, height);
+        this.dir = dir;
+        this.velX = speed * Math.sin(dir);
+        this.velY = speed * Math.cos(dir);
         this.parentID = parentID;
         this.handler = handler;
 
-        this.cooldown = Constants.FIRE_CLOUD_COOLDOWN;
-        this.lifetime = Constants.FIRE_CLOUD_LIFETIME;
+        this.cooldown = Constants.BAMBOO_COOLDOWN;
         this.damaged = [];
-    }
-
-    getBounds() {
-        const innerWidth = this.width / Math.SQRT2;
-        const margin = (this.width - innerWidth) / 2;
-        return new Rectangle(this.x + margin, this.y + margin, innerWidth, innerWidth);
     }
 
     update(dt) {
         this.collision(dt);
 
-        if (this.cooldown % 3 == 0) {
-            this.x--;
-            this.y--;
-            this.width += 2;
-            this.height += 2;
-        }
         if (this.cooldown > 0) {
             this.cooldown--;
         } else {
-            this.cooldown = 50;
-            this.damaged = [];
+            super.update(dt);
         }
-        if (this.lifetime > 0) {
-            this.lifetime--;
-        } else if (this.lifetime === 0) {
+        if (this.x + this.width < 0 || this.x > Constants.WIDTH || 
+            this.y + this.height < 0 || this.y > Constants.HEIGHT) {
             this.handler.removeWeapon(this);
-            return;
         }
+
     }
   
     //Method to check collision with platforms, players, and other weapons
@@ -56,6 +43,7 @@ class FireCloud extends GameObject {
             }           
             if (this.getBounds().intersects(temp.getBounds()) && 
                 temp.id !== this.parentID && !this.damaged.includes(temp.id)) {
+                
                 temp.takeDamage(this.type);
                 this.damaged.push(temp.id);
                 return;   
@@ -68,7 +56,7 @@ class FireCloud extends GameObject {
                 continue;           
             }
             if (this.getBounds().intersects(temp.getBounds())) {
-                if (temp.type === Type.BULLET || temp.type === Type.BAMBOO) {
+                if (temp.type === Type.BULLET) {
                     this.handler.removeWeapon(temp);
                     return;
                 } else if (temp.type === Type.MINE || temp.type === Type.BOMB ||
@@ -86,12 +74,10 @@ class FireCloud extends GameObject {
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
-            cooldown: this.cooldown,
             type: this.type,
-            width: this.width,
-            height: this.height,
+            dir: this.dir
         };
     }
 }
 
-module.exports = FireCloud;
+module.exports = Bamboo;

@@ -3,6 +3,7 @@ const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const Player = require("./player");
 const Bullet = require("./bullet");
+const BambooStorm = require("./bambooStorm");
 const ReflectBullet = require("./reflectBullet");
 
 class Panda extends Player {
@@ -21,33 +22,16 @@ class Panda extends Player {
         }
     }
    
-   //Method to attack using special ability
-   qAbility() {
-    //   if (character == ID.Panda) {
-    //      handler.addObject(new BambooStorm(0, 0, 0, 0, this, ID.BambooStorm, handler));
-    //   } else if (character == ID.Panda) {
-    //      if (faceRight) {
-    //         handler.addObject(new Laser(x + width, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      } else {
-    //         handler.addObject(new Laser(x, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      }
-    //   } else if (character == ID.Panda) {
-    //      handler.addObject(new FireCloud(x + width/2 - 150, y + height/2 - 150, 
-    //            300, 300, this, ID.FireCloud, handler));
-    //   } else if (character == ID.Panda) {
-    //      if (faceRight) {
-    //         handler.addObject(new TeleportBullet(x + width, y + height/2 - 5, 
-    //               32, 10, 25, this, ID.TeleportBullet, handler));
-    //      } else {
-    //         handler.addObject(new TeleportBullet(x - 32, y + height/2 - 5, 
-    //               32, 10, -25, this, ID.TeleportBullet, handler));         
-    //      }
-    //   }
-    //   shootCooldown += 25;
-    //   abilityMeter = 0;
-   }
+    //Method to attack using special ability
+    qAbility() {
+        if (this.abilityMeter !== 100) {
+            return;
+        }
+        this.abilityMeter = 0;
+        this.shootCooldown += Constants.PLAYER_FIRE_COOLDOWN;
+
+        this.handler.addWeapon(new BambooStorm(Type.BAMBOO_STORM, 0, 0, 0, 0, this.id, this.handler))
+    }
 }
 
 module.exports = Panda;

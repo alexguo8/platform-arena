@@ -1,9 +1,9 @@
-import { debounce } from 'throttle-debounce';
-import { getAsset } from './assets';
-import { getCurrentState } from './state';
+import { debounce } from "throttle-debounce";
+import { getAsset } from "./assets";
+import { getCurrentState } from "./state";
 
-const Type = require('../../shared/objectTypes');
-const Constants = require('../../shared/constants');
+const Type = require("../../shared/objectTypes");
+const Constants = require("../../shared/constants");
 
 const { PLAYER_WIDTH, PLAYER_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT, 
     DRILL_WIDTH, DRILL_HEIGHT, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
@@ -16,7 +16,7 @@ export class Renderer {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
         setCanvasDimensions(canvas);
-        window.addEventListener('resize', debounce(40, setCanvasDimensions));
+        window.addEventListener("resize", debounce(40, setCanvasDimensions));
         this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
     }
 
@@ -100,6 +100,10 @@ function render(canvas, context) {
         if (others.length === 0) {
             renderCrown(context, me);
         }
+    } else {
+        if (others.length === 1) {
+            renderCrown(context, others[0]);
+        }
     }
     others.forEach(p => {
         renderPlayer(context, p);
@@ -113,6 +117,8 @@ function render(canvas, context) {
             renderExplosion(context, w);
         } else if (w.type === Type.LASER) {
             renderLaser(context, w);
+        } else if (w.type === Type.BAMBOO) {
+            renderBamboo(context, w);
         }
     })
 }
@@ -197,22 +203,22 @@ function renderHealthBar(context, player) {
 function renderPlayerPowerup(context, player) {
     switch(player.powerup) {
         case Type.DRILL_POWERUP:
-            context.drawImage(getAsset('drillPowerup.png'), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("drillPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.MINE_POWERUP:
-            context.drawImage(getAsset('minePowerup.png'), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("minePowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.BOMB_POWERUP:
-            context.drawImage(getAsset('bombPowerup.png'), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("bombPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.REFLECT_POWERUP:
-            context.drawImage(getAsset('reflectPowerup.png'), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("reflectPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
@@ -221,13 +227,12 @@ function renderPlayerPowerup(context, player) {
     }
     if (player.powerup !== Type.NO_POWERUP) {
         context.font = "12px Arial";
-        context.fillStyle = 'black';
+        context.fillStyle = "black";
         context.fillText(player.specialAmmo, player.x + 20, player.y + PLAYER_HEIGHT + 15);
     }
 }
 
 function renderCrown(context, player) {
-    context.fillStyle = "yellow";
     context.drawImage(
         getAsset("crown.png"), player.x, player.y - Constants.HEALTHBAR_HEIGHT - 40, 
         Constants.PLAYER_WIDTH, 18
@@ -238,7 +243,7 @@ function renderBullet(context, bullet) {
     context.save();
     context.translate(bullet.x + (BULLET_WIDTH / 2), bullet.y + (BULLET_HEIGHT / 2));
     context.rotate(Math.PI / 2 - bullet.dir);
-    context.drawImage(getAsset('greenBullet.png'), -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2,
+    context.drawImage(getAsset("greenBullet.png"), -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2,
         BULLET_WIDTH, BULLET_HEIGHT,
     );
     context.restore();
@@ -248,28 +253,44 @@ function renderDrill(context, drill) {
     context.save();
     context.translate(drill.x + (DRILL_WIDTH / 2), drill.y + (DRILL_HEIGHT / 2));
     context.rotate(Math.PI / 2 - drill.dir);
-    context.drawImage(getAsset('drillRight.png'), -DRILL_WIDTH / 2, -DRILL_HEIGHT / 2,
+    context.drawImage(getAsset("drillRight.png"), -DRILL_WIDTH / 2, -DRILL_HEIGHT / 2,
         DRILL_WIDTH, DRILL_HEIGHT,
     );
     context.restore();
 }
 
 function renderExplosion(context, explosion) {
-    context.drawImage(getAsset('explosion.png'), explosion.x, explosion.y,
+    context.drawImage(getAsset("explosion.png"), explosion.x, explosion.y,
         EXPLOSION_WIDTH, EXPLOSION_HEIGHT,
     );
 }
 
 function renderBomb(context, bomb) {
-    context.drawImage(getAsset('bomb.png'), bomb.x, bomb.y,
+    context.drawImage(getAsset("bomb.png"), bomb.x, bomb.y,
         BOMB_WIDTH, BOMB_HEIGHT,
     );
 }
 
 function renderMine(context, mine) {
-    context.drawImage(getAsset('mine.png'), mine.x, mine.y,
+    context.drawImage(getAsset("mine.png"), mine.x, mine.y,
         MINE_WIDTH, MINE_HEIGHT,
     );
+}
+
+function renderBamboo(context, bamboo) {
+    if (Math.abs(Math.sin(bamboo.dir)) > 0.5) {
+        context.drawImage(getAsset("bamboo.png"), bamboo.x, bamboo.y,
+            Constants.BAMBOO_WIDTH, Constants.BAMBOO_HEIGHT
+        );
+    } else {
+        context.save();
+        context.translate(bamboo.x + (Constants.BAMBOO_HEIGHT / 2), bamboo.y + (Constants.BAMBOO_WIDTH / 2));
+        context.rotate(Math.PI / 2);
+        context.drawImage(getAsset("bamboo.png"), -Constants.BAMBOO_WIDTH / 2, -Constants.BAMBOO_HEIGHT / 2,
+            Constants.BAMBOO_WIDTH, Constants.BAMBOO_HEIGHT
+        );
+        context.restore();
+    }
 }
 
 function renderLaser(context, laser) {
@@ -278,10 +299,12 @@ function renderLaser(context, laser) {
     }
     if (laser.dir > 0) {
         context.drawImage(getAsset("laser.png"), laser.x, laser.y, 
-        laser.width, Constants.LASER_HEIGHT);
+            laser.width, Constants.LASER_HEIGHT
+        );
     } else {
         context.drawImage(getAsset("laser.png"), laser.x - laser.width, laser.y, 
-        laser.width, Constants.LASER_HEIGHT);
+            laser.width, Constants.LASER_HEIGHT
+        );
     }
     context.globalAlpha = 1;
 }
@@ -324,22 +347,22 @@ function renderPlatform(context, platform) {
 function renderPowerup(context, powerup) {
     switch(powerup.type) {
         case Type.DRILL_POWERUP:
-            context.drawImage(getAsset('drillPowerup.png'), powerup.x, powerup.y,
+            context.drawImage(getAsset("drillPowerup.png"), powerup.x, powerup.y,
                 POWERUP_WIDTH, POWERUP_HEIGHT,
             );
             break;
         case Type.MINE_POWERUP:
-            context.drawImage(getAsset('minePowerup.png'), powerup.x, powerup.y,
+            context.drawImage(getAsset("minePowerup.png"), powerup.x, powerup.y,
                 POWERUP_WIDTH, POWERUP_HEIGHT,
             );
             break;
         case Type.BOMB_POWERUP:
-            context.drawImage(getAsset('bombPowerup.png'), powerup.x, powerup.y,
+            context.drawImage(getAsset("bombPowerup.png"), powerup.x, powerup.y,
                 POWERUP_WIDTH, POWERUP_HEIGHT,
             );
             break;
         case Type.REFLECT_POWERUP:
-            context.drawImage(getAsset('reflectPowerup.png'), powerup.x, powerup.y,
+            context.drawImage(getAsset("reflectPowerup.png"), powerup.x, powerup.y,
                 POWERUP_WIDTH, POWERUP_HEIGHT,
             );
             break;

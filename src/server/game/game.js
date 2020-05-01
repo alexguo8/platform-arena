@@ -73,7 +73,7 @@ class Game {
         } 
         for (let i = 0; i < Constants.WIDTH; i += 32) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i, 0, 32, 32, false, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i, Constants.HEIGHT - 80, 32, 70, false, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i, Constants.HEIGHT - 32, 32, 32, false, this.handler));
         }
 
         for (let i = 0; i < 3; i++) {
@@ -160,7 +160,7 @@ class Game {
         if (player) {
             serializedPlayer = player.serializeForUpdate();
         } 
-        
+
         return {
             t: Date.now(),
             me: serializedPlayer,
