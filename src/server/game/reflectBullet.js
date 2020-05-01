@@ -1,6 +1,7 @@
 //Reflect bullet powerup that reflects multiple times before disappearing
 const Constants = require("../../shared/constants");
-const Type = require("../../shared/objectTypes")
+const Type = require("../../shared/objectTypes");
+const Explosion = require("./powerups/explosion");
 const Bullet = require("./bullet");
 
 class ReflectBullet extends Bullet {
@@ -32,19 +33,16 @@ class ReflectBullet extends Bullet {
             }           
             if (this.getBounds().intersects(temp.getBounds()) &&
                 (temp.id !== this.parentID || this.cooldown == 0)) {
-                    // tempPlayer = temp;
-                    // if (owner.getCharacter() == ID.Dino) {
-                    //     handler.addObject(new Explosion(x - 32 + width/2, y - 32 + height/2, 64, 64, ID.Explosion, handler));
-                    // } else {
-                        // if (tempPlayer.getShielded()) {
-                        // tempPlayer.setShielded(false);
-                        // } else if (owner.getCharacter() == ID.Eagle) {
-                        // tempPlayer.setHealth(tempPlayer.getHealth() - 5);
-                        // } else {
-                        // tempPlayer.setHealth(tempPlayer.getHealth() - 10);
-                        // }
-                    // }
-                temp.takeDamage(this.type);
+                if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.DINO) {
+                    this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
+                        this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
+                        this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
+                        Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
+                } else if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.EAGLE) {
+                    temp.health -= 5;
+                } else {
+                    temp.takeDamage(this.type);
+                }
                 this.handler.removeWeapon(this);
                 return;
             }    
@@ -55,13 +53,6 @@ class ReflectBullet extends Bullet {
             if (!temp) {
                 continue;
             }            
-            // if (owner.getCharacter() == ID.Seal) {
-            //     if (velY > 0 && temp.y > y && velY > temp.y - (y+height)
-            //         && x + width > temp.x && x < temp.x + temp.width) {
-            //         velY = -5;
-            //         y += temp.y - (y+height);
-            //     }
-            // } 
             if (this.velX > 0 && 
                 temp.x > this.x && 
                 dt * this.velX > temp.x - (this.x + this.width) && 
@@ -90,12 +81,18 @@ class ReflectBullet extends Bullet {
                 dt * this.velY > temp.y - (this.y + this.height) && 
                 this.x + this.width > temp.x && 
                 this.x < temp.x + temp.width) {
-                this.velY *= -1;
-                this.dir = Math.PI - this.dir;
-                this.y += temp.y - (this.y + this.height);
-                if (this.bounces > 0) {
-                    this.bounces--;
-                 }
+                
+                if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.SEAL) {
+                    this.velY = -200;
+                    this.y += temp.y - (this.y + this.height);
+                } else {
+                    this.velY *= -1;
+                    this.dir = Math.PI - this.dir;
+                    this.y += temp.y - (this.y + this.height);
+                    if (this.bounces > 0) {
+                        this.bounces--;
+                    }
+                }
             } else if (this.velY < 0 && 
                 temp.y < this.y && 
                 dt * Math.abs(this.velY) > this.y - (temp.y + temp.height) && 

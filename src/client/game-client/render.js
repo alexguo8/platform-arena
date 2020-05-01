@@ -240,10 +240,24 @@ function renderCrown(context, player) {
 }
 
 function renderBullet(context, bullet) {
+    if (bullet.character === Type.SEAL) {
+        context.drawImage(getAsset("blueBullet.png"), bullet.x, bullet.y,
+            BULLET_WIDTH, BULLET_HEIGHT,
+        );
+        return;
+    }
+    let image = getAsset("greenBullet.png");
+    if (bullet.character === Type.PANDA) {
+        image = getAsset("greenBullet.png");
+    } else if (bullet.character === Type.DINO) {
+        image = getAsset("yellowBullet.png");
+    } else if (bullet.character === Type.EAGLE) {
+        image = getAsset("redBullet.png");
+    }
     context.save();
     context.translate(bullet.x + (BULLET_WIDTH / 2), bullet.y + (BULLET_HEIGHT / 2));
     context.rotate(Math.PI / 2 - bullet.dir);
-    context.drawImage(getAsset("greenBullet.png"), -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2,
+    context.drawImage(image, -BULLET_WIDTH / 2, -BULLET_HEIGHT / 2,
         BULLET_WIDTH, BULLET_HEIGHT,
     );
     context.restore();

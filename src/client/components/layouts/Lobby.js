@@ -54,14 +54,11 @@ const Lobby = (props) => {
             setPlayers(getLobbyState);
             setLobbyStart(getLobbyStart);
         }, 1000 / 60);
-
-        return () => {
-            clearInterval(updateInterval.current);
-        }
     }, []);
 
     useEffect(() => {
         if (lobbyStart) {
+            clearInterval(updateInterval.current);
             props.history.push("/game");
         }
     }, [lobbyStart])
