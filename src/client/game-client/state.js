@@ -3,12 +3,34 @@
 const RENDER_DELAY = 100;
 
 const gameUpdates = [];
+let lobbyUpdate = {};
+let lobbyStart = false;
 let gameStart = 0;
 let firstServerTimestamp = 0;
 
 export function initState() {
     gameStart = 0;
     firstServerTimestamp = 0;
+}
+
+export function getLobbyState() {
+    return lobbyUpdate;
+}
+
+export function processLobbyUpdate(update) {
+    lobbyUpdate = update;
+}
+
+export function getLobbyStart() {
+    return lobbyStart;
+}
+
+export function resetLobbyStart() {
+    lobbyStart = false;
+}
+
+export function processLobbyStart(update) {
+    lobbyStart = update;
 }
 
 export function processGameUpdate(update) {
@@ -77,7 +99,7 @@ function interpolateObject(object1, object2, ratio) {
     Object.keys(object1).forEach(key => {
         if (key === 'direction') {
             interpolated[key] = interpolateDirection(object1[key], object2[key], ratio);
-        } else if (key === "specialAmmo") {
+        } else if (key === "specialAmmo" || key === "username") {
             interpolated[key] = object1[key];
         } else {
             interpolated[key] = object1[key] + (object2[key] - object1[key]) * ratio;

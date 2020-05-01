@@ -3,9 +3,10 @@ const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const GameObject = require("./gameObject");
 const Bullet = require("./bullet");
-const Drill = require("./drill");
-const Bomb = require("./bomb");
-const Mine = require("./mine");
+const ReflectBullet = require("./reflectBullet");
+const Drill = require("./powerups/drill");
+const Bomb = require("./powerups/bomb");
+const Mine = require("./powerups/mine");
 const { clamp } = require("./utils/utilFunctions");
 
 class Player extends GameObject {
@@ -23,7 +24,6 @@ class Player extends GameObject {
         this.shootCooldown = 0;
         this.specialAmmo = 0;
         this.abilityMeter = 0;
-        this.abilityCounter = 0;
         this.powerup = Type.NO_POWERUP;
     
         this.lP = false;
@@ -40,21 +40,18 @@ class Player extends GameObject {
             this.inAir = true;
         }
         
-        this.velY += 50;  
+        this.velY += Constants.PLAYER_GRAVITY;  
         
         if (this.rP) {
-            this.velX = 400;
+            this.velX = Constants.PLAYER_SPEED;
         } else if (this.lP) {
-            this.velX = -400;
+            this.velX = -Constants.PLAYER_SPEED;
         }
         
-        // if (health <= 0) {
-        //     hudHandler.removeObject(healthBar);
-        //     hudHandler.removeObject(playerPowerup);
-        //     hudHandler.removeObject(abilityBar);
-        //     handler.removeObject(this);
-        //     Game.getAlive().remove(this);
-        // }          
+        if (this.health <= 0) {
+            this.handler.removePlayer(this);
+        }     
+
         if (this.shootCooldown > 0) {
             this.shootCooldown -= dt;
             this.shootCooldown = Math.max(0, this.shootCooldown);
@@ -63,37 +60,31 @@ class Player extends GameObject {
 
     left() {
         this.lP = true;
-        this.velX = -5;
         this.faceRight = false; 
     }
 
     right() {
         this.rP = true;
-        this.velX = 5;
         this.faceRight = true; 
     }
 
     stopLeft() {
         this.lP = false;
-        if (this.rP) {
-            this.velX = 5;
-        } else {
+        if (!this.rP) {
             this.velX = 0;
-        }      
+        }
     }
 
     stopRight() {
         this.rP = false;
-        if (this.lP) {
-            this.velX = -5;
-        } else {
+        if (!this.lP) {
             this.velX = 0;
         }
     }
 
     jump() {
         if (!this.inAir) {
-            this.velY=-800;
+            this.velY = -Constants.PLAYER_JUMP;
             this.inAir = true;
         }
     }
@@ -106,6 +97,14 @@ class Player extends GameObject {
                 this.health -= Constants.BULLET_DAMAGE;
             } else if (source === Type.EXPLOSION) {
                 this.health -= Constants.EXPLOSION_DAMAGE;
+            } else if (source === Type.BAMBOO) {
+                this.health -= Constants.BAMBOO_DAMAGE;
+            } else if (source === Type.LASER) {
+                this.health -= Constants.LASER_DAMAGE;
+            } else if (source === Type.FIRE_CLOUD) {
+                this.health -= Constants.FIRE_CLOUD_DAMAGE;
+            } else if (source === Type.TELEPORT_BULLET) {
+                this.health -= Constants.TELEPORT_BULLET_DAMAGE;
             }
         }
     }
@@ -157,49 +156,40 @@ class Player extends GameObject {
         }
     }
    
+    //Method to basic shoot
+    basicShoot(dir) {
+        if (this.powerup === Type.NO_POWERUP) {
+            this.handler.addWeapon(new Bullet(Type.BULLET, 
+                this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
+                Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
+                Constants.BULLET_SPEED, dir, this.id, this.handler));
+        } else if (this.powerup === Type.REFLECT_POWERUP) {
+            this.handler.addWeapon(new ReflectBullet(Type.BULLET,
+                this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2), 
+                Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
+                Constants.BULLET_SPEED, dir, this.id, this.handler));
+        }
+    }
+
     //Method to attack corresponding to shoot button
-    shoot() {
+    shoot(dir) {
         if (this.shootCooldown > 0) {
             return;
         }
         this.shootCooldown += Constants.PLAYER_FIRE_COOLDOWN;
 
-        if (this.powerup === Type.NO_POWERUP) {
-            if (this.faceRight) {
-                this.handler.addWeapon(new Bullet(Type.BULLET, 
-                    this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
-                    Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
-                    Constants.BULLET_SPEED, Math.PI / 2, this.id, this.handler));
-            } else {
-                this.handler.addWeapon(new Bullet(Type.BULLET, 
-                    this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
-                    Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
-                    Constants.BULLET_SPEED, 3 * Math.PI / 2, this.id, this.handler));
-            }
+        if (this.powerup === Type.NO_POWERUP || this.powerup === Type.REFLECT_POWERUP) {
+            this.basicShoot(dir);
         } else if (this.powerup === Type.DRILL_POWERUP) {
-            if (this.faceRight) {
-                this.handler.addWeapon(new Drill(Type.DRILL,
-                    this.x, this.y + (this.height / 2) - (Constants.DRILL_HEIGHT / 2), 
-                    Constants.DRILL_WIDTH, Constants.DRILL_HEIGHT, 
-                    Constants.DRILL_SPEED, Math.PI / 2, this.id, this.handler));
-            } else {
-                this.handler.addWeapon(new Drill(Type.DRILL,
-                    this.x, this.y + (this.height / 2) - (Constants.DRILL_HEIGHT / 2), 
-                    Constants.DRILL_WIDTH, Constants.DRILL_HEIGHT, 
-                    Constants.DRILL_SPEED, 3 * Math.PI / 2, this.id, this.handler));
-            }
+            this.handler.addWeapon(new Drill(Type.DRILL,
+                this.x, this.y + (this.height / 2) - (Constants.DRILL_HEIGHT / 2), 
+                Constants.DRILL_WIDTH, Constants.DRILL_HEIGHT, 
+                Constants.DRILL_SPEED, dir, this.id, this.handler));
         } else if (this.powerup === Type.BOMB_POWERUP) {
-            if (this.faceRight) {
-                this.handler.addWeapon(new Bomb(Type.BOMB,
-                    this.x, this.y + (this.height / 2) - (Constants.BOMB_HEIGHT / 2), 
-                    Constants.BOMB_WIDTH, Constants.BOMB_HEIGHT, 
-                    Constants.BOMB_SPEED, Math.PI / 4, this.id, this.handler));
-            } else {
-                this.handler.addWeapon(new Bomb(Type.BOMB,
-                    this.x, this.y + (this.height / 2) - (Constants.BOMB_HEIGHT / 2), 
-                    Constants.BOMB_WIDTH, Constants.BOMB_HEIGHT, 
-                    Constants.BOMB_SPEED, 7 * Math.PI / 4, this.id, this.handler));
-            }
+            this.handler.addWeapon(new Bomb(Type.BOMB,
+                this.x, this.y + (this.height / 2) - (Constants.BOMB_HEIGHT / 2), 
+                Constants.BOMB_WIDTH, Constants.BOMB_HEIGHT, 
+                Constants.BOMB_SPEED, dir, this.id, this.handler));
         } else if (this.powerup === Type.MINE_POWERUP) {
             this.handler.addWeapon(new Mine(Type.MINE, 
                 this.x, this.y + this.height - Constants.MINE_HEIGHT,
@@ -282,43 +272,18 @@ class Player extends GameObject {
     //      }        
     //   }
     //   shootCooldown += 25;
-   }
-   
-   //Method to attack using special ability
-   ability() {
-    //   if (character == ID.Panda) {
-    //      handler.addObject(new BambooStorm(0, 0, 0, 0, this, ID.BambooStorm, handler));
-    //   } else if (character == ID.Seal) {
-    //      if (faceRight) {
-    //         handler.addObject(new Laser(x + width, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      } else {
-    //         handler.addObject(new Laser(x, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      }
-    //   } else if (character == ID.Dino) {
-    //      handler.addObject(new FireCloud(x + width/2 - 150, y + height/2 - 150, 
-    //            300, 300, this, ID.FireCloud, handler));
-    //   } else if (character == ID.Eagle) {
-    //      if (faceRight) {
-    //         handler.addObject(new TeleportBullet(x + width, y + height/2 - 5, 
-    //               32, 10, 25, this, ID.TeleportBullet, handler));
-    //      } else {
-    //         handler.addObject(new TeleportBullet(x - 32, y + height/2 - 5, 
-    //               32, 10, -25, this, ID.TeleportBullet, handler));         
-    //      }
-    //   }
-    //   shootCooldown += 25;
-    //   abilityMeter = 0;
-   }
+    }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
             health: this.health,
+            username: this.username,
             powerup: this.powerup,
             specialAmmo: this.specialAmmo,
             faceRight: this.faceRight,
+            character: this.character,
+            abilityMeter: this.abilityMeter,
         };
     }
 }

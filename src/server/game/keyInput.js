@@ -10,14 +10,14 @@ class KeyInput {
         if (key === "W") {
             player.jump();
         }
-        if (key === "S") {
-            player.shoot();
-        }
         if (key === "D") {
             player.right();
         }          
         if (key === "A") {
             player.left();
+        }
+        if (key === "Q") {
+            player.qAbility();
         }
         // if (key === KeyEvent.VK_Q && player.getAbilityMeter() === 100) {
         //     player.ability();

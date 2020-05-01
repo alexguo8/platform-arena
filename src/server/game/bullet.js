@@ -3,15 +3,18 @@ const shortid = require("shortid");
 const GameObject = require("./gameObject");
 const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
+const Explosion = require("./powerups/explosion");
 const Rectangle = require("./rectangle");
 
 class Bullet extends GameObject {
     constructor(type, x, y, width, height, speed, dir, parentID, handler) {
         super(shortid(), type, x, y, width, height);
+        this.dir = dir;
         this.velX = speed * Math.sin(dir);
         this.velY = speed * Math.cos(dir);
         this.parentID = parentID;
         this.handler = handler;
+        this.character = this.handler.players[this.parentID].character;
     }
 
     getBounds() {
@@ -19,15 +22,19 @@ class Bullet extends GameObject {
     }
 
     update(dt) {
+        this.collision(dt);
         super.update(dt);
         if (this.x < 0 || this.x > Constants.WIDTH || this.y < 0 || this.y > Constants.HEIGHT) {
             this.handler.removeWeapon(this);
         }
-        this.collision();
+        if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.SEAL &&
+            this.type === Type.BULLET) {
+            this.velY += 15;
+        }
     }
   
     //Method to check collision with platforms, players, and other weapons
-    collision() {
+    collision(dt) {
         for (const key of Object.keys(this.handler.players)) {
             const temp = this.handler.players[key];
             
@@ -35,19 +42,16 @@ class Bullet extends GameObject {
                 continue;
             }           
             if (this.getBounds().intersects(temp.getBounds()) && temp.id !== this.parentID) {
-                    // tempPlayer = temp;
-                    // if (owner.getCharacter() == ID.Dino) {
-                    //     handler.addObject(new Explosion(x - 32 + width/2, y - 32 + height/2, 64, 64, ID.Explosion, handler));
-                    // } else {
-                        // if (tempPlayer.getShielded()) {
-                        // tempPlayer.setShielded(false);
-                        // } else if (owner.getCharacter() == ID.Eagle) {
-                        // tempPlayer.setHealth(tempPlayer.getHealth() - 5);
-                        // } else {
-                        // tempPlayer.setHealth(tempPlayer.getHealth() - 10);
-                        // }
-                    // }
-                temp.takeDamage(this.type);
+                if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.DINO) {
+                    this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
+                        this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
+                        this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
+                        Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
+                } else if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.EAGLE) {
+                    temp.health -= 5;
+                } else {
+                    temp.takeDamage(this.type);
+                }
                 this.handler.removeWeapon(this);
                 return;
             }    
@@ -58,13 +62,16 @@ class Bullet extends GameObject {
             if (!temp) {
                 continue;
             }            
-            // if (owner.getCharacter() == ID.Seal) {
-            //     if (velY > 0 && temp.y > y && velY > temp.y - (y+height)
-            //         && x + width > temp.x && x < temp.x + temp.width) {
-            //         velY = -5;
-            //         y += temp.y - (y+height);
-            //     }
-            // }
+            if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.SEAL) {
+                if (this.velY > 0 && 
+                    temp.y > this.y && 
+                    dt * this.velY > temp.y - (this.y + this.height) && 
+                    this.x + this.width > temp.x && 
+                    this.x < temp.x + temp.width) {
+                    this.velY = -200;
+                    this.y += temp.y - (this.y + this.height);
+                }
+            }
             if (this.getBounds().intersects(temp.getBounds())) {
                 this.handler.removeWeapon(this);     
                 return;            
@@ -90,6 +97,8 @@ class Bullet extends GameObject {
         return {
             ...(super.serializeForUpdate()),
             type: this.type,
+            dir: this.dir,
+            character: this.character,
         };
     }
 }

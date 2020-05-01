@@ -1,46 +1,52 @@
-import { sendKeyPress, sendKeyUp } from "./networking";
+
 export class InputHandler {
-    constructor(room) {
+    constructor(room, networkHandler, canvas) {
         this.room = room;
-        //this.networkHandler = networkHandler;
-        this.networkAndRoom = {
+        this.networkHandler = networkHandler;
+        this.canvas = canvas;
+        this.props = {
             room: this.room,
-            //networkHandler: this.networkHandler
+            networkHandler: this.networkHandler,
+            canvas: this.canvas,
         }
-        //this.onClickEvent = this.onClick.bind(this.networkAndRoom);
-        this.onKeyPressEvent = this.onKeyPress.bind(this.networkAndRoom);
-        this.onKeyUpEvent = this.onKeyUp.bind(this.networkAndRoom);
+        this.onClickEvent = this.onClick.bind(this.props);
+        this.onKeyPressEvent = this.onKeyPress.bind(this.props);
+        this.onKeyUpEvent = this.onKeyUp.bind(this.props);
     }
 
-    // onClick(e) {
-    //     sendClick(e.clientX, e.clientY, this.room);
-    // }
+    onClick(e) {
+        if (e.button === 0) {
+            const left = this.canvas.offsetLeft + this.canvas.clientLeft;
+            const top = this.canvas.offsetTop + this.canvas.clientTop;
+            this.networkHandler.sendClick(e.pageX - left, e.pageY - top, this.room);
+        }
+    }
 
     onKeyPress(e) {
-        const keys = ['W', 'A', 'S', 'D'];
+        const keys = ["W", "A", "D", "Q"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            sendKeyPress(key, this.room);
+            this.networkHandler.sendKeyPress(key, this.room);
         }
     }
 
     onKeyUp(e) {
-        const keys = ['W', 'A', 'S', 'D'];
+        const keys = ["A", "D"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            sendKeyUp(key, this.room);
+            this.networkHandler.sendKeyUp(key, this.room);
         }
     }
 
     startCapturingInput() {
-        window.addEventListener("click", this.onClickEvent);
+        this.canvas.addEventListener("click", this.onClickEvent);
         window.addEventListener('keypress', this.onKeyPressEvent);
         window.addEventListener('keyup', this.onKeyUpEvent);
         console.log("Starting to capture input");
     }
     
     stopCapturingInput() {
-        window.removeEventListener("click", this.onClickEvent);
+        this.canvas.removeEventListener("click", this.onClickEvent);
         window.removeEventListener('keypress', this.onKeyPressEvent);
         window.removeEventListener('keyup', this.onKeyUpEvent);
         console.log("Stopping capture input");

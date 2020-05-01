@@ -1,9 +1,9 @@
 import axios from "axios";
 
-import { GET_ERRORS, GET_USER_ROOM } from "./types";
+import { GET_ERRORS, GET_USER_ROOM, RESET_ROOM } from "./types";
 
 export const joinRoom = (user_room, history) => dispatch => {
-    axios.post("http://localhost:5000/game/join", user_room)
+    axios.post("/game/join", user_room)
         .then(res => {
             dispatch({
                 type: GET_ERRORS,
@@ -16,7 +16,7 @@ export const joinRoom = (user_room, history) => dispatch => {
                     room: user_room.room,
                 }
             })
-            history.push("/game");
+            history.push("/lobby");
         })
         .catch(err => {
             console.log(err.response.data);
@@ -26,6 +26,13 @@ export const joinRoom = (user_room, history) => dispatch => {
             })
         });
 };
+
+export const resetRoom = () => dispatch => {
+    dispatch({
+        type: RESET_ROOM,
+        payload: {}
+    });
+}
 
 export const refreshErrors = () => dispatch => {
     dispatch({

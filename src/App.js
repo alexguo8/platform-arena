@@ -12,7 +12,9 @@ import Navbar from "./client/components/layouts/Navbar";
 import Register from "./client/components/accounts/RegisterForm";
 import Login from "./client/components/accounts/LoginForm";
 import UserProfile from "./client/components/accounts/UserProfile";
+import Lobby from "./client/components/layouts/Lobby";
 import GameCanvas from "./client/components/layouts/GameCanvas";
+import Tutorial from "./client/components/layouts/Tutorial";
 import RoomSelection from "./client/components/layouts/RoomSelection";
 import PrivateRoute from "./client/components/private-route/PrivateRoute";
 
@@ -34,20 +36,28 @@ function App() {
     <Provider store={store}>
         <Router>
             <div className="App">
-                <Navbar />
-                <Route exact path="/" component={RoomSelection} />
-                <Route exact path="/register" component={Register} />
-                <Route exact path="/login" component={Login} />
                 <Switch>
-                    <PrivateRoute exact path="/game" component={GameCanvas} />
-                </Switch>
-                <Switch>
-                    <PrivateRoute exact path="/profile" component={UserProfile} />
+                    <Route exact path="/lobby" component={Lobby} />
+                    <Route exact path="/game" component={GameCanvas} />
+                    <Route component={DefaultContainer} />
                 </Switch>
             </div>
         </Router> 
     </Provider>  
   );
 }
+  
+const DefaultContainer = () => (
+    <div>
+        <Navbar />
+        <Route exact path="/" component={RoomSelection} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/how-to-play" component={Tutorial} />
+        <Switch>
+            <PrivateRoute exact path="/profile" component={UserProfile} />
+        </Switch>
+    </div>
+)
 
 export default App;

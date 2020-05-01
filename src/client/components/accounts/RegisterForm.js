@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { registerUser, refreshErrors } from "../../actions/authActions";
+import { registerUser, resetErrors } from "../../actions/authActions";
 import classnames from "classnames";
 
 const RegisterForm = (props) => {
@@ -11,11 +11,11 @@ const RegisterForm = (props) => {
     const [password, setPassword] = useState("");
     const [password2, setPassword2] = useState("");
     const [errors, setErrors] = useState({});
-    const { refreshErrors } = props;
+    const { resetErrors } = props;
 
     useEffect(() => {
-        refreshErrors();
-    }, [refreshErrors]);
+        resetErrors();
+    }, [resetErrors]);
 
     useEffect(() => {
         if (props.errors) {
@@ -132,7 +132,7 @@ const RegisterForm = (props) => {
 
 RegisterForm.propTypes = {
     registerUser: PropTypes.func.isRequired,
-    refreshErrors: PropTypes.func.isRequired,
+    resetErrors: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired
 };
@@ -144,5 +144,5 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    { registerUser, refreshErrors }
+    { registerUser, resetErrors }
 )(withRouter(RegisterForm));

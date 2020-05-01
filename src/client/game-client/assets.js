@@ -2,8 +2,17 @@ const ASSET_NAMES = [
   'ship.svg',
   'bullet.svg',
   "greenBullet.png",
+  "blueBullet.png",
+  "redBullet.png",
+  "yellowBullet.png",
   "pandaRight.png",
   "pandaLeft.png",
+  "sealLeft.png",
+  "sealRight.png",
+  "dinoLeft.png",
+  "dinoRight.png",
+  "eagleLeft.png",
+  "eagleRight.png",
   "explosion.png",
   "drillRight.png",
   "bomb.png",
@@ -11,7 +20,13 @@ const ASSET_NAMES = [
   "drillPowerup.png",
   "minePowerup.png",
   "bombPowerup.png",
-  "reflectPowerup.png"
+  "reflectPowerup.png",
+  "crown.png",
+  "bamboo.png",
+  "laser.png",
+  "fireCloud.png",
+  "teleportBulletRight.png",
+  "teleportBulletLeft.png",
 ];
 
 const assets = {};

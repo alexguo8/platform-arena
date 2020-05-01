@@ -1,9 +1,13 @@
 const Constants = require("../../shared/constants");
 const Type = require("../../shared/objectTypes")
 const KeyInput = require("./keyInput")
-const Player = require("./player")
+const MouseInput = require("./mouseInput")
+const Panda = require("./panda")
+const Seal = require("./seal")
+const Dino = require("./dino")
+const Eagle = require("./eagle")
 const Platform = require("./platform");
-const Powerup = require("./powerup");
+const Powerup = require("./powerups/powerup");
 const Handler = require("./handler")
 
 class Game {            
@@ -12,6 +16,7 @@ class Game {
         this.sockets = {};
         this.handler = new Handler();
         this.keyInput = new KeyInput(this.handler);
+        this.mouseInput = new MouseInput(this.handler);
 
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
@@ -21,6 +26,14 @@ class Game {
 
     endGame() {
         clearInterval(this.updateInterval);
+    }
+
+    loadPlayers(sockets, players) {
+        for (const key of Object.keys(players)) {
+            const socket = sockets[key];
+            const player = players[key];
+            this.addPlayer(socket, player.username, player.character);
+        }
     }
 
     createStage() {
@@ -35,7 +48,7 @@ class Game {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 192, 192, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 704, 192, 32, 16, true, this.handler));
         }
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 288, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 288, 32, 16, true, this.handler));
         }
@@ -60,7 +73,7 @@ class Game {
         } 
         for (let i = 0; i < Constants.WIDTH; i += 32) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i, 0, 32, 32, false, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i, Constants.HEIGHT - 80, 32, 70, false, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i, Constants.HEIGHT - 32, 32, 32, false, this.handler));
         }
 
         for (let i = 0; i < 3; i++) {
@@ -69,15 +82,33 @@ class Game {
         }
     }
 
-    addPlayer(socket, username) {
+    addPlayer(socket, username, character) {
         this.sockets[socket.id] = socket;
-    
+
         // Generate a position to start this player at.
         const x = Constants.WIDTH * (0.25 + Math.random() * 0.5);
         const y = Constants.HEIGHT * (0.25 + Math.random() * 0.5);
-        this.handler.players[socket.id] = 
-            new Player(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
-                username, "test", this.handler);
+        if (character === Type.PANDA) {
+            this.handler.players[socket.id] = 
+                new Panda(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.SEAL) {
+            this.handler.players[socket.id] = 
+                new Seal(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.DINO) {
+            this.handler.players[socket.id] = 
+                new Dino(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else if (character === Type.EAGLE) {
+            this.handler.players[socket.id] = 
+                new Eagle(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        } else {
+            this.handler.players[socket.id] = 
+                new Panda(socket.id, Type.PLAYER, x, y, Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, 
+                    username, character, this.handler);
+        }
     }
     
     removePlayer(socket) {
@@ -91,6 +122,16 @@ class Game {
                 this.keyInput.handleKeyPress(socket, key);
             } else if (msg_type === Constants.MSG_TYPES.KEYUP) {
                 this.keyInput.handleKeyUp(socket, key);
+            }
+        }
+    }
+
+    handleMouseInput(socket, x, y, msg_type) {
+        if (this.handler.players[socket.id]) {
+            if (msg_type === Constants.MSG_TYPES.CLICK) {
+                this.mouseInput.handleClick(socket, x, y);
+            } else if (msg_type === Constants.MSG_TYPES.KEYUP) {
+                this.mouseInput.handleClick(socket, x, y);
             }
         }
     }
@@ -115,9 +156,14 @@ class Game {
     }
 
     createUpdate(player) {
+        let serializedPlayer = {};
+        if (player) {
+            serializedPlayer = player.serializeForUpdate();
+        } 
+
         return {
             t: Date.now(),
-            me: player.serializeForUpdate(),
+            me: serializedPlayer,
             others: Object.values(this.handler.players).filter(p => p !== player).map(p => p.serializeForUpdate()),
             platforms: Object.values(this.handler.platforms).map(p => p.serializeForUpdate()),
             weapons: Object.values(this.handler.weapons).map(w => w.serializeForUpdate()),
