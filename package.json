@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "react-scripts start",
+    "start": "cd src/server && node server.js",
+    "heroku-postbuild": "npm run build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -47,6 +48,7 @@
     "nodemon": "^2.0.3"
   },
   "engines": {
+    "npm": "6.14.4",
     "node": "12.16.2"
   },
   "browserslist": {
