@@ -9,7 +9,7 @@ const { PLAYER_WIDTH, PLAYER_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT,
     DRILL_WIDTH, DRILL_HEIGHT, EXPLOSION_WIDTH, EXPLOSION_HEIGHT, 
     BOMB_WIDTH, BOMB_HEIGHT, MINE_WIDTH, MINE_HEIGHT,
     POWERUP_WIDTH, POWERUP_HEIGHT, PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
-    WIDTH, HEIGHT } = Constants;
+    } = Constants;
 
 export class Renderer {
     constructor(canvas) {
@@ -178,7 +178,7 @@ function renderHealthBar(context, player) {
     if (player.health <= 50) {
         colour = `rgb(155, ${155 - (135 * (50 - player.health)) / 50}, 20)`;
     }
-    if (player.abilityMeter === 100) {
+    if (player.abilityMeter >= 100) {
         context.fillStyle = "white";
         context.fillRect(
             player.x - 2, 

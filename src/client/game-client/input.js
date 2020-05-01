@@ -15,9 +15,11 @@ export class InputHandler {
     }
 
     onClick(e) {
-        const left = this.canvas.offsetLeft + this.canvas.clientLeft;
-        const top = this.canvas.offsetTop + this.canvas.clientTop;
-        this.networkHandler.sendClick(e.pageX - left, e.pageY - top, this.room);
+        if (e.button === 0) {
+            const left = this.canvas.offsetLeft + this.canvas.clientLeft;
+            const top = this.canvas.offsetTop + this.canvas.clientTop;
+            this.networkHandler.sendClick(e.pageX - left, e.pageY - top, this.room);
+        }
     }
 
     onKeyPress(e) {

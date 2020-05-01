@@ -40,10 +40,6 @@ class Player extends GameObject {
             this.inAir = true;
         }
         
-        if (this.abilityMeter < 100) {
-            this.abilityMeter++;
-        }
-        
         this.velY += Constants.PLAYER_GRAVITY;  
         
         if (this.rP) {
@@ -276,34 +272,6 @@ class Player extends GameObject {
     //      }        
     //   }
     //   shootCooldown += 25;
-    }
-   
-   //Method to attack using special ability
-   ability() {
-    //   if (character == ID.Panda) {
-    //      handler.addObject(new BambooStorm(0, 0, 0, 0, this, ID.BambooStorm, handler));
-    //   } else if (character == ID.Seal) {
-    //      if (faceRight) {
-    //         handler.addObject(new Laser(x + width, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      } else {
-    //         handler.addObject(new Laser(x, y + height/2 - 12, 
-    //               24, faceRight, this, ID.Laser, handler));
-    //      }
-    //   } else if (character == ID.Dino) {
-    //      handler.addObject(new FireCloud(x + width/2 - 150, y + height/2 - 150, 
-    //            300, 300, this, ID.FireCloud, handler));
-    //   } else if (character == ID.Eagle) {
-    //      if (faceRight) {
-    //         handler.addObject(new TeleportBullet(x + width, y + height/2 - 5, 
-    //               32, 10, 25, this, ID.TeleportBullet, handler));
-    //      } else {
-    //         handler.addObject(new TeleportBullet(x - 32, y + height/2 - 5, 
-    //               32, 10, -25, this, ID.TeleportBullet, handler));         
-    //      }
-    //   }
-    //   shootCooldown += 25;
-    //   abilityMeter = 0;
     }
 
     serializeForUpdate() {

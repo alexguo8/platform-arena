@@ -3,7 +3,7 @@ import axios from "axios";
 import { GET_ERRORS, GET_USER_ROOM, RESET_ROOM } from "./types";
 
 export const joinRoom = (user_room, history) => dispatch => {
-    axios.post("http://localhost:5000/game/join", user_room)
+    axios.post("/game/join", user_room)
         .then(res => {
             dispatch({
                 type: GET_ERRORS,

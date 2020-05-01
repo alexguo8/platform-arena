@@ -46,6 +46,9 @@
   "devDependencies": {
     "nodemon": "^2.0.3"
   },
+  "engines": {
+    "node": "12.16.2"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -57,5 +60,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

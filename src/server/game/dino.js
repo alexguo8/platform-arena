@@ -8,6 +8,15 @@ const ReflectBullet = require("./reflectBullet");
 const Bomb = require("./powerups/bomb");
 
 class Dino extends Player {
+
+    update(dt) {
+        super.update(dt);
+                
+        if (this.abilityMeter < 100) {
+            this.abilityMeter += 0.05;
+        }
+    }
+
     //Method to basic shoot
     basicShoot(dir) {
         if (this.powerup === Type.NO_POWERUP) {
@@ -26,7 +35,7 @@ class Dino extends Player {
    
     //Method to attack using special ability
     qAbility() {
-        if (this.abilityMeter !== 100) {
+        if (this.abilityMeter < 100) {
             return;
         }
         this.abilityMeter = 0;

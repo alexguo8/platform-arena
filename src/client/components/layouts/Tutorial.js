@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Type from "../../../shared/objectTypes"
 
 const Tutorial = () => {
     return (
@@ -28,7 +27,7 @@ const Tutorial = () => {
                                 W - Jump <br />
                                 A - Left <br />
                                 D - Right <br />
-                                Mouse Click - Shoot <br />
+                                Left Mouse Click - Shoot or Use Powerup <br />
                                 Q - Ability <br />
                             </p>
                         </div>
@@ -36,23 +35,27 @@ const Tutorial = () => {
                     <div class="col s12">
                         <div class="card-panel">
                             <p>
-                                There are 4 playable characters, each with unique abilities.
+                                There are 4 playable characters, each with unique bullets and abilities.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/pandaRight.png"} alt="Panda" />   
-                                &ensp;- Panda's special ability is a bamboo storm
+                                &ensp;- Panda has a fast bullet with a high fire rate.
+                                Their special ability is to launch a bamboo storm.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/sealRight.png"} alt="Seal" /> 
-                                &ensp;- Seal's special ability is a laser
+                                &ensp;- Seal has a very slow water bullet with a slow fire rate. 
+                                Their special ability is a laser.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/dinoRight.png"} alt="Dino" /> 
-                                &ensp;- Dino's special ability is a fire cloud 
+                                &ensp;- Dino has a slow explosive bullet with a slow fire rate.
+                                Their special ability is a fire cloud 
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/eagleRight.png"} alt="Eagle" /> 
-                                &ensp;- Eagle's special ability is a teleporting bullet
+                                &ensp;- Eagle has a very fast weaker bullet with a very high fire rate.
+                                Their special ability is a teleporting bullet.
                             </p>
                         </div>
                     </div>
