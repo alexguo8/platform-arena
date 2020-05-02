@@ -19,8 +19,8 @@ export class InputHandler {
         if (e.button === 0) {
             const left = this.canvas.offsetLeft + this.canvas.clientLeft;
             const top = this.canvas.offsetTop + this.canvas.clientTop;
-            const resultX = (e.pageX - left) * Constants.WIDTH / this.canvas.style.width;
-            const resultY = (e.pageY - top) * Constants.HEIGHT / this.canvas.style.height;
+            const resultX = (e.pageX - left) * Constants.WIDTH / this.canvas.clientWidth;
+            const resultY = (e.pageY - top) * Constants.HEIGHT / this.canvas.clientHeight;
             this.networkHandler.sendClick(resultX, resultY, this.room);
         }
     }
