@@ -34,6 +34,9 @@ const matchSchema = new Schema({
     ipWinner: {
         type: String
     },
+    usernameWinner: {
+        type: String
+    },
     room: {
         type: String,
     }

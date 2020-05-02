@@ -23,7 +23,8 @@ class Game {
         this.gameStart = Date.now();
         this.gameOver = Date.now();
         this.gameLeft = Date.now();
-        this.winner = "";
+        this.ipWinner = "";
+        this.usernameWinner = "";
 
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
@@ -41,7 +42,8 @@ class Game {
             gameOver: this.gameOver,
             gameLeft: Date.now(),
             gameLength: Math.abs(this.gameOver - this.gameStart) / 1000,
-            ipWinner: this.winner,
+            ipWinner: this.ipWinner,
+            usernameWinner: this.usernameWinner,
             room: this.room,
         })
         newMatch.save()
@@ -143,7 +145,9 @@ class Game {
         if (Object.keys(this.handler.players).length === 1) {
             this.gameOver = Date.now();
             for (const key of Object.keys(this.handler.players)) {
-                this.winner = this.matchPlayers.find(e => e.id === key).ipAddress;
+                const winner = this.matchPlayers.find(e => e.id === key);
+                this.ipWinner = winner.ipAddress;
+                this.usernameWinner = winner.username;
             }
         }
         delete this.sockets[socket.id];

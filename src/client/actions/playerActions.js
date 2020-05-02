@@ -19,7 +19,6 @@ export const joinRoom = (user_room, history) => dispatch => {
             history.push("/lobby");
         })
         .catch(err => {
-            console.log(err.response.data);
             dispatch({
                 type: GET_ERRORS,
                 payload: err.response.data
