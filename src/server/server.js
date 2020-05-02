@@ -64,12 +64,13 @@ io.on('connection', socket => {
 function joinLobby(username, room) {
     const roomNames = lobbies.map(lo => lo.room);
     const roomIndex = roomNames.indexOf(room);
+    const ipAddress = this.request.headers['x-forwarded-for'] || this.request.connection.remoteAddress;
     this.join(room);
     if (roomIndex >= 0) {
-        lobbies[roomIndex].addPlayer(this, username);
+        lobbies[roomIndex].addPlayer(this, username, ipAddress);
     } else {
         const lobby = new Lobby(room);
-        lobby.addPlayer(this, username);
+        lobby.addPlayer(this, username, ipAddress);
         lobbies.push(lobby);
     }
 }

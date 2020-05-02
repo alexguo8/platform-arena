@@ -13,11 +13,12 @@ class Lobby {
         this.update();
     }
 
-    addPlayer(socket, username) {
+    addPlayer(socket, username, ip) {
         this.sockets[socket.id] = socket;
         this.players[socket.id] = {
             username: username,
-            character: Type.NO_CHARACTER
+            character: Type.NO_CHARACTER,
+            ip: ip,
         }
         this.update();
     }

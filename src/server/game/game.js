@@ -9,6 +9,7 @@ const Eagle = require("./eagle")
 const Platform = require("./platform");
 const Powerup = require("./powerups/powerup");
 const Handler = require("./handler")
+const Match = require("../models/match");
 
 class Game {            
     constructor(room) {
@@ -18,6 +19,12 @@ class Game {
         this.keyInput = new KeyInput(this.handler);
         this.mouseInput = new MouseInput(this.handler);
 
+        this.matchPlayers = [];
+        this.gameStart = Date.now();
+        this.gameOver = Date.now();
+        this.gameLeft = Date.now();
+        this.winner = "";
+
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
         this.createStage();
@@ -25,6 +32,21 @@ class Game {
     }
 
     endGame() {
+        this.matchPlayers.map(p => {
+            (({ ipAddress, username, character }) => ({ ipAddress, username, character}))(p);
+        });
+        const newMatch = new Match({
+            players: this.matchPlayers,
+            gameStart: this.gameStart,
+            gameOver: this.gameOver,
+            gameLeft: Date.now(),
+            gameLength: Math.abs(this.gameOver - this.gameStart) / 1000,
+            ipWinner: this.winner,
+            room: this.room,
+        })
+        newMatch.save()
+            .then(() => console.log("Added match to history"))
+            .catch(err => console.log(err));
         clearInterval(this.updateInterval);
     }
 
@@ -33,6 +55,12 @@ class Game {
             const socket = sockets[key];
             const player = players[key];
             this.addPlayer(socket, player.username, player.character);
+            this.matchPlayers.push({
+                ipAddress: player.ip,
+                username: player.username,
+                character: player.character,
+                id: key, 
+            });
         }
     }
 
@@ -112,6 +140,12 @@ class Game {
     }
     
     removePlayer(socket) {
+        if (Object.keys(this.handler.players).length === 1) {
+            this.gameOver = Date.now();
+            for (const key of Object.keys(this.handler.players)) {
+                this.winner = this.matchPlayers.find(e => e.id === key).ipAddress;
+            }
+        }
         delete this.sockets[socket.id];
         delete this.handler.players[socket.id];
     }
