@@ -19,8 +19,8 @@ const Tutorial = () => {
                         <br />
                     </div>
 
-                    <div class="col s12">
-                        <div class="card-panel">
+                    <div className="col s12">
+                        <div className="card-panel">
                             <p>
                                 Platform Arena is a platformer fighting game. Eliminate all your enemies to win! <br />
                                 When your healthbar is glowing, you can use your ability! These are the controls: <br />
@@ -32,8 +32,8 @@ const Tutorial = () => {
                             </p>
                         </div>
                     </div>
-                    <div class="col s12">
-                        <div class="card-panel">
+                    <div className="col s12">
+                        <div className="card-panel">
                             <p>
                                 There are 4 playable characters, each with unique bullets and abilities.
                             </p>
@@ -59,8 +59,8 @@ const Tutorial = () => {
                             </p>
                         </div>
                     </div>
-                    <div class="col s12">
-                        <div class="card-panel">
+                    <div className="col s12">
+                        <div className="card-panel">
                             <p>
                                 Collect powerups to gain special weapons. 
                             </p>

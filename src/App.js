@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import jwt_decode from "jwt-decode";
@@ -18,6 +18,22 @@ import Tutorial from "./client/components/layouts/Tutorial";
 import RoomSelection from "./client/components/layouts/RoomSelection";
 import PrivateRoute from "./client/components/private-route/PrivateRoute";
 
+import ReactGA from 'react-ga';
+import { createBrowserHistory } from 'history';
+
+const trackingId = "UA-165365144-1"; 
+ReactGA.initialize(trackingId);
+
+const history = createBrowserHistory();
+
+console.log("test")
+history.listen(location => {
+    console.log("test")
+    ReactGA.set({ page: location.pathname }); 
+    ReactGA.pageview(location.pathname); 
+});
+
+
 if (localStorage.jwtToken) {
     const token = localStorage.jwtToken;
     setAuthToken(token);
@@ -32,9 +48,13 @@ if (localStorage.jwtToken) {
 }
 
 function App() {
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname);
+  }, [])
+
   return (
     <Provider store={store}>
-        <Router>
+        <Router history={history}>
             <div className="App">
                 <Switch>
                     <Route exact path="/lobby" component={Lobby} />
