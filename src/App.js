@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Router as Router, Route, Switch } from "react-router-dom";
+import { Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./client/utils/setAuthToken";
