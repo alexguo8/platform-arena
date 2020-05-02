@@ -41,12 +41,12 @@ class Eagle extends Player {
 
         if (this.faceRight) {
             this.handler.addWeapon(new TeleportBullet(Type.TELEPORT_BULLET, 
-                this.x + this.width, this.y + (this.height / 2) - (Constants.TELEPORT_BULLET_HEIGHT / 2), 
+                this.x, this.y + (this.height / 2) - (Constants.TELEPORT_BULLET_HEIGHT / 2), 
                 Constants.TELEPORT_BULLET_WIDTH, Constants.TELEPORT_BULLET_HEIGHT,
                 Constants.TELEPORT_BULLET_SPEED, Math.PI / 2, this.id, this.handler));
         } else {
             this.handler.addWeapon(new TeleportBullet(Type.TELEPORT_BULLET, 
-                this.x + this.width, this.y + (this.height / 2) - (Constants.TELEPORT_BULLET_HEIGHT / 2), 
+                this.x, this.y + (this.height / 2) - (Constants.TELEPORT_BULLET_HEIGHT / 2), 
                 Constants.TELEPORT_BULLET_WIDTH, Constants.TELEPORT_BULLET_HEIGHT,
                 Constants.TELEPORT_BULLET_SPEED, 3 * Math.PI / 2, this.id, this.handler));
         }

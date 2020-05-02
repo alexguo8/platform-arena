@@ -117,6 +117,7 @@ function handleMouseInput(x, y, room, msg_type) {
 }
 
 function onDisconnect() {
+    console.log(this)
     for (let i = 0; i < games.length; i++) {
         if (games[i].handler.players.hasOwnProperty(this.id)) {
             const game = games[i];
