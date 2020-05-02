@@ -78,7 +78,7 @@ const RoomSelection = (props) => {
                                 value={room}
                                 error={errors.room}
                                 id="email"
-                                type="email"
+                                type="text"
                                 className={classnames("", { invalid: errors.room })}
                             />
                             <label htmlFor="room">Room</label>
