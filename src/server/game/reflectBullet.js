@@ -31,20 +31,23 @@ class ReflectBullet extends Bullet {
             if (!temp) { 
                 continue;
             }           
-            if (this.getBounds().intersects(temp.getBounds()) &&
-                (temp.id !== this.parentID || this.cooldown == 0)) {
-                if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.DINO) {
-                    this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
-                        this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
-                        this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
-                        Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
-                } else if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.EAGLE) {
-                    temp.health -= 5;
-                } else {
-                    temp.takeDamage(this.type);
+            if (this.getBounds().intersects(temp.getBounds())) {
+                if (temp.id !== this.parentID) {
+                    if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.DINO) {
+                        this.handler.addWeapon(new Explosion(Type.EXPLOSION, 
+                            this.x - (Constants.EXPLOSION_WIDTH / 2) + (this.width / 2), 
+                            this.y - (Constants.EXPLOSION_HEIGHT / 2) + (this.height / 2), 
+                            Constants.EXPLOSION_WIDTH, Constants.EXPLOSION_HEIGHT, this.handler));
+                    } else if (this.handler.players[this.parentID] && this.handler.players[this.parentID].character === Type.EAGLE) {
+                        temp.health -= 5;
+                    } else {
+                        temp.takeDamage(this.type);
+                    }
                 }
-                this.handler.removeWeapon(this);
-                return;
+                if ((temp.id === this.parentID && this.cooldown === 0) || temp.id !== this.parentID) {
+                    this.handler.removeWeapon(this);
+                    return;
+                }
             }    
         }
         for (const key of Object.keys(this.handler.platforms)) {
