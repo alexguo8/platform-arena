@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Router as Router, Route, Switch } from "react-router-dom";
 import './App.css';
 import jwt_decode from "jwt-decode";
 import setAuthToken from "./client/utils/setAuthToken";
@@ -26,9 +26,7 @@ ReactGA.initialize(trackingId);
 
 const history = createBrowserHistory();
 
-console.log("test")
 history.listen(location => {
-    console.log("test")
     ReactGA.set({ page: location.pathname }); 
     ReactGA.pageview(location.pathname); 
 });
