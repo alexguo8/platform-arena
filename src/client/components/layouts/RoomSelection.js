@@ -54,7 +54,7 @@ const RoomSelection = (props) => {
                         </p>
                         <br />
                     </div>
-                    <form noValidate onSubmit={onSubmit} autoComplete="new-password">
+                    <form noValidate onSubmit={onSubmit}>
                         {props.auth.isAuthenticated 
                             ? <p className="flow-text grey-text text-darken-1">
                                 Welcome back {props.auth.user.username}!
@@ -64,6 +64,7 @@ const RoomSelection = (props) => {
                                     onChange={e => setUsername(e.target.value)}
                                     value={username}
                                     error={errors.username}
+                                    autoComplete="none"
                                     id="name"
                                     type="text"
                                     className={classnames("", { invalid: errors.username })}
@@ -77,6 +78,7 @@ const RoomSelection = (props) => {
                                 onChange={e => setRoom(e.target.value)}
                                 value={room}
                                 error={errors.room}
+                                autoComplete="none"
                                 id="email"
                                 type="text"
                                 className={classnames("", { invalid: errors.room })}
