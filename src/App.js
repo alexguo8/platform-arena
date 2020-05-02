@@ -21,7 +21,7 @@ import PrivateRoute from "./client/components/private-route/PrivateRoute";
 import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
 
-const trackingId = "UA-165365144-1"; 
+const trackingId = process.env.REACT_APP_TRACKING_ID; 
 ReactGA.initialize(trackingId);
 
 const history = createBrowserHistory();
