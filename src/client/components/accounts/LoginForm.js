@@ -57,7 +57,7 @@ const LoginForm = (props) => {
                                 onChange={e => setEmail(e.target.value)}
                                 value={email}
                                 error={errors.email}
-                                autoComplete="none"
+                                autoComplete="new-password"
                                 id="email"
                                 type="email"
                                 className={classnames("", { invalid: errors.email || errors.emailNotFound })}
@@ -70,7 +70,6 @@ const LoginForm = (props) => {
                                 onChange={e => setPassword(e.target.value)}
                                 value={password}
                                 error={errors.password}
-                                autoComplete="none"
                                 id="password"
                                 type="password"
                                 className={classnames("", { invalid: errors.password || errors.passwordIncorrect })}

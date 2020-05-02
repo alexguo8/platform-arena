@@ -66,7 +66,7 @@ const RegisterForm = (props) => {
                             onChange={e => setUsername(e.target.value)}
                             value={username}
                             error={errors.username}
-                            autoComplete="none"
+                            autoComplete="new-password"
                             id="name"
                             type="text"
                             className={classnames("", { invalid: errors.username })}
@@ -79,7 +79,7 @@ const RegisterForm = (props) => {
                             onChange={e => setEmail(e.target.value)}
                             value={email}
                             error={errors.email}
-                            autoComplete="none"
+                            autoComplete="new-password"
                             id="email"
                             type="email"
                             className={classnames("", { invalid: errors.email })}
@@ -92,7 +92,6 @@ const RegisterForm = (props) => {
                             onChange={e => setPassword(e.target.value)}
                             value={password}
                             error={errors.password}
-                            autoComplete="none"
                             id="password"
                             type="password"
                             className={classnames("", { invalid: errors.password })}

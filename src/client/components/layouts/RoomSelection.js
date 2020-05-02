@@ -64,7 +64,7 @@ const RoomSelection = (props) => {
                                     onChange={e => setUsername(e.target.value)}
                                     value={username}
                                     error={errors.username}
-                                    autoComplete="none"
+                                    autoComplete="new-password"
                                     id="name"
                                     type="text"
                                     className={classnames("", { invalid: errors.username })}
@@ -78,7 +78,7 @@ const RoomSelection = (props) => {
                                 onChange={e => setRoom(e.target.value)}
                                 value={room}
                                 error={errors.room}
-                                autoComplete="none"
+                                autoComplete="new-password"
                                 id="email"
                                 type="text"
                                 className={classnames("", { invalid: errors.room })}
