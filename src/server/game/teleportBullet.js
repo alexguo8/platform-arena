@@ -17,6 +17,7 @@ class TeleportBullet extends Bullet {
                 const owner = this.handler.players[this.parentID];
                 owner.x = temp.x;
                 owner.y = temp.y - temp.height;
+                temp.takeDamage(this.type)
                 this.handler.removeWeapon(this); 
             }
         }

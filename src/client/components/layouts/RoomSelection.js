@@ -54,7 +54,7 @@ const RoomSelection = (props) => {
                         </p>
                         <br />
                     </div>
-                    <form noValidate onSubmit={onSubmit}>
+                    <form noValidate onSubmit={onSubmit} autoComplete="new-password">
                         {props.auth.isAuthenticated 
                             ? <p className="flow-text grey-text text-darken-1">
                                 Welcome back {props.auth.user.username}!

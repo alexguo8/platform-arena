@@ -51,7 +51,7 @@ const LoginForm = (props) => {
                             Don't have an account? <Link to="/register">Register</Link>
                         </p>
                     </div>
-                    <form noValidate onSubmit={onSubmit}>
+                    <form noValidate onSubmit={onSubmit} autoComplete="new-password">
                         <div className="input-field col s12">
                             <input
                                 onChange={e => setEmail(e.target.value)}
