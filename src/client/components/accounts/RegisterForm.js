@@ -60,7 +60,7 @@ const RegisterForm = (props) => {
                             <Link to="/login"> Log in </Link>
                         </p>
                     </div>
-                    <form noValidate onSubmit={onSubmit}>
+                    <form noValidate onSubmit={onSubmit} autoComplete="off">
                         <div className="input-field col s12">
                             <input
                             onChange={e => setUsername(e.target.value)}

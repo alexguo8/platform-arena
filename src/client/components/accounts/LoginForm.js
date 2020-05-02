@@ -51,13 +51,12 @@ const LoginForm = (props) => {
                             Don't have an account? <Link to="/register">Register</Link>
                         </p>
                     </div>
-                    <form noValidate onSubmit={onSubmit}>
+                    <form noValidate onSubmit={onSubmit} autoComplete="off">
                         <div className="input-field col s12">
                             <input
                                 onChange={e => setEmail(e.target.value)}
                                 value={email}
                                 error={errors.email}
-                                autoComplete="new-password"
                                 id="email"
                                 type="email"
                                 className={classnames("", { invalid: errors.email || errors.emailNotFound })}
