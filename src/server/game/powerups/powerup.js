@@ -48,10 +48,10 @@ class Powerup extends GameObject {
                             default:
                                 break;
                         }
-                            this.cooldown = 100;
-                            this.x = Constants.WIDTH + 100;
-                            this.y = Constants.HEIGHT + 100;
-                        }   
+                    }
+                    this.cooldown = 100;
+                    this.x = Constants.WIDTH + 100;
+                    this.y = Constants.HEIGHT + 100;   
                 }    
             }
         }

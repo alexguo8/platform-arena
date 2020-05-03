@@ -14,6 +14,7 @@ const ASSET_NAMES = [
   "eagleLeft.png",
   "eagleRight.png",
   "explosion.png",
+  "shield.png",
   "drillRight.png",
   "bomb.png",
   "mine.png",

@@ -81,6 +81,10 @@ const Tutorial = () => {
                                 <img src={process.env.PUBLIC_URL + "/assets/reflectPowerup.png"} alt="Reflect" /> 
                                 &ensp;- Reflecting bullets bounce around before disappearing 
                             </p>
+                            <p>
+                                <img src={process.env.PUBLIC_URL + "/assets/shield.png"} alt="Shield" /> 
+                                &ensp;- Shield blocks one attack
+                            </p>
                         </div>
                     </div>
                 </div>

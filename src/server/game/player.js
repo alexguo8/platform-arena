@@ -284,6 +284,7 @@ class Player extends GameObject {
             faceRight: this.faceRight,
             character: this.character,
             abilityMeter: this.abilityMeter,
+            shielded: this.shielded,
         };
     }
 }

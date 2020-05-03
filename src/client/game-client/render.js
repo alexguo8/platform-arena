@@ -142,6 +142,7 @@ function renderBackground(context) {
 
 function renderPlayer(context, player) {
     let image = getAsset("pandaRight.png");
+    console.log(player.character)
     if (player.character === Type.PANDA) {
         if (player.faceRight) {
             image = getAsset("pandaRight.png")
@@ -171,6 +172,13 @@ function renderPlayer(context, player) {
         image, player.x, player.y,
         PLAYER_WIDTH, PLAYER_HEIGHT,
     );
+    if (player.shielded) {
+        context.globalAlpha = 0.5;
+        context.drawImage(getAsset("shield.png"), player.x - 10, player.y - 10,
+            PLAYER_WIDTH + 20, PLAYER_HEIGHT + 20,
+        );
+        context.globalAlpha = 1;
+    }
 }
 
 function renderHealthBar(context, player) {
@@ -377,6 +385,11 @@ function renderPowerup(context, powerup) {
             break;
         case Type.REFLECT_POWERUP:
             context.drawImage(getAsset("reflectPowerup.png"), powerup.x, powerup.y,
+                POWERUP_WIDTH, POWERUP_HEIGHT,
+            );
+            break;
+        case Type.SHIELD_POWERUP:
+            context.drawImage(getAsset("shield.png"), powerup.x, powerup.y,
                 POWERUP_WIDTH, POWERUP_HEIGHT,
             );
             break;
