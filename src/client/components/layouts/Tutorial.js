@@ -27,7 +27,7 @@ const Tutorial = () => {
                                 W - Jump <br />
                                 A - Left <br />
                                 D - Right <br />
-                                S - Shoot directly in front or use powerup
+                                S - Shoot directly in front or use powerup <br />
                                 Left Mouse Click - Aim and shoot or use powerup <br />
                                 Q - Ability <br />
                             </p>
