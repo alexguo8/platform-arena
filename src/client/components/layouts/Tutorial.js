@@ -23,13 +23,13 @@ const Tutorial = () => {
                         <div className="card-panel">
                             <p>
                                 Platform Arena is a platformer fighting game. Eliminate all your enemies to win! <br />
-                                When your healthbar is glowing, you can use your ability! These are the controls: <br />
+                                These are the controls: <br />
                                 W - Jump <br />
                                 A - Left <br />
                                 D - Right <br />
                                 S - Shoot directly in front or use powerup <br />
                                 Left Mouse Click - Aim and shoot or use powerup <br />
-                                Q - Ability <br />
+                                Q - Ability (when your healthbar is glowing, you can use your ability!)<br />
                             </p>
                         </div>
                     </div>
