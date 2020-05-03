@@ -14,7 +14,7 @@ router.post("/join", (req, res) => {
 
     User.findOne({ username: req.body.username })
         .then(user => {
-            if (user) {
+            if (user && !req.body.loggedIn) {
                 return res.status(400).json({ username: "Username already exists" });
             }
             res.json("Join successful");

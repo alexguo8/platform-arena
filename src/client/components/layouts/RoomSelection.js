@@ -9,10 +9,12 @@ import classnames from "classnames";
 const RoomSelection = (props) => {
     const [username, setUsername] = useState("");
     const [room, setRoom] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false);
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (props.auth.isAuthenticated) {
+            setLoggedIn(true);
             setUsername(props.auth.user.username);
         }
         props.resetErrors();
@@ -35,8 +37,9 @@ const RoomSelection = (props) => {
         const user_room = {
             username: username,
             room: room,
+            loggedIn: loggedIn,
+            
         }
-
         props.joinRoom(user_room, props.history);
     }
     
