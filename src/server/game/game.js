@@ -82,8 +82,8 @@ class Game {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 288, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 288, 32, 16, true, this.handler));
         }
-        for (let i = 0; i < 10; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 352, 320, 32, 16, true, this.handler));
+        for (let i = 0; i < 8; i++) {
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 384, 320, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 12; i++) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 320, 416, 32, 16, true, this.handler));

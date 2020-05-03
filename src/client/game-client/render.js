@@ -142,7 +142,6 @@ function renderBackground(context) {
 
 function renderPlayer(context, player) {
     let image = getAsset("pandaRight.png");
-    console.log(player.character)
     if (player.character === Type.PANDA) {
         if (player.faceRight) {
             image = getAsset("pandaRight.png")

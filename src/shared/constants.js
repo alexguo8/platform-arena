@@ -3,8 +3,8 @@ module.exports = Object.freeze({
     PLAYER_HEIGHT: 32,
     PLAYER_MAX_HP: 100,
     PLAYER_SPEED: 400,
-    PLAYER_JUMP: 800,
-    PLAYER_GRAVITY: 50,
+    PLAYER_JUMP: 1000,
+    PLAYER_GRAVITY: 60,
     PLAYER_FIRE_COOLDOWN: 0.5,
 
     BULLET_WIDTH: 32,
