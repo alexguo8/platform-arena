@@ -15,22 +15,31 @@ export class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
+        this.renderAnimation = this.renderAnimation.bind(this);
+        this.request = requestAnimationFrame(this.renderAnimation);
         setCanvasDimensions(canvas);
         window.addEventListener("resize", debounce(40, setCanvasDimensions));
-        this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
+    }
+
+    renderAnimation() {
+        requestAnimationFrame(this.renderAnimation);
+        render(this.context);
     }
 
     // Replaces main menu rendering with game rendering.
     startRendering() {
-        clearInterval(this.renderInterval);
-        this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        //clearInterval(this.renderInterval);
+        //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
+        //requestAnimationFrame(this.renderAnimation);
         console.log("Starting rendering");
     }
 
     // Replaces game rendering with main menu rendering.
     stopRendering() {
-        clearInterval(this.renderInterval);
+        //clearInterval(this.renderInterval);
         //this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
+        cancelAnimationFrame(this.request);
         console.log("Stopping rendering")
         //renderInterval = setInterval(renderMainMenu, 1000 / 60);
     }
@@ -47,7 +56,7 @@ function setCanvasDimensions(canvas) {
 }
 
 
-function render(canvas, context) {
+function render(context) {
     const { me, others, platforms, weapons, powerups } = getCurrentState();
     if (!me) {
         return;
