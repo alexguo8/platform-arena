@@ -10,16 +10,6 @@ class MouseInput {
         const dir = Math.atan2(x - (player.x + (player.width / 2)), y - (player.y + (player.height / 2)));
         player.shoot(dir);
     }
- 
-    handleKeyUp(socket, key) {
-        const player = this.handler.players[socket.id];
-        if (key === "D") {
-            player.stopRight();
-        }          
-        if (key === "A") {
-            player.stopLeft();
-        }
-    }
 }
 
 module.exports = MouseInput;
