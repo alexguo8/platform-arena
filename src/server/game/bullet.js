@@ -18,7 +18,8 @@ class Bullet extends GameObject {
     }
 
     getBounds() {
-        return new Rectangle(this.x + (this.width / 4), this.y, this.width / 2, this.height);
+        return new Rectangle(this.x + (this.width / 2) - (this.height / 2), 
+            this.y, this.height, this.height);
     }
 
     update(dt) {
