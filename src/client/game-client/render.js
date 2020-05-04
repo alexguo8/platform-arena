@@ -57,7 +57,7 @@ function setCanvasDimensions(canvas) {
 
 
 function render(context) {
-    const { me, others, platforms, weapons, powerups } = getCurrentState();
+    const { me, others, weapons, powerups } = getCurrentState();
     if (!me) {
         return;
     }
@@ -66,9 +66,9 @@ function render(context) {
     renderBackground(context);
 
     // Draw all platforms
-    platforms.forEach(p => {
-        renderPlatform(context, p);
-    })
+    // platforms.forEach(p => {
+    //     renderPlatform(context, p);
+    // })
 
     // Draw all bullets
     weapons.forEach(w => {
