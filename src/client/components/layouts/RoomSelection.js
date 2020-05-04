@@ -20,7 +20,7 @@ const RoomSelection = (props) => {
         props.resetErrors();
         props.resetRoom();
         if (Object.keys(props.network.handler).length !== 0) {
-            props.network.handler.disconnect();
+            props.network.handler.leaveRoom();
         }
         props.resetNetworkHandler();
     }, []);

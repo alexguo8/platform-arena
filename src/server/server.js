@@ -58,6 +58,7 @@ io.on('connection', socket => {
     socket.on(Constants.MSG_TYPES.KEYPRESS, handleKeyInput);
     socket.on(Constants.MSG_TYPES.KEYUP, handleKeyInput);
     socket.on(Constants.MSG_TYPES.CLICK, handleMouseInput);
+    socket.on('leave', leave);
     socket.on('disconnect', onDisconnect);
 });
 
@@ -116,11 +117,12 @@ function handleMouseInput(x, y, room, msg_type) {
     }
 }
 
-function onDisconnect() {
+function leave() {
     for (let i = 0; i < games.length; i++) {
         if (games[i].handler.players.hasOwnProperty(this.id)) {
             const game = games[i];
             game.removePlayer(this);
+            this.leave(game.room);
             if (Object.keys(game.handler.players).length === 0) {
                 game.endGame();
                 games.splice(i, 1);
@@ -132,12 +134,17 @@ function onDisconnect() {
         if (lobbies[i].players.hasOwnProperty(this.id)) {
             const lobby = lobbies[i];
             lobby.removePlayer(this);
+            this.leave(lobby.room);
             if (Object.keys(lobby.players).length === 0) {
                 lobbies.splice(i, 1);
             }
             return;
         }
     }
+}
+
+function onDisconnect() {
+
 }
 
 module.exports = getGames = () => games;
