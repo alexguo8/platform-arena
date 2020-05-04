@@ -1,6 +1,6 @@
 // The "current" state will always be RENDER_DELAY ms behind server time.
 // This makes gameplay smoother and lag less noticeable.
-const RENDER_DELAY = 50;
+const RENDER_DELAY = 25;
 
 const gameUpdates = [];
 let lobbyUpdate = {};
