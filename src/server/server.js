@@ -44,7 +44,7 @@ const server = app.listen(port);
 console.log(`Server is running on port: ${port}`);
 
 // Setup socket.io
-const io = socketio(server);
+const io = socketio(server, {pingInterval: 5000});
 
 const games = [];
 const lobbies = [];

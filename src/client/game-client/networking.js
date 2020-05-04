@@ -18,6 +18,11 @@ export class NetworkHandler {
                 resolve();
             });
         }).then(() => {
+            let latency = 0; 
+            this.socket.on("pong", ms => {
+                latency = ms;
+                console.log(latency)
+            })
             // Register callbacks
             this.socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, processLobbyUpdate);
             this.socket.on(Constants.MSG_TYPES.GAME_UPDATE, processGameUpdate);
