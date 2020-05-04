@@ -37,11 +37,6 @@ export class NetworkHandler {
         this.socket.emit(Constants.MSG_TYPES.LOBBY_UPDATE, character, room);
     }
 
-    leaveRoom = () => {
-        this.socket.emit("leave");
-        console.log("Left room");
-    }
-
     disconnect = () => {
         this.socket.disconnect();
     }
