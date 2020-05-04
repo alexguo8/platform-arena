@@ -66,9 +66,7 @@ function render(context) {
     renderBackground(context);
 
     // Draw all platforms
-    // platforms.forEach(p => {
-    //     renderPlatform(context, p);
-    // })
+    renderPlatforms(platforms);
 
     // Draw all bullets
     weapons.forEach(w => {
@@ -361,17 +359,65 @@ function renderTeleportBullet(context, tBullet) {
     );
 }
 
-function renderPlatform(context, platform) {
+function renderPlatforms(context, platforms) {
     const platformGradient = context.createLinearGradient(
         platform.x,
-        platform.y + platform.height,
-        platform.x + platform.width,
+        platform.y + Constants.PLATFORM_HEIGHT / 2,
+        platform.x + Constants.PLATFORM_WIDTH,
         platform.y
     );
     platformGradient.addColorStop(0, "#1d5e8c");
     platformGradient.addColorStop(1, "#57a4da");
     context.fillStyle = platformGradient;
-    context.fillRect(platform.x, platform.y, platform.width, platform.height);
+    //context.fillRect(platform.x, platform.y, platform.width, platform.height);
+
+    for (let i = 0; i < 3; i++) {
+        context.fillRect(i * 32 + 32, 96, 32, 16);
+        context.fillRect(Constants.WIDTH - i * 32 - 64, 96, 32, 16);
+    }
+    for (let i = 0; i < 8; i++) {
+        context.fillRect(i * 32 + 384, 96, 32, 16);
+        context.fillRect(i * 32 + 384, 320, 32, 16);
+    }
+    for (let i = 0; i < 4; i++) {
+        context.fillRect(i * 32 + 192, 192, 32, 16);
+        context.fillRect(i * 32 + 704, 192, 32, 16);
+        context.fillRect(i * 32 + 448, 544, 32, 16);
+    }
+    for (let i = 0; i < 6; i++) {
+        context.fillRect(i * 32 + 32, 288, 32, 16);
+        context.fillRect(Constants.WIDTH - i * 32 - 64, 288, 32, 16);
+        context.fillRect(i * 32 + 160, 512, 32, 16);
+        context.fillRect(Constants.WIDTH - i * 32 - 192, 512, 32, 16);
+        context.fillRect(i * 32 + 96, 608, 32, 16);
+        context.fillRect(Constants.WIDTH - i * 32 - 128, 608, 32, 16);
+    }
+    for (let i = 0; i < 12; i++) {
+        context.fillRect(i * 32 + 320, 416, 32, 16);
+    }
+    context.fillStyle = "#b0b0f5";
+    context.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
+    platforms.forEach(p => {
+        context.fillRect(p.x, p.y, Constants.WIDTH, Constants.HEIGHT / 2);
+    })
+
+    const platformGradient = context.createLinearGradient(
+        platform.x,
+        platform.y + Constants.PLATFORM_HEIGHT,
+        platform.x + Constants.PLATFORM_WIDTH,
+        platform.y
+    );
+    platformGradient.addColorStop(0, "#1d5e8c");
+    platformGradient.addColorStop(1, "#57a4da");
+    context.fillStyle = platformGradient;
+    for (let i = 0; i < Constants.HEIGHT; i += 32) {
+        context.fillRect(0, i, 32, 32);
+        context.fillRect(Constants.WIDTH - 32, i, 32, 32);
+    } 
+    for (let i = 0; i < Constants.WIDTH; i += 32) {
+        context.fillRect(i, 0, 32, 32);
+        context.fillRect(i, Constants.HEIGHT - 32, 32, 32);
+    }
 }
 
 function renderPowerup(context, powerup) {
