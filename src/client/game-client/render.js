@@ -1,7 +1,6 @@
 import { debounce } from "throttle-debounce";
 import { getAsset } from "./assets";
 import { getCurrentState } from "./state";
-import { ghostwhite } from "color-name";
 
 const Type = require("../../shared/objectTypes");
 const Constants = require("../../shared/constants");
