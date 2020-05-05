@@ -59,7 +59,7 @@ function setCanvasDimensions(canvas) {
 
 
 function render(context) {
-    const { me } = getCurrentState();
+    const { me, others, platforms, weapons, powerups } = getCurrentState();
     if (!me) {
         return;
     }
@@ -67,69 +67,69 @@ function render(context) {
     // Draw background
     renderBackground(context);
 
-    // // Draw all platforms
-    // renderPlatforms(context, platforms);
+    // Draw all platforms
+    renderPlatforms(context, platforms);
 
-    // // Draw all bullets
-    // weapons.forEach(w => {
-    //     switch(w.type) {
-    //         case Type.BULLET:
-    //             renderBullet(context, w);
-    //             break;
-    //         case Type.DRILL:
-    //             renderDrill(context, w);
-    //             break;
-    //         case Type.BOMB:
-    //             renderBomb(context, w);
-    //             break;
-    //         case Type.MINE:
-    //             renderMine(context, w);
-    //             break;
-    //         case Type.TELEPORT_BULLET:
-    //             renderTeleportBullet(context, w);
-    //             break;
-    //         case Type.FIRE_CLOUD:
-    //             renderFireCloud(context, w);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // })
+    // Draw all bullets
+    weapons.forEach(w => {
+        switch(w.type) {
+            case Type.BULLET:
+                renderBullet(context, w);
+                break;
+            case Type.DRILL:
+                renderDrill(context, w);
+                break;
+            case Type.BOMB:
+                renderBomb(context, w);
+                break;
+            case Type.MINE:
+                renderMine(context, w);
+                break;
+            case Type.TELEPORT_BULLET:
+                renderTeleportBullet(context, w);
+                break;
+            case Type.FIRE_CLOUD:
+                renderFireCloud(context, w);
+                break;
+            default:
+                break;
+        }
+    })
 
-    // // Draw all powerups
-    // powerups.forEach(p => {
-    //     renderPowerup(context, p);
-    // })
+    // Draw all powerups
+    powerups.forEach(p => {
+        renderPowerup(context, p);
+    })
 
-    // // Draw all players
-    // if (Object.keys(me).length !== 0) {
+    // Draw all players
+    if (Object.keys(me).length !== 0) {
         renderPlayer(context, me);
         renderHealthBar(context, me);
         renderPlayerPowerup(context, me);
-    //     if (others.length === 0) {
-    //         renderCrown(context, me);
-    //     }
-    // } else {
-    //     if (others.length === 1) {
-    //         renderCrown(context, others[0]);
-    //     }
-    // }
-    // others.forEach(p => {
-    //     renderPlayer(context, p);
-    //     renderHealthBar(context, p);
-    //     renderPlayerPowerup(context, p);
-    // });
+        if (others.length === 0) {
+            renderCrown(context, me);
+        }
+    } else {
+        if (others.length === 1) {
+            renderCrown(context, others[0]);
+        }
+    }
+    others.forEach(p => {
+        renderPlayer(context, p);
+        renderHealthBar(context, p);
+        renderPlayerPowerup(context, p);
+    });
 
-    // //Draw some weapons last
-    // weapons.forEach(w => {
-    //     if (w.type === Type.EXPLOSION) {
-    //         renderExplosion(context, w);
-    //     } else if (w.type === Type.LASER) {
-    //         renderLaser(context, w);
-    //     } else if (w.type === Type.BAMBOO) {
-    //         renderBamboo(context, w);
-    //     }
-    // })
+    //Draw some weapons last
+    weapons.forEach(w => {
+        if (w.type === Type.EXPLOSION) {
+            renderExplosion(context, w);
+        } else if (w.type === Type.LASER) {
+            renderLaser(context, w);
+        } else if (w.type === Type.BAMBOO) {
+            renderBamboo(context, w);
+        }
+    })
 }
 
 function renderBackground(context) {
