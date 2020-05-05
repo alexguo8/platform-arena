@@ -21,7 +21,7 @@ export class NetworkHandler {
             let latency = 0; 
             this.socket.on("pong", ms => {
                 latency = ms;
-                console.log(latency)
+                //console.log(latency)
             })
             // Register callbacks
             this.socket.on(Constants.MSG_TYPES.LOBBY_UPDATE, processLobbyUpdate);
