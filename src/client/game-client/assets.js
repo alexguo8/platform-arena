@@ -28,6 +28,7 @@ const ASSET_NAMES = [
   "fireCloud.png",
   "teleportBulletRight.png",
   "teleportBulletLeft.png",
+  "platform.png"
 ];
 
 const assets = {};
