@@ -33,6 +33,9 @@ class Game {
     }
 
     endGame() {
+        if (this.room === "a") {
+            return;
+        }
         this.matchPlayers.map(p => {
             (({ ipAddress, username, character }) => ({ ipAddress, username, character}))(p);
         });

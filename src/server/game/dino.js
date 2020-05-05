@@ -44,7 +44,8 @@ class Dino extends Player {
         this.handler.addWeapon(new FireCloud(Type.FIRE_CLOUD, 
             this.x + (this.width / 2) - (Constants.FIRE_CLOUD_WIDTH / 2), 
             this.y + (this.height / 2) - (Constants.FIRE_CLOUD_HEIGHT / 2), 
-            Constants.FIRE_CLOUD_WIDTH, Constants.FIRE_CLOUD_HEIGHT, this.id, this.handler));
+            Constants.FIRE_CLOUD_WIDTH, Constants.FIRE_CLOUD_HEIGHT, 
+            Constants.FIRE_CLOUD_SPEED, this.id, this.handler));
     }
 }
 

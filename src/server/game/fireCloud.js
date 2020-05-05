@@ -7,8 +7,9 @@ const Explosion = require("./powerups/explosion")
 const Rectangle = require("./rectangle");
 
 class FireCloud extends GameObject {
-    constructor(type, x, y, width, height, parentID, handler) {
+    constructor(type, x, y, width, height, speed, parentID, handler) {
         super(shortid(), type, x, y, width, height);
+        this.speed = speed;
         this.parentID = parentID;
         this.handler = handler;
 
@@ -25,12 +26,11 @@ class FireCloud extends GameObject {
 
     update(dt) {
         this.collision(dt);
-
-        if (this.cooldown % 3 == 0) {
-            this.x--;
-            this.y--;
-            this.width += 2;
-            this.height += 2;
+        if (this.width < Constants.FIRE_CLOUD_MAX_WIDTH) {
+            this.x -= dt * this.speed;
+            this.y -= dt * this.speed;
+            this.width += dt * this.speed * 2;
+            this.height += dt * this.speed * 2;
         }
         if (this.cooldown > 0) {
             this.cooldown--;
