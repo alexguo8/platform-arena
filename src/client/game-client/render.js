@@ -1,6 +1,7 @@
 import { debounce } from "throttle-debounce";
 import { getAsset } from "./assets";
 import { getCurrentState } from "./state";
+import { ghostwhite } from "color-name";
 
 const Type = require("../../shared/objectTypes");
 const Constants = require("../../shared/constants");
@@ -16,14 +17,14 @@ export class Renderer {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
         this.renderAnimation = this.renderAnimation.bind(this);
-        this.request = requestAnimationFrame(this.renderAnimation);
+        this.request = null;
         setCanvasDimensions(canvas);
         window.addEventListener("resize", debounce(40, setCanvasDimensions));
         //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
     }
 
     renderAnimation() {
-        requestAnimationFrame(this.renderAnimation);
+        this.request = window.requestAnimationFrame(this.renderAnimation);
         render(this.context);
     }
 
@@ -32,6 +33,7 @@ export class Renderer {
         //clearInterval(this.renderInterval);
         //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
         //requestAnimationFrame(this.renderAnimation);
+        this.request = window.requestAnimationFrame(this.renderAnimation);
         console.log("Starting rendering");
     }
 
@@ -39,7 +41,8 @@ export class Renderer {
     stopRendering() {
         //clearInterval(this.renderInterval);
         //this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
-        cancelAnimationFrame(this.request);
+        window.cancelAnimationFrame(this.request);
+        this.request = null;
         console.log("Stopping rendering")
         //renderInterval = setInterval(renderMainMenu, 1000 / 60);
     }
