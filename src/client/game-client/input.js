@@ -1,18 +1,15 @@
 const Constants = require("../../shared/constants");
 
 export class InputHandler {
-    constructor(room, networkHandler, canvas) {
+    constructor(room, networkHandler, renderer, canvas) {
         this.room = room;
         this.networkHandler = networkHandler;
+        this.renderer = renderer;
         this.canvas = canvas;
-        this.props = {
-            room: this.room,
-            networkHandler: this.networkHandler,
-            canvas: this.canvas,
-        }
-        this.onClickEvent = this.onClick.bind(this.props);
-        this.onKeyPressEvent = this.onKeyPress.bind(this.props);
-        this.onKeyUpEvent = this.onKeyUp.bind(this.props);
+        this.onClickEvent = this.onClick.bind(this);
+        this.onKeyPressEvent = this.onKeyPress.bind(this);
+        this.onKeyUpEvent = this.onKeyUp.bind(this);
+        this.sequence = 0;
     }
 
     onClick(e) {
@@ -30,6 +27,14 @@ export class InputHandler {
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
             this.networkHandler.sendKeyPress(key, this.room);
+            if (key === "A" || key === "D" || key === "W") {
+                this.renderer.inputs.push({
+                    sequence: this.sequence,
+                    key: key,
+                    type: 0
+                });
+                this.sequence++;
+            }
         }
     }
 
@@ -38,6 +43,14 @@ export class InputHandler {
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
             this.networkHandler.sendKeyUp(key, this.room);
+            if (key === "A" || key === "D" || key === "W") {
+                this.renderer.inputs.push({
+                    sequence: this.sequence,
+                    key: key,
+                    type: 1
+                });
+                this.sequence++;
+            }
         }
     }
 

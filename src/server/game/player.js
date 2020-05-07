@@ -28,6 +28,7 @@ class Player extends GameObject {
     
         this.lP = false;
         this.rP = false;
+        this.sequence = 0;
     } 
 
     update(dt) {
@@ -61,11 +62,13 @@ class Player extends GameObject {
     left() {
         this.lP = true;
         this.faceRight = false; 
+        this.sequence++;
     }
 
     right() {
         this.rP = true;
         this.faceRight = true; 
+        this.sequence++;
     }
 
     stopLeft() {
@@ -73,6 +76,7 @@ class Player extends GameObject {
         if (!this.rP) {
             this.velX = 0;
         }
+        this.sequence++;
     }
 
     stopRight() {
@@ -80,6 +84,7 @@ class Player extends GameObject {
         if (!this.lP) {
             this.velX = 0;
         }
+        this.sequence++;
     }
 
     jump() {
@@ -87,6 +92,7 @@ class Player extends GameObject {
             this.velY = -Constants.PLAYER_JUMP;
             this.inAir = true;
         }
+        this.sequence++;
     }
 
     takeDamage(source) {
@@ -201,82 +207,13 @@ class Player extends GameObject {
         } else if (this.powerup !== Type.NO_POWERUP) {
             this.powerup = Type.NO_POWERUP;
         }
-    //   if (powerup == ID.NoPowerup) {
-    //      if (character == ID.Seal) {
-    //         if (faceRight) {
-    //            handler.addObject(new Bullet(x + width, y + height/2 - 5, 
-    //                        32, 10, 6, this, ID.Bullet, handler));
-    //         } else {
-    //            handler.addObject(new Bullet(x - 32, y + height/2 - 5, 
-    //                        32, 10, -6, this, ID.Bullet, handler));
-    //         }
-    //      } else if (character == ID.Eagle) {
-    //         if (faceRight) {
-    //            handler.addObject(new Bullet(x + width, y + 5, 
-    //                        32, 10, 8, this, ID.Bullet, handler));
-    //            handler.addObject(new Bullet(x + width, y + height - 15, 
-    //                        32, 10, 8, this, ID.Bullet, handler));
-    //         } else {
-    //            handler.addObject(new Bullet(x - 32, y + 5, 
-    //                        32, 10, -8, this, ID.Bullet, handler));
-    //            handler.addObject(new Bullet(x - 32, y + height - 15, 
-    //                        32, 10, -8, this, ID.Bullet, handler));
-    //         }
-    //      } else {
-    //         if (faceRight) {
-    //            handler.addObject(new Bullet(x + width, y + height/2 - 5, 
-    //                        32, 10, 8, this, ID.Bullet, handler));
-    //         } else {
-    //            handler.addObject(new Bullet(x - 32, y + height/2 - 5, 
-    //                        32, 10, -8, this, ID.Bullet, handler));
-    //         }
-    //      }
-    //      if (character == ID.Dino) {
-    //         shootCooldown += 15;
-    //      } else if (character == ID.Eagle) {
-    //         shootCooldown += 20;
-    //      } else if (powerup == ID.ReflectBulletPowerup) {
-    //      if (character == ID.Seal) {
-    //         if (faceRight) {
-    //            handler.addObject(new ReflectBullet(x + width, y + height/2 - 5, 
-    //                        32, 10, 6, this, ID.ReflectBullet, handler));
-    //         } else {
-    //            handler.addObject(new ReflectBullet(x - 32, y + height/2 - 5, 
-    //                        32, 10, -6, this, ID.ReflectBullet, handler));
-    //         }
-    //      } else if (character == ID.Eagle) {
-    //         if (faceRight) {
-    //            handler.addObject(new ReflectBullet(x + width, y + 5, 
-    //                        32, 10, 8, this, ID.ReflectBullet, handler));
-    //            handler.addObject(new ReflectBullet(x + width, y + height - 15, 
-    //                        32, 10, 8, this, ID.ReflectBullet, handler));
-    //         } else {
-    //            handler.addObject(new ReflectBullet(x - 32, y + 5, 
-    //                        32, 10, -8, this, ID.ReflectBullet, handler));
-    //            handler.addObject(new ReflectBullet(x - 32, y + height - 15, 
-    //                        32, 10, -8, this, ID.ReflectBullet, handler));
-    //         }
-    //      } else {
-    //         if (faceRight) {
-    //            handler.addObject(new ReflectBullet(x + width, y + height/2 - 5, 
-    //                        32, 10, 8, this, ID.ReflectBullet, handler));
-    //         } else {
-    //            handler.addObject(new ReflectBullet(x - 32, y + height/2 - 5, 
-    //                        32, 10, -8, this, ID.ReflectBullet, handler));
-    //         }
-    //      } 
-    //      if (character == ID.Dino) {
-    //         shootCooldown += 15;
-    //      } else if (character == ID.Eagle) {
-    //         shootCooldown += 20;
-    //      }        
-    //   }
-    //   shootCooldown += 25;
     }
 
     serializeForUpdate() {
         return {
             ...(super.serializeForUpdate()),
+            velX: this.velX,
+            velY: this.velY,
             health: this.health,
             username: this.username,
             powerup: this.powerup,
@@ -285,6 +222,7 @@ class Player extends GameObject {
             character: this.character,
             abilityMeter: this.abilityMeter,
             shielded: this.shielded,
+            sequence: this.sequence,
         };
     }
 }

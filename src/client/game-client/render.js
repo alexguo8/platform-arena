@@ -1,6 +1,10 @@
 import { debounce } from "throttle-debounce";
 import { getAsset } from "./assets";
 import { getCurrentState } from "./state";
+import Handler from "./handler";
+import Player from "./player";
+import KeyInput from "./keyInput";
+
 
 const Type = require("../../shared/objectTypes");
 const Constants = require("../../shared/constants");
@@ -15,16 +19,135 @@ export class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
-        this.renderAnimation = this.renderAnimation.bind(this);
+        this.render = this.render.bind(this);
         this.request = null;
         setCanvasDimensions(canvas);
         window.addEventListener("resize", debounce(40, setCanvasDimensions));
         //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
+        this.handler = new Handler();
+        this.handler.initializePlatforms();
+        this.playerAdded = false;
+        this.keyInput = null;
+        this.inputs = [];
+        this.lastUpdateTime = Date.now();
     }
 
-    renderAnimation() {
-        this.request = window.requestAnimationFrame(this.renderAnimation);
-        render(this.context);
+    render() {
+        this.request = window.requestAnimationFrame(this.render);
+        const now = Date.now();
+        const dt = (now - this.lastUpdateTime) / 1000;
+        this.lastUpdateTime = now;
+
+        const { me, others, platforms, weapons, powerups } = getCurrentState();
+        if (!me) {
+            return;
+        }
+        if (!this.playerAdded) {
+            const player = new Player(me.id, me.x, me.y, 
+                Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, this.handler);
+            this.handler.addPlayer(player);
+            this.keyInput = new KeyInput(player);
+            this.playerAdded = true;
+        }
+
+        if (Object.keys(me).length !== 0) {
+            this.handler.player.x = me.x;
+            this.handler.player.y = me.y;
+            this.handler.player.velX = me.velX;
+            this.handler.player.velY = me.velY;
+        }
+
+        //Client Side Prediction
+        this.inputs = this.inputs.filter(i => i.sequence > me.sequence);
+        this.inputs.forEach(i => {
+            if (i.type === 0) {
+                this.keyInput.handleKeyPress(i.key);
+            } else {
+                this.keyInput.handleKeyUp(i.key);
+            }
+        })
+        this.handler.update(dt);
+        console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+    
+        // Draw background
+        renderBackground(this.context);
+    
+        platforms.forEach(p => {
+            for (let i = 0; i < this.handler.platforms.length; i++) {
+                const pl = this.handler.platforms[i];
+                if (pl.respawnTimer === 0 &&
+                    p.x === pl.x && p.y === pl.y) {
+                    pl.disappear();
+                    break;
+                }
+            }
+        })
+
+        // Draw all platforms
+        this.handler.platforms.forEach(p => {
+            renderPlatform(this.context, p);
+        })
+    
+        // Draw all bullets
+        weapons.forEach(w => {
+            switch(w.type) {
+                case Type.BULLET:
+                    renderBullet(this.context, w);
+                    break;
+                case Type.DRILL:
+                    renderDrill(this.context, w);
+                    break;
+                case Type.BOMB:
+                    renderBomb(this.context, w);
+                    break;
+                case Type.MINE:
+                    renderMine(this.context, w);
+                    break;
+                case Type.TELEPORT_BULLET:
+                    renderTeleportBullet(this.context, w);
+                    break;
+                case Type.FIRE_CLOUD:
+                    renderFireCloud(this.context, w);
+                    break;
+                default:
+                    break;
+            }
+        })
+    
+        // Draw all powerups
+        powerups.forEach(p => {
+            renderPowerup(this.context, p);
+        })
+    
+        // Draw all players
+        if (Object.keys(me).length !== 0) {
+            renderPlayer(this.context, me, this.handler.player);
+            renderHealthBar(this.context, me, this.handler.player);
+            renderPlayerPowerup(this.context, me, this.handler.player);
+            if (others.length === 0) {
+                renderCrown(this.context, me, this.handler.player);
+            }
+        } else {
+            if (others.length === 1) {
+                renderCrown(this.context, others[0]);
+            }
+        }
+        others.forEach(p => {
+            renderPlayer(this.context, p, p);
+            renderHealthBar(this.context, p, p);
+            renderPlayerPowerup(this.context, p, p);
+        });
+    
+        //Draw some weapons last
+        weapons.forEach(w => {
+            if (w.type === Type.EXPLOSION) {
+                renderExplosion(this.context, w);
+            } else if (w.type === Type.LASER) {
+                renderLaser(this.context, w);
+            } else if (w.type === Type.BAMBOO) {
+                renderBamboo(this.context, w);
+            }
+        })
     }
 
     // Replaces main menu rendering with game rendering.
@@ -32,7 +155,7 @@ export class Renderer {
         //clearInterval(this.renderInterval);
         //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
         //requestAnimationFrame(this.renderAnimation);
-        this.request = window.requestAnimationFrame(this.renderAnimation);
+        this.request = window.requestAnimationFrame(this.render);
         console.log("Starting rendering");
     }
 
@@ -57,81 +180,6 @@ function setCanvasDimensions(canvas) {
     canvas.height = Constants.HEIGHT;
 }
 
-
-function render(context) {
-    const { me, others, platforms, weapons, powerups } = getCurrentState();
-    if (!me) {
-        return;
-    }
-
-    // Draw background
-    renderBackground(context);
-
-    // Draw all platforms
-    renderPlatforms(context, platforms);
-
-    // Draw all bullets
-    weapons.forEach(w => {
-        switch(w.type) {
-            case Type.BULLET:
-                renderBullet(context, w);
-                break;
-            case Type.DRILL:
-                renderDrill(context, w);
-                break;
-            case Type.BOMB:
-                renderBomb(context, w);
-                break;
-            case Type.MINE:
-                renderMine(context, w);
-                break;
-            case Type.TELEPORT_BULLET:
-                renderTeleportBullet(context, w);
-                break;
-            case Type.FIRE_CLOUD:
-                renderFireCloud(context, w);
-                break;
-            default:
-                break;
-        }
-    })
-
-    // Draw all powerups
-    powerups.forEach(p => {
-        renderPowerup(context, p);
-    })
-
-    // Draw all players
-    if (Object.keys(me).length !== 0) {
-        renderPlayer(context, me);
-        renderHealthBar(context, me);
-        renderPlayerPowerup(context, me);
-        if (others.length === 0) {
-            renderCrown(context, me);
-        }
-    } else {
-        if (others.length === 1) {
-            renderCrown(context, others[0]);
-        }
-    }
-    others.forEach(p => {
-        renderPlayer(context, p);
-        renderHealthBar(context, p);
-        renderPlayerPowerup(context, p);
-    });
-
-    //Draw some weapons last
-    weapons.forEach(w => {
-        if (w.type === Type.EXPLOSION) {
-            renderExplosion(context, w);
-        } else if (w.type === Type.LASER) {
-            renderLaser(context, w);
-        } else if (w.type === Type.BAMBOO) {
-            renderBamboo(context, w);
-        }
-    })
-}
-
 function renderBackground(context) {
     // const backgroundX = canvas.width / 2;
     // const backgroundY = canvas.height / 2;
@@ -149,7 +197,7 @@ function renderBackground(context) {
     context.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 }
 
-function renderPlayer(context, player) {
+function renderPlayer(context, player, pos) {
     let image = getAsset("pandaRight.png");
     if (player.character === Type.PANDA) {
         if (player.faceRight) {
@@ -177,19 +225,19 @@ function renderPlayer(context, player) {
         }
     } 
     context.drawImage(
-        image, player.x, player.y,
+        image, pos.x, pos.y,
         PLAYER_WIDTH, PLAYER_HEIGHT,
     );
     if (player.shielded) {
         context.globalAlpha = 0.5;
-        context.drawImage(getAsset("shield.png"), player.x - 10, player.y - 10,
+        context.drawImage(getAsset("shield.png"), pos.x - 10, pos.y - 10,
             PLAYER_WIDTH + 20, PLAYER_HEIGHT + 20,
         );
         context.globalAlpha = 1;
     }
 }
 
-function renderHealthBar(context, player) {
+function renderHealthBar(context, player, pos) {
     let colour = `rgb(${20 + (135 * (100 - player.health)) / 50}, 155, 20)`;
     if (player.health <= 50) {
         colour = `rgb(155, ${155 - (135 * (50 - player.health)) / 50}, 20)`;
@@ -197,44 +245,44 @@ function renderHealthBar(context, player) {
     if (player.abilityMeter >= 100) {
         context.fillStyle = "white";
         context.fillRect(
-            player.x - 2, 
-            player.y - Constants.HEALTHBAR_HEIGHT - 7, 
+            pos.x - 2, 
+            pos.y - Constants.HEALTHBAR_HEIGHT - 7, 
             (Constants.HEALTHBAR_WIDTH * player.health) / 100 + 4, 
             Constants.HEALTHBAR_HEIGHT + 4,
         );
     }
     context.fillStyle = colour;
     context.fillRect(
-        player.x, 
-        player.y - Constants.HEALTHBAR_HEIGHT - 5, 
+        pos.x, 
+        pos.y - Constants.HEALTHBAR_HEIGHT - 5, 
         (Constants.HEALTHBAR_WIDTH * player.health) / 100, 
         Constants.HEALTHBAR_HEIGHT,
     );
     context.fillStyle = "black";
     context.textAlign = "center";
-    context.fillText(player.username, player.x + (Constants.PLAYER_WIDTH / 2), 
-        player.y - Constants.HEALTHBAR_HEIGHT - 10);
+    context.fillText(player.username, pos.x + (Constants.PLAYER_WIDTH / 2), 
+        pos.y - Constants.HEALTHBAR_HEIGHT - 10);
 }
 
-function renderPlayerPowerup(context, player) {
+function renderPlayerPowerup(context, player, pos) {
     switch(player.powerup) {
         case Type.DRILL_POWERUP:
-            context.drawImage(getAsset("drillPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("drillPowerup.png"), pos.x + 5, pos.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.MINE_POWERUP:
-            context.drawImage(getAsset("minePowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("minePowerup.png"), pos.x + 5, pos.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.BOMB_POWERUP:
-            context.drawImage(getAsset("bombPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("bombPowerup.png"), pos.x + 5, pos.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
         case Type.REFLECT_POWERUP:
-            context.drawImage(getAsset("reflectPowerup.png"), player.x + 5, player.y + PLAYER_HEIGHT + 5,
+            context.drawImage(getAsset("reflectPowerup.png"), pos.x + 5, pos.y + PLAYER_HEIGHT + 5,
                 PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
             );
             break;
@@ -244,13 +292,13 @@ function renderPlayerPowerup(context, player) {
     if (player.powerup !== Type.NO_POWERUP) {
         context.font = "12px Arial";
         context.fillStyle = "black";
-        context.fillText(player.specialAmmo, player.x + 20, player.y + PLAYER_HEIGHT + 15);
+        context.fillText(player.specialAmmo, pos.x + 20, pos.y + PLAYER_HEIGHT + 15);
     }
 }
 
-function renderCrown(context, player) {
+function renderCrown(context, player, pos) {
     context.drawImage(
-        getAsset("crown.png"), player.x, player.y - Constants.HEALTHBAR_HEIGHT - 40, 
+        getAsset("crown.png"), pos.x, pos.y - Constants.HEALTHBAR_HEIGHT - 40, 
         Constants.PLAYER_WIDTH, 18
     );
 }
@@ -361,43 +409,9 @@ function renderTeleportBullet(context, tBullet) {
     );
 }
 
-function renderPlatforms(context, platforms) {
-    for (let i = 0; i < 3; i++) {
-        context.drawImage(getAsset("platform.png"), i * 32 + 32, 96, 32, 16);
-        context.drawImage(getAsset("platform.png"), Constants.WIDTH - i * 32 - 64, 96, 32, 16);
-    }
-    for (let i = 0; i < 8; i++) {
-        context.drawImage(getAsset("platform.png"), i * 32 + 384, 96, 32, 16);
-        context.drawImage(getAsset("platform.png"), i * 32 + 384, 320, 32, 16);
-    }
-    for (let i = 0; i < 4; i++) {
-        context.drawImage(getAsset("platform.png"), i * 32 + 192, 192, 32, 16);
-        context.drawImage(getAsset("platform.png"), i * 32 + 704, 192, 32, 16);
-        context.drawImage(getAsset("platform.png"), i * 32 + 448, 544, 32, 16);
-    }
-    for (let i = 0; i < 6; i++) {
-        context.drawImage(getAsset("platform.png"), i * 32 + 32, 288, 32, 16);
-        context.drawImage(getAsset("platform.png"), Constants.WIDTH - i * 32 - 64, 288, 32, 16);
-        context.drawImage(getAsset("platform.png"), i * 32 + 160, 512, 32, 16);
-        context.drawImage(getAsset("platform.png"), Constants.WIDTH - i * 32 - 192, 512, 32, 16);
-        context.drawImage(getAsset("platform.png"), i * 32 + 96, 608, 32, 16);
-        context.drawImage(getAsset("platform.png"), Constants.WIDTH - i * 32 - 128, 608, 32, 16);
-    }
-    for (let i = 0; i < 12; i++) {
-        context.drawImage(getAsset("platform.png"), i * 32 + 320, 416, 32, 16);
-    }
-    context.fillStyle = "#b0b0f5";
-    platforms.forEach(p => {
-        context.fillRect(p.x, p.y, Constants.PLATFORM_WIDTH, Constants.PLATFORM_HEIGHT / 2);
-    })
-    for (let i = 0; i < Constants.HEIGHT; i += 32) {
-        context.drawImage(getAsset("platform.png"), 0, i, 32, 32);
-        context.drawImage(getAsset("platform.png"), Constants.WIDTH - 32, i, 32, 32);
-    } 
-    for (let i = 0; i < Constants.WIDTH; i += 32) {
-        context.drawImage(getAsset("platform.png"), i, 0, 32, 32);
-        context.drawImage(getAsset("platform.png"), i, Constants.HEIGHT - 32, 32, 32);
-    }
+function renderPlatform(context, platform) {
+    context.drawImage(getAsset("platform.png"), platform.x, platform.y,
+        platform.width, platform.height);
 }
 
 function renderPowerup(context, powerup) {

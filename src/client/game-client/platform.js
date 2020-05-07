@@ -1,15 +1,13 @@
 //Basic platform that is solid for every player and many weapons
-const shortid = require("shortid");
 const Constants = require("../../shared/constants");
-const GameObject = require("./gameObject");
 
-class Platform extends GameObject {
-    constructor(type, x, y, width, height, breakable, handler) {
-        super(shortid(), type, x, y, width, height);
-        this.breakable = breakable;
-        this.handler = handler;
+export default class Platform {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
 
-        this.solid = true;
         this.originalX = x;
         this.originalY = y;
         this.respawnTimer = 0;
@@ -33,13 +31,4 @@ class Platform extends GameObject {
         this.x = this.originalX;
         this.y = this.originalY;
     } 
-
-    serializeForUpdate() {
-        return {
-            x: this.originalX,
-            y: this.originalY,
-        }
-    }
 }
-
-module.exports = Platform;

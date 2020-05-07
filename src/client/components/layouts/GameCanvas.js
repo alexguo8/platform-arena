@@ -24,10 +24,10 @@ const GameCanvas = (props) => {
                 if (canvasRef.current) {
                     renderer.current = new Renderer(canvasRef.current);
                     renderer.current.startRendering();
+                    inputHandler.current = new InputHandler(props.player.room, props.network.handler, renderer.current, canvasRef.current);
+                    inputHandler.current.startCapturingInput();
                 }
             }).catch(console.error);
-        inputHandler.current = new InputHandler(props.player.room, props.network.handler, canvasRef.current);
-        inputHandler.current.startCapturingInput();
         props.resetRoom();
         resetLobbyStart();
         return () => {
