@@ -38,12 +38,12 @@ export class Client {
         this.lastUpdateTime = now;
 
         const me = getCurrentPlayerState();
+        const { platforms } = getCurrentState();
+        if (!me || !platforms) {
+            return;
+        }
 
         if (!this.playerAdded) {
-            const { me, platforms } = getCurrentState();
-            if (!me) {
-                return;
-            }
             const player = new Player(me.id, me.x, me.y, 
                 Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, this.handler);
             this.handler.addPlatforms(platforms);
@@ -51,6 +51,12 @@ export class Client {
             this.keyInput = new KeyInput(player);
             this.playerAdded = true;
         }
+
+        platforms.forEach(p => {
+            const pl = this.handler.platforms[p.id];
+            pl.x = p.x;
+            pl.y = p.y;
+        });
     
         if (Object.keys(me).length !== 0) {
             this.handler.player.x = me.x;
