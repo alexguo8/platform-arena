@@ -206,7 +206,7 @@ class Game {
             t: Date.now(),
             me: serializedPlayer,
             others: Object.values(this.handler.players).filter(p => p !== player).map(p => p.serializeForUpdate()),
-            platforms: Object.values(this.handler.platforms).filter(p => p.x === Constants.WIDTH).map(p => p.serializeForUpdate()),
+            platforms: Object.values(this.handler.platforms).map(p => p.serializeForUpdate()),
             weapons: Object.values(this.handler.weapons).map(w => w.serializeForUpdate()),
             powerups: Object.values(this.handler.powerups).map(p => p.serializeForUpdate()),
         };

@@ -36,8 +36,9 @@ class Platform extends GameObject {
 
     serializeForUpdate() {
         return {
-            x: this.originalX,
-            y: this.originalY,
+            ...super.serializeForUpdate(),
+            width: this.width,
+            height: this.height,
         }
     }
 }

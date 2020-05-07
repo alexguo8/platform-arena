@@ -8,6 +8,8 @@ let lobbyStart = false;
 let gameStart = 0;
 let firstServerTimestamp = 0;
 
+let lastPlayerUpdate = null;
+
 export function initState() {
     gameStart = 0;
     firstServerTimestamp = 0;
@@ -33,12 +35,17 @@ export function processLobbyStart(update) {
     lobbyStart = update;
 }
 
+export function getCurrentPlayerState() {
+    return lastPlayerUpdate;
+}
+
 export function processGameUpdate(update) {
     if (!firstServerTimestamp) {
         firstServerTimestamp = update.t;
         gameStart = Date.now();
     }
     gameUpdates.push(update);
+    lastPlayerUpdate = update.me;
 
     // Keep only one game update before the current server time
     const base = getBaseUpdate();

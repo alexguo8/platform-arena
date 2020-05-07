@@ -2,16 +2,14 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { Renderer } from "../../game-client/render";
-import { InputHandler } from "../../game-client/input";
 import { downloadAssets } from "../../game-client/assets";
 import { initState, resetLobbyStart } from "../../game-client/state";
 import { resetRoom } from "../../actions/playerActions";
+import { Client } from "../../game-client/client";
 
 const GameCanvas = (props) => {
     const canvasRef = useRef(null);
-    const renderer = useRef();
-    const inputHandler = useRef();
+    const client = useRef();
 
     useEffect(() => {
         if (props.player.room === "") {
@@ -22,20 +20,15 @@ const GameCanvas = (props) => {
             .then(() => {
                 initState();
                 if (canvasRef.current) {
-                    renderer.current = new Renderer(canvasRef.current);
-                    renderer.current.startRendering();
-                    inputHandler.current = new InputHandler(props.player.room, props.network.handler, renderer.current, canvasRef.current);
-                    inputHandler.current.startCapturingInput();
+                    client.current = new Client(canvasRef.current, props.player.room, props.network.handler);
+                    client.current.start();
                 }
             }).catch(console.error);
         props.resetRoom();
         resetLobbyStart();
         return () => {
-            if (inputHandler.current instanceof InputHandler) {
-                inputHandler.current.stopCapturingInput();
-            }
-            if (renderer.current instanceof Renderer) {
-                renderer.current.stopRendering();
+            if (client.current instanceof Client) {
+                client.current.stop();
             }
         }
     }, []);

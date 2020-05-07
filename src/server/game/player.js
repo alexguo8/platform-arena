@@ -32,6 +32,7 @@ class Player extends GameObject {
     } 
 
     update(dt) {
+        this.velY += Constants.PLAYER_GRAVITY;  
         this.collision(dt);
         super.update(dt);
         this.x = clamp(this.x, 0, Constants.WIDTH - this.width);
@@ -41,12 +42,12 @@ class Player extends GameObject {
             this.inAir = true;
         }
         
-        this.velY += Constants.PLAYER_GRAVITY;  
-        
         if (this.rP) {
             this.velX = Constants.PLAYER_SPEED;
         } else if (this.lP) {
             this.velX = -Constants.PLAYER_SPEED;
+        } else {
+            this.velX = 0;
         }
         
         if (this.health <= 0) {
@@ -73,17 +74,11 @@ class Player extends GameObject {
 
     stopLeft() {
         this.lP = false;
-        if (!this.rP) {
-            this.velX = 0;
-        }
         this.sequence++;
     }
 
     stopRight() {
         this.rP = false;
-        if (!this.lP) {
-            this.velX = 0;
-        }
         this.sequence++;
     }
 

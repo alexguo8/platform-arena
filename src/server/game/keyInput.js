@@ -26,9 +26,6 @@ class KeyInput {
         if (key === "Q") {
             player.qAbility();
         }
-        // if (key === KeyEvent.VK_Q && player.getAbilityMeter() === 100) {
-        //     player.ability();
-        // }
     }
  
     handleKeyUp(socket, key) {

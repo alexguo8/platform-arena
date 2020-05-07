@@ -13,18 +13,14 @@ export default class Player {
         this.velX = 0;
         this.velY = 0;
         this.inAir = false;
-        this.faceRight = true;
-        this.shielded = false;  
-        this.health = 100;
-        this.shootCooldown = 0;
-        this.specialAmmo = 0;
     
         this.lP = false;
         this.rP = false;
     } 
 
     update(dt) {
-        this.collision(dt);
+        //this.velY += Constants.PLAYER_GRAVITY;  
+        //this.collision(dt);
         this.x += dt * this.velX;
         this.y += dt * this.velY;
         
@@ -32,37 +28,29 @@ export default class Player {
             this.inAir = true;
         }
         
-        this.velY += Constants.PLAYER_GRAVITY;  
-        
         if (this.rP) {
             this.velX = Constants.PLAYER_SPEED;
         } else if (this.lP) {
             this.velX = -Constants.PLAYER_SPEED;
+        } else {
+            this.velX = 0;
         }
     }
 
     left() {
         this.lP = true;
-        this.faceRight = false; 
     }
 
     right() {
         this.rP = true;
-        this.faceRight = true; 
     }
 
     stopLeft() {
         this.lP = false;
-        if (!this.rP) {
-            this.velX = 0;
-        }
     }
 
     stopRight() {
         this.rP = false;
-        if (!this.lP) {
-            this.velX = 0;
-        }
     }
 
     jump() {
@@ -74,8 +62,8 @@ export default class Player {
 
     //Method to check collision with platforms and players
     collision(dt) {
-        for (let i = 0; i < this.handler.platforms.length; i++) {
-            const temp = this.handler.platforms[i];
+        for (const key of Object.keys(this.handler.platforms)) {
+            const temp = this.handler.platforms[key];
 
             if (!temp) {
                 continue;

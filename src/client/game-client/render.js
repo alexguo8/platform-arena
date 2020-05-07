@@ -1,10 +1,5 @@
-import { debounce } from "throttle-debounce";
 import { getAsset } from "./assets";
 import { getCurrentState } from "./state";
-import Handler from "./handler";
-import Player from "./player";
-import KeyInput from "./keyInput";
-
 
 const Type = require("../../shared/objectTypes");
 const Constants = require("../../shared/constants");
@@ -15,184 +10,89 @@ const { PLAYER_WIDTH, PLAYER_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT,
     POWERUP_WIDTH, POWERUP_HEIGHT, PLAYER_POWERUP_WIDTH, PLAYER_POWERUP_HEIGHT,
     } = Constants;
 
-export class Renderer {
-    constructor(canvas) {
-        this.canvas = canvas;
-        this.context = canvas.getContext("2d");
-        this.render = this.render.bind(this);
-        this.request = null;
-        setCanvasDimensions(canvas);
-        window.addEventListener("resize", debounce(40, setCanvasDimensions));
-        //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
-        this.handler = new Handler();
-        this.handler.initializePlatforms();
-        this.playerAdded = false;
-        this.keyInput = null;
-        this.inputs = [];
-        this.lastUpdateTime = Date.now();
-    }
 
-    render() {
-        this.request = window.requestAnimationFrame(this.render);
-        const now = Date.now();
-        const dt = (now - this.lastUpdateTime) / 1000;
-        this.lastUpdateTime = now;
-
-        const { me, others, platforms, weapons, powerups } = getCurrentState();
-        if (!me) {
-            return;
-        }
-        if (!this.playerAdded) {
-            const player = new Player(me.id, me.x, me.y, 
-                Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, this.handler);
-            this.handler.addPlayer(player);
-            this.keyInput = new KeyInput(player);
-            this.playerAdded = true;
-        }
-
-        if (Object.keys(me).length !== 0) {
-            this.handler.player.x = (this.handler.player.x + me.x) / 2;
-            this.handler.player.y = (this.handler.player.y + me.y) / 2;
-            this.handler.player.velX = 0.98 * me.velX;
-            this.handler.player.velY = 0.98 * me.velY;
-        }
-
-        //Client Side Prediction
-        this.inputs = this.inputs.filter(i => i.sequence > me.sequence);
-        this.inputs.forEach(i => {
-            if (i.type === 0) {
-                this.keyInput.handleKeyPress(i.key);
-            } else {
-                this.keyInput.handleKeyUp(i.key);
-            }
-        })
-        this.handler.update(dt);
-        //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
-    
-        // Draw background
-        renderBackground(this.context);
-    
-        platforms.forEach(p => {
-            for (let i = 0; i < this.handler.platforms.length; i++) {
-                const pl = this.handler.platforms[i];
-                if (pl.respawnTimer === 0 &&
-                    p.x === pl.x && p.y === pl.y) {
-                    pl.disappear();
-                    break;
-                }
-            }
-        })
-
-        // Draw all platforms
-        this.handler.platforms.forEach(p => {
-            renderPlatform(this.context, p);
-        })
-    
-        // Draw all bullets
-        weapons.forEach(w => {
-            switch(w.type) {
-                case Type.BULLET:
-                    renderBullet(this.context, w);
-                    break;
-                case Type.DRILL:
-                    renderDrill(this.context, w);
-                    break;
-                case Type.BOMB:
-                    renderBomb(this.context, w);
-                    break;
-                case Type.MINE:
-                    renderMine(this.context, w);
-                    break;
-                case Type.TELEPORT_BULLET:
-                    renderTeleportBullet(this.context, w);
-                    break;
-                case Type.FIRE_CLOUD:
-                    renderFireCloud(this.context, w);
-                    break;
-                default:
-                    break;
-            }
-        })
-    
-        // Draw all powerups
-        powerups.forEach(p => {
-            renderPowerup(this.context, p);
-        })
-    
-        // Draw all players
-        if (Object.keys(me).length !== 0) {
-            renderPlayer(this.context, me, this.handler.player);
-            renderHealthBar(this.context, me, this.handler.player);
-            renderPlayerPowerup(this.context, me, this.handler.player);
-            if (others.length === 0) {
-                renderCrown(this.context, me, this.handler.player);
-            }
-        } else {
-            if (others.length === 1) {
-                renderCrown(this.context, others[0]);
-            }
-        }
-        others.forEach(p => {
-            renderPlayer(this.context, p, p);
-            renderHealthBar(this.context, p, p);
-            renderPlayerPowerup(this.context, p, p);
-        });
-    
-        //Draw some weapons last
-        weapons.forEach(w => {
-            if (w.type === Type.EXPLOSION) {
-                renderExplosion(this.context, w);
-            } else if (w.type === Type.LASER) {
-                renderLaser(this.context, w);
-            } else if (w.type === Type.BAMBOO) {
-                renderBamboo(this.context, w);
-            }
-        })
-    }
-
-    // Replaces main menu rendering with game rendering.
-    startRendering() {
-        //clearInterval(this.renderInterval);
-        //this.renderInterval = setInterval(() => render(this.context), 1000 / 60);
-        //requestAnimationFrame(this.renderAnimation);
-        this.request = window.requestAnimationFrame(this.render);
-        console.log("Starting rendering");
-    }
-
-    // Replaces game rendering with main menu rendering.
-    stopRendering() {
-        //clearInterval(this.renderInterval);
-        //this.renderInterval = setInterval(() => render(this.canvas, this.context), 1000 / 60);
-        window.cancelAnimationFrame(this.request);
-        this.request = null;
-        console.log("Stopping rendering")
-        //renderInterval = setInterval(renderMainMenu, 1000 / 60);
-    }
-}
-
-function setCanvasDimensions(canvas) {
-  // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
-  // 800 in-game units of width.
-//   const scaleRatio = Math.max(1, 800 / window.innerWidth);
-//   canvas.width = scaleRatio * window.innerWidth;
-//   canvas.height = scaleRatio * window.innerHeight;
+export function setCanvasDimensions(canvas) {
     canvas.width = Constants.WIDTH;
     canvas.height = Constants.HEIGHT;
 }
 
+export function render(context, client) {
+    const { me, others, platforms, weapons, powerups } = getCurrentState();
+    if (!me) {
+        return;
+    }
+
+    // Draw background
+    renderBackground(context);
+
+    //Draw all platforms
+    platforms.forEach(p => {
+        renderPlatform(context, p);
+    })
+
+    // Draw all bullets
+    weapons.forEach(w => {
+        switch(w.type) {
+            case Type.BULLET:
+                renderBullet(context, w);
+                break;
+            case Type.DRILL:
+                renderDrill(context, w);
+                break;
+            case Type.BOMB:
+                renderBomb(context, w);
+                break;
+            case Type.MINE:
+                renderMine(context, w);
+                break;
+            case Type.TELEPORT_BULLET:
+                renderTeleportBullet(context, w);
+                break;
+            case Type.FIRE_CLOUD:
+                renderFireCloud(context, w);
+                break;
+            default:
+                break;
+        }
+    })
+
+    // Draw all powerups
+    powerups.forEach(p => {
+        renderPowerup(context, p);
+    })
+
+    // Draw all players
+    if (Object.keys(me).length !== 0) {
+        renderPlayer(context, me, client);
+        renderHealthBar(context, me, client);
+        renderPlayerPowerup(context, me, client);
+        if (others.length === 0) {
+            renderCrown(context, me, client);
+        }
+    } else {
+        if (others.length === 1) {
+            renderCrown(context, others[0]);
+        }
+    }
+    others.forEach(p => {
+        renderPlayer(context, p, p);
+        renderHealthBar(context, p, p);
+        renderPlayerPowerup(context, p, p);
+    });
+
+    //Draw some weapons last
+    weapons.forEach(w => {
+        if (w.type === Type.EXPLOSION) {
+            renderExplosion(context, w);
+        } else if (w.type === Type.LASER) {
+            renderLaser(context, w);
+        } else if (w.type === Type.BAMBOO) {
+            renderBamboo(context, w);
+        }
+    })
+}
+
 function renderBackground(context) {
-    // const backgroundX = canvas.width / 2;
-    // const backgroundY = canvas.height / 2;
-    // const backgroundGradient = context.createRadialGradient(
-    //     backgroundX,
-    //     backgroundY,
-    //     WIDTH / 10,
-    //     backgroundX,
-    //     backgroundY,
-    //     HEIGHT / 2,
-    // );
-    // backgroundGradient.addColorStop(0, "#c0c0ff");
-    // backgroundGradient.addColorStop(1, "#b0b0f5");
     context.fillStyle = "#b0b0f5";
     context.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 }
