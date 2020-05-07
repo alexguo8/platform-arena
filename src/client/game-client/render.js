@@ -51,27 +51,23 @@ export class Renderer {
         }
 
         if (Object.keys(me).length !== 0) {
-            //console.log(Math.sqrt(Math.pow(me.x - this.handler.player.x, 2) + 
-        //Math.pow(me.y - this.handler.player.y, 2)))
-            if (Math.sqrt(Math.pow(me.x - this.handler.player.x, 2) + 
-                Math.pow(me.y - this.handler.player.y, 2)) > 5) {
-                this.handler.player.x = me.x;
-                this.handler.player.y = me.y;
-                this.inputs = this.inputs.filter(i => i.sequence > me.sequence);
-                this.inputs.forEach(i => {
-                    if (i.type === 0) {
-                        this.keyInput.handleKeyPress(i.key);
-                    } else {
-                        this.keyInput.handleKeyUp(i.key);
-                    }
-                })   
-            }
-            this.handler.player.velX = me.velX;
-            this.handler.player.velY = me.velY;
+            this.handler.player.x = (this.handler.player.x + me.x) / 2;
+            this.handler.player.y = (this.handler.player.y + me.y) / 2;
+            this.handler.player.velX = 0.98 * me.velX;
+            this.handler.player.velY = 0.98 * me.velY;
         }
 
         //Client Side Prediction
+        this.inputs = this.inputs.filter(i => i.sequence > me.sequence);
+        this.inputs.forEach(i => {
+            if (i.type === 0) {
+                this.keyInput.handleKeyPress(i.key);
+            } else {
+                this.keyInput.handleKeyUp(i.key);
+            }
+        })
         this.handler.update(dt);
+        //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
     
         // Draw background
         renderBackground(this.context);
