@@ -52,17 +52,17 @@ export class Client {
             this.playerAdded = true;
         }
 
-        platforms.forEach(p => {
-            const pl = this.handler.platforms[p.id];
-            pl.x = p.x;
-            pl.y = p.y;
-        });
+        // platforms.forEach(p => {
+        //     const pl = this.handler.platforms[p.id];
+        //     pl.x = p.x;
+        //     pl.y = p.y;
+        // });
     
         if (Object.keys(me).length !== 0) {
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
-            //this.handler.player.velY = me.velY;
+            this.handler.player.velY = me.velY;
         }
     
         //Client Side Prediction
