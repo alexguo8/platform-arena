@@ -28,6 +28,8 @@ export class Client {
         this.keyInput = null;
         this.pendingInputs = [];
         this.lastUpdateTime = Date.now();
+
+        this.previousServerTime = null;
     }
 
     update() {
@@ -37,7 +39,8 @@ export class Client {
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const { me, platforms } = getCurrentState();
+        const { time, me } = getCurrentPlayerState();
+        const { platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
@@ -49,6 +52,8 @@ export class Client {
             this.handler.addPlayer(player);
             this.keyInput = new KeyInput(player);
             this.playerAdded = true;
+            this.previousServerX = me.x;
+            this.previousServerY = me.y;
         }
 
         platforms.forEach(p => {
@@ -57,28 +62,33 @@ export class Client {
             pl.y = p.y;
         });
     
-        const originalX = this.handler.player.x;
-        const originalY = this.handler.player.y;
-        if (Object.keys(me).length !== 0) {
+        if (Object.keys(me).length !== 0 && time !== this.previousServerTime) {
+            const originalX = this.handler.player.x;
+            const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
+            this.previousServerTime = time;
+
+            //Client Side Prediction
+            this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
+            this.pendingInputs.forEach(i => {
+                if (i.type === 0) {
+                    this.keyInput.handleKeyPress(i.key);
+                } else if (i.type === 1) {
+                    this.keyInput.handleKeyPress(i.key);
+                }
+            })
+            this.handler.update(dt);
+            this.handler.player.x = (this.handler.player.x + originalX) / 2;
+            this.handler.player.y = (this.handler.player.y + originalY) / 2;
+        } else {
+            this.handler.update(dt);
         }
     
-        //Client Side Prediction
-        this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
-        this.pendingInputs.forEach(i => {
-            if (i.type === 0) {
-                this.keyInput.handleKeyPress(i.key); 
-            } else if (i.type === 1) {
-                this.keyInput.handleKeyPress(i.key);
-            }
-        })
-        this.handler.update(dt);
-        this.handler.player.x = (this.handler.player.x + originalX) / 2;
-        this.handler.player.y = (this.handler.player.y + originalY) / 2;
-        //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+        
+        console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
 
         render(this.context, this.handler.player);
     }

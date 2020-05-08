@@ -45,7 +45,10 @@ export function processGameUpdate(update) {
         gameStart = Date.now();
     }
     gameUpdates.push(update);
-    lastPlayerUpdate = update.me;
+    lastPlayerUpdate = {
+        time: Date.now(),
+        me: update.me,
+    };
 
     // Keep only one game update before the current server time
     const base = getBaseUpdate();
