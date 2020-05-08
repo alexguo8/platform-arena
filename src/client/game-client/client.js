@@ -58,9 +58,11 @@ export class Client {
         //     pl.y = p.y;
         // });
     
+        const originalX = this.handler.player.x;
+        const originalY = this.handler.player.y;
         if (Object.keys(me).length !== 0) {
-            this.handler.player.x = (this.handler.player.x + me.x)/2;
-            this.handler.player.y = (this.handler.player.y + me.y)/2;
+            this.handler.player.x = me.x;
+            this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
         }
@@ -75,6 +77,8 @@ export class Client {
             }
         })
         this.handler.update(dt);
+        this.handler.player.x = (this.handler.player.x + originalX) / 2;
+        this.handler.player.y = (this.handler.player.y + originalY) / 2;
         //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
 
         render(this.context, this.handler.player);
