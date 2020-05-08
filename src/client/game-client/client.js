@@ -29,7 +29,7 @@ export class Client {
         this.pendingInputs = [];
         this.lastUpdateTime = Date.now();
 
-        this.previousServerTime = null;
+        this.previousFrame = null;
     }
 
     update() {
@@ -39,7 +39,7 @@ export class Client {
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const { time, me } = getCurrentPlayerState();
+        const { frame, me } = getCurrentPlayerState();
         const { platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
@@ -62,14 +62,14 @@ export class Client {
             pl.y = p.y;
         });
     
-        if (Object.keys(me).length !== 0 && time !== this.previousServerTime) {
+        if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
-            this.previousServerTime = time;
+            this.previousFrame = frame;
 
             //Client Side Prediction
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);

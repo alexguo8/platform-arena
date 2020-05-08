@@ -3,6 +3,7 @@
 const RENDER_DELAY = 50;
 
 const gameUpdates = [];
+let counter = 0;
 let lobbyUpdate = {};
 let lobbyStart = false;
 let gameStart = 0;
@@ -46,9 +47,10 @@ export function processGameUpdate(update) {
     }
     gameUpdates.push(update);
     lastPlayerUpdate = {
-        time: Date.now(),
+        frame: counter,
         me: update.me,
     };
+    counter++;
 
     // Keep only one game update before the current server time
     const base = getBaseUpdate();
