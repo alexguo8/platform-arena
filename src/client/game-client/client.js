@@ -64,9 +64,9 @@ export class Client {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
-            this.handler.player.y = me.y;
+            //this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
-            this.handler.player.velY = me.velY;
+            //this.handler.player.velY = me.velY;
             this.previousFrame = frame;
 
             //Client Side Prediction
