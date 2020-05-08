@@ -60,9 +60,9 @@ export class Client {
     
         if (Object.keys(me).length !== 0) {
             this.handler.player.x = me.x;
-            this.handler.player.y = me.y;
+            //this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
-            this.handler.player.velY = me.velY;
+            //this.handler.player.velY = me.velY;
         }
     
         //Client Side Prediction
@@ -75,7 +75,7 @@ export class Client {
             }
         })
         this.handler.update(dt);
-        console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+        //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
 
         render(this.context, this.handler.player);
     }
