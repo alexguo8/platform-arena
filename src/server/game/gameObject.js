@@ -22,8 +22,8 @@ class GameObject {
     }
 
     update(dt) {
-        this.x += Math.round(dt * this.velX);
-        this.y += Math.round(dt * this.velY);
+        this.x += dt * this.velX;
+        this.y += dt * this.velY;
     }
    
     serializeForUpdate() {

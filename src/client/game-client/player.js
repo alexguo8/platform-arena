@@ -21,8 +21,8 @@ export default class Player {
     update(dt) {
         this.velY += Constants.PLAYER_GRAVITY;  
         this.collision(dt);
-        this.x += Math.round(dt * this.velX);
-        this.y += Math.round(dt * this.velY);
+        this.x += dt * this.velX;
+        this.y += dt * this.velY;
         
         if (this.velY > 0) {
             this.inAir = true;
