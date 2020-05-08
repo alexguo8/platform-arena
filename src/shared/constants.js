@@ -46,7 +46,7 @@ module.exports = Object.freeze({
     LASER_HEIGHT: 32,
     LASER_COOLDOWN: 20,
     LASER_LIFETIME: 60,
-    LASER_DAMAGE: 20,
+    LASER_DAMAGE: 30,
 
     FIRE_CLOUD_WIDTH: 32,
     FIRE_CLOUD_HEIGHT: 32,

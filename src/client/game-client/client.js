@@ -105,6 +105,10 @@ export class Client {
                 }
             })
             this.handler.update(dt);
+            if (me.velY === 0) {
+                this.handler.player.velY = 0;
+                this.handler.player.y = me.y;
+            }
             //console.log([2, this.handler.player.x - me.x, this.handler.player.y - me.y])
         }
     
