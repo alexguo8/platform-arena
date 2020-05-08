@@ -37,8 +37,7 @@ export class Client {
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const me = getCurrentPlayerState();
-        const { platforms } = getCurrentState();
+        const { me, platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
