@@ -71,19 +71,19 @@ class Game {
 
     createStage() {
         for (let i = 0; i < 3; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 96, 32, 16, true, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 96, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 128, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 128, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 8; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 384, 96, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 384, 128, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 4; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 192, 192, 32, 16, true, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 704, 192, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 192, 224, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 704, 224, 32, 16, true, this.handler));
         }
-        for (let i = 0; i < 6; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 288, 32, 16, true, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 288, 32, 16, true, this.handler));
+        for (let i = 0; i < 5; i++) {
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 32, 320, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 64, 320, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 8; i++) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 384, 320, 32, 16, true, this.handler));
@@ -92,13 +92,13 @@ class Game {
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 320, 416, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 6; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 160, 512, 32, 16, true, this.handler));
-            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 192, 512, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 192, 512, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 224, 512, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 96, 608, 32, 16, true, this.handler));
             this.handler.addPlatform(new Platform(Type.PLATFORM, Constants.WIDTH - i * 32 - 128, 608, 32, 16, true, this.handler));
         }
         for (let i = 0; i < 4; i++) {
-            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 448, 544, 32, 16, true, this.handler));
+            this.handler.addPlatform(new Platform(Type.PLATFORM, i * 32 + 448, 608, 32, 16, true, this.handler));
         }
         for (let i = 0; i < Constants.HEIGHT; i += 32) {
             this.handler.addPlatform(new Platform(Type.PLATFORM, 0, i, 32, 32, false, this.handler));
