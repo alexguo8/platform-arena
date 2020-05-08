@@ -88,7 +88,7 @@ export class Client {
         }
     
         
-        console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+        //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
 
         render(this.context, this.handler.player);
     }
