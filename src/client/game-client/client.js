@@ -30,6 +30,7 @@ export class Client {
         this.lastUpdateTime = Date.now();
 
         this.previousFrame = null;
+        this.deltaY = 0;
     }
 
     update() {
@@ -64,7 +65,8 @@ export class Client {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
             this.handler.player.x = (this.handler.player.x + me.x)/2;
-            this.handler.player.y += (me.y - this.handler.player.y) * 0.5;
+            this.handler.player.y += (this.deltaY + me.y - this.handler.player.y) * 0.5;
+            this.deltaY = (this.deltaY + me.y - this.handler.player.y) * 0.5;
             if (me.velX = 0) {
                 this.handler.player.velX = 0;
             }
