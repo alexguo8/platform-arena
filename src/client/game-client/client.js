@@ -52,11 +52,11 @@ export class Client {
             this.playerAdded = true;
         }
 
-        // platforms.forEach(p => {
-        //     const pl = this.handler.platforms[p.id];
-        //     pl.x = p.x;
-        //     pl.y = p.y;
-        // });
+        platforms.forEach(p => {
+            const pl = this.handler.platforms[p.id];
+            pl.x = p.x;
+            pl.y = p.y;
+        });
     
         const originalX = this.handler.player.x;
         const originalY = this.handler.player.y;

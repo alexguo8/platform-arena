@@ -19,8 +19,8 @@ export default class Player {
     } 
 
     update(dt) {
-        //this.velY += Constants.PLAYER_GRAVITY;  
-        //this.collision(dt);
+        this.velY += Constants.PLAYER_GRAVITY;  
+        this.collision(dt);
         this.x += dt * this.velX;
         this.y += dt * this.velY;
         
