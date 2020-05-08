@@ -60,7 +60,7 @@ export class Client {
     
         if (Object.keys(me).length !== 0) {
             this.handler.player.x = me.x;
-            //this.handler.player.y = me.y;
+            this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             //this.handler.player.velY = me.velY;
         }
