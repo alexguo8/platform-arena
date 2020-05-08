@@ -45,7 +45,7 @@ class Player extends GameObject {
         } else {
             this.velX = 0;
         }
-        
+
         this.collision(dt);
         super.update(dt);
         this.x = clamp(this.x, 0, Constants.WIDTH - this.width);
@@ -88,7 +88,7 @@ class Player extends GameObject {
             this.velY = -Constants.PLAYER_JUMP;
             this.inAir = true;
         }
-        this.sequence++;
+        // this.sequence++;
     }
 
     takeDamage(source) {

@@ -9,7 +9,7 @@ let lobbyStart = false;
 let gameStart = 0;
 let firstServerTimestamp = 0;
 
-let lastPlayerUpdate = null;
+let lastPlayerUpdate = {};
 
 export function initState() {
     gameStart = 0;

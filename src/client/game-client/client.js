@@ -63,8 +63,21 @@ export class Client {
         if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
-            this.handler.player.x = (this.handler.player.x + me.x)/2;
-            this.handler.player.y = (this.handler.player.y + me.y)/2;
+            if (Math.abs(this.handler.player.x - me.x) < 5) {
+                this.handler.player.x = me.x;
+            } else {
+                this.handler.player.x += Math.round((me.x - this.handler.player.x) * 0.5);
+            }
+
+            if (Math.abs(this.handler.player.y - me.y) < 5) {
+                this.handler.player.y = me.y;
+            } else {
+                this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
+            }
+
+            // this.handler.player.x = me.x;
+            // this.handler.player.y = me.y;
+            
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
             this.previousFrame = frame;
@@ -129,15 +142,16 @@ export class Client {
         const keys = ["W", "A", "S", "D", "Q"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            if (key === "A" || key === "D" || key === "W") {
+            if (key === "A" || key === "D") {
                 this.pendingInputs.push({
                     sequence: this.sequence,
                     key: key,
                     type: 0
                 });
-                this.keyInput.handleKeyPress(key); 
+                
                 this.sequence++;
             }
+            this.keyInput.handleKeyPress(key); 
             this.networkHandler.sendKeyPress(key, this.room);
         }
     }

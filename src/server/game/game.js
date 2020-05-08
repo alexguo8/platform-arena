@@ -27,7 +27,7 @@ class Game {
         this.usernameWinner = "";
 
         this.lastUpdateTime = Date.now();
-        this.shouldSendUpdate = false;
+        this.shouldSendUpdate = 0;
         this.createStage();
         this.updateInterval = setInterval(this.update.bind(this), 1000 / 60);
     }
@@ -184,15 +184,15 @@ class Game {
 
         this.handler.update(dt);
 
-        if (this.shouldSendUpdate) {
+        if (this.shouldSendUpdate === 1) {
             for (const playerID of Object.keys(this.sockets)) {
                 const socket = this.sockets[playerID];
                 const player = this.handler.players[playerID];
                 socket.emit(Constants.MSG_TYPES.GAME_UPDATE, this.createUpdate(player));
             };
-            this.shouldSendUpdate = false;
+            this.shouldSendUpdate = 0;
         } else {
-            this.shouldSendUpdate = true;
+            this.shouldSendUpdate++;
         }
     }
 

@@ -13,6 +13,7 @@ export default class Player {
         this.velX = 0;
         this.velY = 0;
         this.inAir = false;
+        this.faceRight = true;
     
         this.lP = false;
         this.rP = false;
@@ -31,18 +32,20 @@ export default class Player {
         } else {
             this.velX = 0;
         }
-        
+
         this.collision(dt);
-        this.x += dt * this.velX;
-        this.y += dt * this.velY;
+        this.x += Math.round(dt * this.velX);
+        this.y += Math.round(dt * this.velY);
     }
 
     left() {
         this.lP = true;
+        this.faceRight = false; 
     }
 
     right() {
         this.rP = true;
+        this.faceRight = true; 
     }
 
     stopLeft() {
