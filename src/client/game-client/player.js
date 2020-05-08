@@ -20,10 +20,6 @@ export default class Player {
 
     update(dt) {
         this.velY += Constants.PLAYER_GRAVITY;  
-        this.collision(dt);
-        this.x += dt * this.velX;
-        this.y += dt * this.velY;
-        
         if (this.velY > 0) {
             this.inAir = true;
         }
@@ -35,6 +31,10 @@ export default class Player {
         } else {
             this.velX = 0;
         }
+        
+        this.collision(dt);
+        this.x += dt * this.velX;
+        this.y += dt * this.velY;
     }
 
     left() {

@@ -33,11 +33,7 @@ class Player extends GameObject {
 
     update(dt) {
         this.velY += Constants.PLAYER_GRAVITY;  
-        this.collision(dt);
-        super.update(dt);
-        this.x = clamp(this.x, 0, Constants.WIDTH - this.width);
-        this.y = clamp(this.y, 0, Constants.HEIGHT - this.height);
-        
+                
         if (this.velY > 0) {
             this.inAir = true;
         }
@@ -49,6 +45,11 @@ class Player extends GameObject {
         } else {
             this.velX = 0;
         }
+        
+        this.collision(dt);
+        super.update(dt);
+        this.x = clamp(this.x, 0, Constants.WIDTH - this.width);
+        this.y = clamp(this.y, 0, Constants.HEIGHT - this.height);
         
         if (this.health <= 0) {
             this.handler.removePlayer(this);
