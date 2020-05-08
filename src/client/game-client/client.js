@@ -64,9 +64,9 @@ export class Client {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
-            //this.handler.player.y = me.y;
+            this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
-            //this.handler.player.velY = me.velY;
+            this.handler.player.velY = me.velY;
             this.previousFrame = frame;
 
             //Client Side Prediction
@@ -80,7 +80,7 @@ export class Client {
             })
             this.handler.update(dt);
             this.handler.player.x = (this.handler.player.x + originalX) / 2;
-            //this.handler.player.y = (this.handler.player.y + originalY) / 2;
+            this.handler.player.y = (this.handler.player.y + originalY) / 2;
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
             this.pendingInputs.forEach(i => {
