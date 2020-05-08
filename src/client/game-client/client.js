@@ -63,8 +63,8 @@ export class Client {
         if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
             const originalX = this.handler.player.x;
             const originalY = this.handler.player.y;
-            this.handler.player.x = me.x;
-            this.handler.player.y = me.y;
+            this.handler.player.x = (this.handler.player.x + me.x)/2;
+            this.handler.player.y = (this.handler.player.y + me.y)/2;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
             this.previousFrame = frame;
@@ -79,8 +79,8 @@ export class Client {
                 }
             })
             this.handler.update(dt);
-            this.handler.player.x = (this.handler.player.x + originalX) / 2;
-            this.handler.player.y = (this.handler.player.y + originalY) / 2;
+            //this.handler.player.x = (this.handler.player.x + originalX) / 2;
+            //this.handler.player.y = (this.handler.player.y + originalY) / 2;
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
