@@ -52,8 +52,6 @@ export class Client {
             this.handler.addPlayer(player);
             this.keyInput = new KeyInput(player);
             this.playerAdded = true;
-            this.previousServerX = me.x;
-            this.previousServerY = me.y;
         }
 
         platforms.forEach(p => {
@@ -69,8 +67,6 @@ export class Client {
             this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
-            this.handler.player.lP = me.lP;
-            this.handler.player.rP = me.rP;
             this.previousFrame = frame;
 
             //Client Side Prediction
@@ -79,7 +75,7 @@ export class Client {
                 if (i.type === 0) {
                     this.keyInput.handleKeyPress(i.key);
                 } else if (i.type === 1) {
-                    this.keyInput.handleKeyPress(i.key);
+                    this.keyInput.handleKeyUp(i.key);
                 }
             })
             this.handler.update(dt);
@@ -91,13 +87,12 @@ export class Client {
                 if (i.type === 0) {
                     this.keyInput.handleKeyPress(i.key);
                 } else if (i.type === 1) {
-                    this.keyInput.handleKeyPress(i.key);
+                    this.keyInput.handleKeyUp(i.key);
                 }
             })
             this.handler.update(dt);
         }
     
-        
         //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
 
         render(this.context, this.handler.player);
@@ -132,7 +127,6 @@ export class Client {
         const keys = ["W", "A", "S", "D", "Q"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            this.networkHandler.sendKeyPress(key, this.room);
             if (key === "A" || key === "D" || key === "W") {
                 this.pendingInputs.push({
                     sequence: this.sequence,
@@ -142,6 +136,7 @@ export class Client {
                 this.keyInput.handleKeyPress(key); 
                 this.sequence++;
             }
+            this.networkHandler.sendKeyPress(key, this.room);
         }
     }
 
@@ -149,7 +144,6 @@ export class Client {
         const keys = ["A", "D"];
         const key = String.fromCharCode(e.keyCode).toUpperCase();
         if (keys.includes(key)) {
-            this.networkHandler.sendKeyUp(key, this.room);
             if (key === "A" || key === "D") {
                 this.pendingInputs.push({
                     sequence: this.sequence,
@@ -159,6 +153,7 @@ export class Client {
                 this.keyInput.handleKeyUp(key); 
                 this.sequence++;
             }
+            this.networkHandler.sendKeyUp(key, this.room);
         }
     }
 }

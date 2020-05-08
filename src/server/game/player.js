@@ -206,9 +206,7 @@ class Player extends GameObject {
 
     serializeForUpdate() {
         return {
-            ...(super.serializeForUpdate()),
-            rP: this.rP,
-            lP: this.lP,
+            ...super.serializeForUpdate(),
             velX: this.velX,
             velY: this.velY,
             health: this.health,
