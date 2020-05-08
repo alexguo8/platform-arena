@@ -80,7 +80,7 @@ export class Client {
             })
             this.handler.update(dt);
             this.handler.player.x = (this.handler.player.x + originalX) / 2;
-            this.handler.player.y = (this.handler.player.y + originalY) / 2;
+            //this.handler.player.y = (this.handler.player.y + originalY) / 2;
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
             this.pendingInputs.forEach(i => {
