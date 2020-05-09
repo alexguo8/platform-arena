@@ -52,6 +52,7 @@ export function processGameUpdate(update) {
         gameStart = Date.now();
     }
     gameUpdates.push(update);
+    lastPlayerUpdate = update.me;
     playerUpdates.push({
         me: update.me,
         t: update.t,
@@ -130,6 +131,7 @@ export function getCurrentState() {
 }
 
 export function getCurrentPlayerState() {
+    return lastPlayerUpdate();
     if (!firstServerTimestamp) {
         return {};
     }
