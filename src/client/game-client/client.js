@@ -77,8 +77,8 @@ export class Client {
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             
-            this.handler.player.velX = me.velX;
-            this.handler.player.velY = me.velY;
+            // this.handler.player.velX = me.velX;
+            // this.handler.player.velY = me.velY;
             this.previousFrame = frame;
 
             //Client Side Prediction
