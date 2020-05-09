@@ -75,8 +75,8 @@ export class Client {
             // } else {
             //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
             // }
-            this.handler.update(firstHalf);
-            console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+            //this.handler.update(firstHalf);
+            //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             
@@ -93,7 +93,7 @@ export class Client {
                     this.keyInput.handleKeyUp(i.key);
                 }
             })
-            this.handler.update(secondHalf);
+            this.handler.update(dt);
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             // this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
