@@ -38,6 +38,7 @@ export class Client {
         const { frame, me, currTime } = getCurrentPlayerState();
 
         const now = Date.now();
+        const firstHalf = (currTime - this.lastUpdateTime) / 1000;
         const secondHalf = (now - currTime) / 1000;
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
@@ -74,11 +75,11 @@ export class Client {
             // } else {
             //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
             // }
-            this.handler.player.x = me.x;
-            this.handler.player.y = me.y;
+            this.handler.player.x += Math.round((me.x - this.handler.player.x) * (firstHalf / dt));
+            this.handler.player.y += Math.round((me.y - this.handler.player.y) * (firstHalf / dt));
             
-            // this.handler.player.velX = me.velX;
-            // this.handler.player.velY = me.velY;
+            this.handler.player.velX = me.velX;
+            this.handler.player.velY = me.velY;
             this.previousFrame = frame;
 
             //Client Side Prediction
