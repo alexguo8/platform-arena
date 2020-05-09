@@ -49,6 +49,7 @@ export function processGameUpdate(update) {
     lastPlayerUpdate = {
         frame: counter,
         me: update.me,
+        currTime: Date.now(),
     };
     counter++;
 

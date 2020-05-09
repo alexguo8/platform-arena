@@ -30,16 +30,20 @@ export class Client {
         this.lastUpdateTime = Date.now();
 
         this.previousFrame = null;
+        this.lastServerTime = 0;
     }
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
+        const { frame, me, currTime, servTime } = getCurrentPlayerState();
 
         const now = Date.now();
+        const firstHalf = (currTime - this.lastUpdateTime) / 1000;
+        const secondHalf = (now - currTime) / 1000;
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const { frame, me } = getCurrentPlayerState();
+        
         const { platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
@@ -72,6 +76,16 @@ export class Client {
             // } else {
             //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
             // }
+            console.log([firstHalf, secondHalf])
+            this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
+            this.pendingInputs.forEach(i => {
+                if (i.type === 0) {
+                    this.keyInput.handleKeyPress(i.key);
+                } else if (i.type === 1) {
+                    this.keyInput.handleKeyUp(i.key);
+                }
+            })
+            this.handler.update(firstHalf);
 
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
@@ -89,7 +103,7 @@ export class Client {
                     this.keyInput.handleKeyUp(i.key);
                 }
             })
-            this.handler.update(dt);
+            this.handler.update(secondHalf);
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
