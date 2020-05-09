@@ -35,14 +35,15 @@ export class Client {
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
-        //const { frame, currTime } = getCurrentPlayerState();
+        const { frame, me, currTime } = getCurrentPlayerState();
 
         const now = Date.now();
-        //const secondHalf = (now - currTime) / 1000;
+        const secondHalf = (now - currTime) / 1000;
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const { me, platforms } = getCurrentState();
+        
+        const { platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
@@ -62,7 +63,7 @@ export class Client {
             pl.y = p.y;
         });
     
-        if (Object.keys(me).length !== 0) {
+        if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
             // if (Math.abs(this.handler.player.x - me.x) < 5) {
             //     this.handler.player.x = me.x;
             // } else {
@@ -76,9 +77,10 @@ export class Client {
             // }
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
+            
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
-            //this.previousFrame = frame;
+            this.previousFrame = frame;
 
             //Client Side Prediction
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
@@ -89,7 +91,7 @@ export class Client {
                     this.keyInput.handleKeyUp(i.key);
                 }
             })
-            this.handler.update(dt);
+            this.handler.update(secondHalf);
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
@@ -103,6 +105,8 @@ export class Client {
             this.handler.update(dt);
             //console.log([2, this.handler.player.x - me.x, this.handler.player.y - me.y])
         }
+    
+        
 
         render(this.context, this.handler.player);
     }
