@@ -16,7 +16,7 @@ export function initState() {
     firstServerTimestamp = 0;
 }
 
-export function resetState() {
+export function resetGameState() {
     gameUpdates.length = 0;
     counter = 0;
     gameStart = 0;
