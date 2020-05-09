@@ -46,37 +46,29 @@ export function resetLobbyStart() {
     lobbyUpdate = {};
 }
 
+export function getCurrentPlayerState() {
+    return lastPlayerUpdate;
+}
+
 export function processGameUpdate(update) {
     if (!firstServerTimestamp) {
         firstServerTimestamp = update.t;
         gameStart = Date.now();
     }
     gameUpdates.push(update);
-    lastPlayerUpdate = update.me;
-    playerUpdates.push({
+    lastPlayerUpdate = {
         me: update.me,
-        t: update.t,
-    });
+    };
 
     // Keep only one game update before the current server time
     const base = getBaseUpdate();
     if (base > 0) {
         gameUpdates.splice(0, base);
     }
-
-    // Keep only one game update before the current server time
-    const playerBase = getPlayerBaseUpdate();
-    if (playerBase > 0) {
-        playerUpdates.splice(0, playerBase);
-    }
 }
 
 function currentServerTime() {
     return firstServerTimestamp + (Date.now() - gameStart) - RENDER_DELAY;
-}
-
-function currentPlayerServerTime() {
-    return firstServerTimestamp + (Date.now() - gameStart) - PLAYER_DELAY;
 }
 
 // Returns the index of the base update, the first game update before
@@ -85,19 +77,7 @@ function getBaseUpdate() {
     const serverTime = currentServerTime();
     for (let i = gameUpdates.length - 1; i >= 0; i--) {
         if (gameUpdates[i].t <= serverTime) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-// Returns the index of the base update, the first player update before
-// current server time, or -1 if N/A.
-function getPlayerBaseUpdate() {
-    const serverTime = currentPlayerServerTime();
-    for (let i = playerUpdates.length - 1; i >= 0; i--) {
-        if (playerUpdates[i].t <= serverTime) {
-            return i;
+        return i;
         }
     }
     return -1;
@@ -121,34 +101,11 @@ export function getCurrentState() {
         const next = gameUpdates[base + 1];
         const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
         return {
-            //me: interpolateObject(baseUpdate.me, next.me, ratio),
+            me: interpolateObject(baseUpdate.me, next.me, ratio),
             others: interpolateObjectArray(baseUpdate.others, next.others, ratio),
             platforms: baseUpdate.platforms,
             weapons: interpolateObjectArray(baseUpdate.weapons, next.weapons, ratio),
             powerups: baseUpdate.powerups,
-        };
-    }
-}
-
-export function getCurrentPlayerState() {
-    return lastPlayerUpdate;
-    if (!firstServerTimestamp) {
-        return {};
-    }
-
-    const base = getPlayerBaseUpdate();
-    const serverTime = currentPlayerServerTime();
-
-    // If base is the most recent update we have, use its state.
-    // Otherwise, interpolate between its state and the state of (base + 1).
-    if (base < 0 || base === playerUpdates.length - 1) {
-        return playerUpdates[playerUpdates.length - 1];
-    } else {
-        const baseUpdate = playerUpdates[base];
-        const next = playerUpdates[base + 1];
-        const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t);
-        return {
-            me: interpolateObject(baseUpdate.me, next.me, ratio),
         };
     }
 }
