@@ -35,15 +35,14 @@ export class Client {
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
-        const { frame, me, currTime } = getCurrentPlayerState();
+        //const { frame, currTime } = getCurrentPlayerState();
 
         const now = Date.now();
-        const firstHalf = (currTime - this.lastUpdateTime) / 1000;
-        const secondHalf = (now - currTime) / 1000;
+        //const secondHalf = (now - currTime) / 1000;
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
 
-        const { platforms } = getCurrentState();
+        const { me, platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
@@ -63,7 +62,7 @@ export class Client {
             pl.y = p.y;
         });
     
-        if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
+        if (Object.keys(me).length !== 0) {
             // if (Math.abs(this.handler.player.x - me.x) < 5) {
             //     this.handler.player.x = me.x;
             // } else {
@@ -75,12 +74,11 @@ export class Client {
             // } else {
             //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
             // }
-            this.handler.player.x += Math.round((me.x - this.handler.player.x) * (firstHalf / dt));
-            this.handler.player.y += Math.round((me.y - this.handler.player.y) * (firstHalf / dt));
-            
+            this.handler.player.x = me.x;
+            this.handler.player.y = me.y;
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
-            this.previousFrame = frame;
+            //this.previousFrame = frame;
 
             //Client Side Prediction
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
@@ -91,7 +89,7 @@ export class Client {
                     this.keyInput.handleKeyUp(i.key);
                 }
             })
-            this.handler.update(secondHalf);
+            this.handler.update(dt);
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
@@ -105,8 +103,6 @@ export class Client {
             this.handler.update(dt);
             //console.log([2, this.handler.player.x - me.x, this.handler.player.y - me.y])
         }
-    
-        
 
         render(this.context, this.handler.player);
     }
