@@ -131,7 +131,7 @@ export function getCurrentState() {
 }
 
 export function getCurrentPlayerState() {
-    return lastPlayerUpdate();
+    return lastPlayerUpdate;
     if (!firstServerTimestamp) {
         return {};
     }
