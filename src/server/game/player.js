@@ -32,7 +32,7 @@ class Player extends GameObject {
     } 
 
     update(dt) {
-        this.velY += Constants.PLAYER_GRAVITY;  
+        this.velY += dt * Constants.PLAYER_GRAVITY;  
                 
         if (this.velY > 0) {
             this.inAir = true;

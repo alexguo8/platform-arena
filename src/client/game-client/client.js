@@ -61,22 +61,20 @@ export class Client {
         });
     
         if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
-            const originalX = this.handler.player.x;
-            const originalY = this.handler.player.y;
-            if (Math.abs(this.handler.player.x - me.x) < 5) {
-                this.handler.player.x = me.x;
-            } else {
-                this.handler.player.x += Math.round((me.x - this.handler.player.x) * 0.5);
-            }
+            // if (Math.abs(this.handler.player.x - me.x) < 5) {
+            //     this.handler.player.x = me.x;
+            // } else {
+            //     this.handler.player.x += Math.round((me.x - this.handler.player.x) * 0.5);
+            // }
 
-            if (Math.abs(this.handler.player.y - me.y) < 5) {
-                this.handler.player.y = me.y;
-            } else {
-                this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
-            }
+            // if (Math.abs(this.handler.player.y - me.y) < 5) {
+            //     this.handler.player.y = me.y;
+            // } else {
+            //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
+            // }
 
-            // this.handler.player.x = me.x;
-            // this.handler.player.y = me.y;
+            this.handler.player.x = me.x;
+            this.handler.player.y = me.y;
             
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
@@ -92,8 +90,6 @@ export class Client {
                 }
             })
             this.handler.update(dt);
-            //this.handler.player.x = (this.handler.player.x + originalX) / 2;
-            //this.handler.player.y = (this.handler.player.y + originalY) / 2;
             //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
         } else {
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
@@ -105,10 +101,6 @@ export class Client {
                 }
             })
             this.handler.update(dt);
-            if (me.velY === 0) {
-                this.handler.player.velY = 0;
-                this.handler.player.y = me.y;
-            }
             //console.log([2, this.handler.player.x - me.x, this.handler.player.y - me.y])
         }
     
