@@ -65,8 +65,8 @@ export class Client {
         this.processInputs();
 
         if (Object.keys(me).length !== 0) {
-            // const originalX = this.handler.player.x;
-            // const originalY = this.handler.player.y;
+            const originalX = this.handler.player.x;
+            const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             
@@ -79,9 +79,10 @@ export class Client {
                 this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            // if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0) {
-            //     console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
-            // }
+            this.handler.player.x = originalX + (this.handler.player.x - originalX) * 0.3;
+            if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0) {
+                console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
+            }
         }
     
         render(this.context, me, this.handler.player);
@@ -112,7 +113,7 @@ export class Client {
         input.sequence = this.sequence;
         this.sequence++;
         this.networkHandler.sendKeyDown(input, this.room);
-        //this.handler.player.applyInput(input);
+        this.handler.player.applyInput(input);
         this.pendingInputs.push(input);
     }
 
