@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { resetGameState } from "../../game-client/state";
 import { resetErrors } from "../../actions/authActions";
 import { joinRoom, resetRoom } from "../../actions/playerActions";
 import { resetNetworkHandler } from "../../actions/networkActions";
@@ -19,6 +20,7 @@ const RoomSelection = (props) => {
         }
         props.resetErrors();
         props.resetRoom();
+        resetGameState();
         if (Object.keys(props.network.handler).length !== 0) {
             props.network.handler.disconnect();
         }

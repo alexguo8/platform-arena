@@ -16,6 +16,14 @@ export function initState() {
     firstServerTimestamp = 0;
 }
 
+export function resetState() {
+    gameUpdates.length = 0;
+    counter = 0;
+    gameStart = 0;
+    firstServerTimestamp = 0;
+    lastPlayerUpdate = {};
+}
+
 export function getLobbyState() {
     return lobbyUpdate;
 }
