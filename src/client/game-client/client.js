@@ -79,11 +79,9 @@ export class Client {
                 this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0)
-                console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
         }
     
-        render(this.context, this.handler.player);
+        render(this.context, me, this.handler.player);
     }
 
     processInputs() {

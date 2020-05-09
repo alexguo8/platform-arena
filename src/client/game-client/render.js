@@ -16,8 +16,8 @@ export function setCanvasDimensions(canvas) {
     canvas.height = Constants.HEIGHT;
 }
 
-export function render(context, client) {
-    const { me, others, platforms, weapons, powerups } = getCurrentState();
+export function render(context, me, client) {
+    const { others, platforms, weapons, powerups } = getCurrentState();
     if (!me) {
         return;
     }
