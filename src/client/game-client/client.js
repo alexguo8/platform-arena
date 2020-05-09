@@ -36,13 +36,13 @@ export class Client {
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
-        const { me } = getCurrentPlayerState();
+        //const { me } = getCurrentPlayerState();
 
         const now = Date.now();
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
         
-        const { platforms } = getCurrentState();
+        const { me, platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
