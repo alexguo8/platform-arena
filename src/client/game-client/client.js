@@ -16,7 +16,7 @@ export class Client {
         //Input
         this.onClickEvent = this.onClick.bind(this);
         this.onKeyPressEvent = this.onKeyPress.bind(this);
-        this.onKeyUpEvent = this.onKeyUp.bind(this);
+        this.keyHandler = this.keyHandler.bind(this);
         this.sequence = 0;
 
         //Game
@@ -30,18 +30,17 @@ export class Client {
         this.lastUpdateTime = Date.now();
 
         this.previousFrame = null;
+
+        this.lastInputTime = Date.now();
     }
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
-        const { frame, me, currTime } = getCurrentPlayerState();
+        const { me } = getCurrentPlayerState();
 
         const now = Date.now();
-        const firstHalf = (currTime - this.lastUpdateTime) / 1000;
-        const secondHalf = (now - currTime) / 1000;
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
-
         
         const { platforms } = getCurrentState();
         if (!me || !platforms) {
@@ -62,70 +61,77 @@ export class Client {
             pl.x = p.x;
             pl.y = p.y;
         });
-    
-        if (Object.keys(me).length !== 0 && frame !== this.previousFrame) {
-            // if (Math.abs(this.handler.player.x - me.x) < 5) {
-            //     this.handler.player.x = me.x;
-            // } else {
-            //     this.handler.player.x += Math.round((me.x - this.handler.player.x) * 0.5);
-            // }
 
-            // if (Math.abs(this.handler.player.y - me.y) < 5) {
-            //     this.handler.player.y = me.y;
-            // } else {
-            //     this.handler.player.y += Math.round((me.y - this.handler.player.y) * 0.5);
-            // }
-            //this.handler.update(firstHalf);
-            //console.log([this.handler.player.x - me.x, this.handler.player.y - me.y])
+        this.processInputs();
+
+        if (Object.keys(me).length !== 0) {
+            const originalX = this.handler.player.x;
+            const originalY = this.handler.player.y;
             this.handler.player.x = me.x;
             this.handler.player.y = me.y;
             
             this.handler.player.velX = me.velX;
             this.handler.player.velY = me.velY;
-            this.previousFrame = frame;
 
             //Client Side Prediction
             this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
             this.pendingInputs.forEach(i => {
-                if (i.type === 0) {
-                    this.keyInput.handleKeyPress(i.key);
-                } else if (i.type === 1) {
-                    this.keyInput.handleKeyUp(i.key);
-                }
+                this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            //console.log([1, this.handler.player.x - me.x, this.handler.player.y - me.y])
-        } else {
-            // this.pendingInputs = this.pendingInputs.filter(i => i.sequence > me.sequence);
-            // this.pendingInputs.forEach(i => {
-            //     if (i.type === 0) {
-            //         this.keyInput.handleKeyPress(i.key);
-            //     } else if (i.type === 1) {
-            //         this.keyInput.handleKeyUp(i.key);
-            //     }
-            // })
-            this.handler.update(dt);
-            //console.log([2, this.handler.player.x - me.x, this.handler.player.y - me.y])
+            if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0)
+                console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
         }
     
-        
-
         render(this.context, this.handler.player);
     }
 
-    start() {
-        this.request = window.requestAnimationFrame(this.update);
-        this.canvas.addEventListener("click", this.onClickEvent);
-        window.addEventListener('keypress', this.onKeyPressEvent);
-        window.addEventListener('keyup', this.onKeyUpEvent);
+    processInputs() {
+        const now = Date.now();
+        const dt = (now - this.lastInputTime) / 1000;
+        this.lastInputTime = now;
+
+        const input = {};
+        if (this.handler.player.lP) {
+            input.dirX = -1;
+        } else if (this.handler.player.rP) {
+            input.dirX = 1;
+        } else {
+            input.dirX = 0;
+        }
+
+        if (this.handler.player.jumped) {
+            input.jumped = true;
+            this.handler.player.jumped = false;
+        } else {
+            input.jumped = false;
+        }
+        
+        input.pressTime = dt;
+        input.sequence = this.sequence;
+        this.sequence++;
+        this.networkHandler.sendKeyDown(input, this.room);
+        this.handler.player.applyInput(input);
+        this.pendingInputs.push(input);
     }
 
-    stop() {
-        window.cancelAnimationFrame(this.request);
-        this.request = null;
-        this.canvas.removeEventListener("click", this.onClickEvent);
-        window.removeEventListener('keypress', this.onKeyPressEvent);
-        window.removeEventListener('keyup', this.onKeyUpEvent);
+    keyHandler(e) {
+        const key = String.fromCharCode(e.keyCode).toUpperCase();
+        if (key === "A") {
+            this.handler.player.lP = (e.type === "keydown");
+        } else if (key === "D") {
+            this.handler.player.rP = (e.type === "keydown");
+        } else if (key === "W" && e.type === "keydown") {
+            this.handler.player.jump();
+        }
+    }
+
+    onKeyPress(e) {
+        const keys = ["S", "Q"];
+        const key = String.fromCharCode(e.keyCode).toUpperCase();
+        if (keys.includes(key)) {
+            this.networkHandler.sendKeyPress(key, this.room);
+        }
     }
 
     onClick(e) {
@@ -138,38 +144,20 @@ export class Client {
         }
     }
 
-    onKeyPress(e) {
-        const keys = ["W", "A", "S", "D", "Q"];
-        const key = String.fromCharCode(e.keyCode).toUpperCase();
-        if (keys.includes(key)) {
-            if (key === "A" || key === "D") {
-                this.pendingInputs.push({
-                    sequence: this.sequence,
-                    key: key,
-                    type: 0
-                });
-                
-                this.sequence++;
-            }
-            this.keyInput.handleKeyPress(key); 
-            this.networkHandler.sendKeyPress(key, this.room);
-        }
+    start() {
+        this.request = window.requestAnimationFrame(this.update);
+        this.canvas.addEventListener("click", this.onClickEvent);
+        window.addEventListener('keypress', this.onKeyPressEvent);
+        window.addEventListener('keydown', this.keyHandler);
+        window.addEventListener('keyup', this.keyHandler);
     }
 
-    onKeyUp(e) {
-        const keys = ["A", "D"];
-        const key = String.fromCharCode(e.keyCode).toUpperCase();
-        if (keys.includes(key)) {
-            if (key === "A" || key === "D") {
-                this.pendingInputs.push({
-                    sequence: this.sequence,
-                    key: key,
-                    type: 1
-                });
-                this.keyInput.handleKeyUp(key); 
-                this.sequence++;
-            }
-            this.networkHandler.sendKeyUp(key, this.room);
-        }
+    stop() {
+        window.cancelAnimationFrame(this.request);
+        this.request = null;
+        this.canvas.removeEventListener("click", this.onClickEvent);
+        window.removeEventListener('keypress', this.onKeyPressEvent);
+        window.removeEventListener('keydown', this.keyHandler);
+        window.removeEventListener('keyup', this.keyHandler);
     }
 }

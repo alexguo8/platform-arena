@@ -157,6 +157,12 @@ class Game {
         delete this.handler.players[socket.id];
     }
 
+    handleKeyDown(socket, input) {
+        if (this.handler.players[socket.id]) {
+            this.handler.players[socket.id].applyInput(input);
+        }
+    }
+
     handleKeyInput(socket, key, msg_type) {
         if (this.handler.players[socket.id]) {
             if (msg_type === Constants.MSG_TYPES.KEYPRESS) {
@@ -170,8 +176,6 @@ class Game {
     handleMouseInput(socket, x, y, msg_type) {
         if (this.handler.players[socket.id]) {
             if (msg_type === Constants.MSG_TYPES.CLICK) {
-                this.mouseInput.handleClick(socket, x, y);
-            } else if (msg_type === Constants.MSG_TYPES.KEYUP) {
                 this.mouseInput.handleClick(socket, x, y);
             }
         }

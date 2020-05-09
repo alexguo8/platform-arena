@@ -55,9 +55,7 @@ export function processGameUpdate(update) {
     }
     gameUpdates.push(update);
     lastPlayerUpdate = {
-        frame: counter,
         me: update.me,
-        currTime: Date.now(),
     };
     counter++;
 

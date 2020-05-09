@@ -17,25 +17,43 @@ export default class Player {
     
         this.lP = false;
         this.rP = false;
+        this.jumped = false;
     } 
 
     update(dt) {
-        this.velY += dt * Constants.PLAYER_GRAVITY;  
+        //this.velY += dt * Constants.PLAYER_GRAVITY;  
         if (this.velY > 0) {
             this.inAir = true;
         }
-        
-        if (this.rP) {
-            this.velX = Constants.PLAYER_SPEED;
-        } else if (this.lP) {
-            this.velX = -Constants.PLAYER_SPEED;
-        } else {
-            this.velX = 0;
+
+        //this.collision(dt);
+        //this.x += Math.round(dt * this.velX);
+        //this.y += Math.round(dt * this.velY);
+    }
+
+    applyInput(input) {
+        const originalVelX = this.velX;
+
+        this.velX = input.dirX * Constants.PLAYER_SPEED;
+        if (this.velX > 0) {
+            this.faceRight = true;
+        } else if (this.velX < 0) {
+            this.faceRight = false;
         }
 
-        this.collision(dt);
-        this.x += Math.round(dt * this.velX);
-        this.y += Math.round(dt * this.velY);
+        if (input.jumped) {
+            this.velY = -Constants.PLAYER_JUMP;
+        }
+        const displacementY = this.velY * input.pressTime + 
+            (Constants.PLAYER_GRAVITY * Math.pow(input.pressTime, 2)) / 2;
+        this.velY += input.pressTime * Constants.PLAYER_GRAVITY; 
+        
+        this.collision(input.pressTime);
+        this.x += Math.round(input.pressTime * this.velX); 
+        if (this.velY !== 0) {
+            this.y += Math.round(displacementY);
+        }
+        this.velX = originalVelX;
     }
 
     left() {
@@ -58,7 +76,8 @@ export default class Player {
 
     jump() {
         if (!this.inAir) {
-            this.velY = -Constants.PLAYER_JUMP;
+            this.jumped = true;
+            //this.velY = -Constants.PLAYER_JUMP;
             this.inAir = true;
         }
     }

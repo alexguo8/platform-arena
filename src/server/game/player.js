@@ -28,28 +28,19 @@ class Player extends GameObject {
     
         this.lP = false;
         this.rP = false;
+        this.jumped = false;
         this.sequence = 0;
     } 
 
     update(dt) {
-        this.velY += dt * Constants.PLAYER_GRAVITY;  
+        //this.velY += dt * Constants.PLAYER_GRAVITY;  
                 
         if (this.velY > 0) {
             this.inAir = true;
         }
-        
-        if (this.rP) {
-            this.velX = Constants.PLAYER_SPEED;
-        } else if (this.lP) {
-            this.velX = -Constants.PLAYER_SPEED;
-        } else {
-            this.velX = 0;
-        }
 
-        this.collision(dt);
-        super.update(dt);
-        this.x = clamp(this.x, 0, Constants.WIDTH - this.width);
-        this.y = clamp(this.y, 0, Constants.HEIGHT - this.height);
+        //this.collision(dt);
+        //super.update(dt);
         
         if (this.health <= 0) {
             this.handler.removePlayer(this);
@@ -61,26 +52,48 @@ class Player extends GameObject {
         }
     }
 
+    applyInput(input) {
+        const originalVelX = this.velX;
+
+        this.velX = input.dirX * Constants.PLAYER_SPEED;
+        if (this.velX > 0) {
+            this.faceRight = true;
+        } else if (this.velX < 0) {
+            this.faceRight = false;
+        }
+
+        if (input.jumped) {
+            this.velY = -Constants.PLAYER_JUMP;
+        }
+        const displacementY = this.velY * input.pressTime + 
+            (Constants.PLAYER_GRAVITY * Math.pow(input.pressTime, 2)) / 2;
+        this.velY += input.pressTime * Constants.PLAYER_GRAVITY; 
+        
+        this.collision(input.pressTime);
+        this.x += Math.round(input.pressTime * this.velX); 
+        if (this.velY !== 0) {
+            this.y += Math.round(displacementY);
+        }
+        this.velX = originalVelX;
+        this.sequence = input.sequence;
+    }
+
     left() {
         this.lP = true;
         this.faceRight = false; 
-        this.sequence++;
     }
 
     right() {
         this.rP = true;
         this.faceRight = true; 
-        this.sequence++;
     }
 
     stopLeft() {
         this.lP = false;
-        this.sequence++;
     }
 
     stopRight() {
         this.rP = false;
-        this.sequence++;
     }
 
     jump() {

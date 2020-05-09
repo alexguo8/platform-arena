@@ -62,6 +62,10 @@ export class NetworkHandler {
         this.socket.emit(Constants.MSG_TYPES.INPUT, dir);
     });
 
+    sendKeyDown = (input, room) => {
+        this.socket.emit(Constants.MSG_TYPES.KEYDOWN, input, room);
+    }
+
     sendKeyPress = throttle(20, (key, room) => {
         this.socket.emit(Constants.MSG_TYPES.KEYPRESS, key, room, Constants.MSG_TYPES.KEYPRESS);
     });

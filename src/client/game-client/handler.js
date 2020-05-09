@@ -1,6 +1,4 @@
 //Handles all ticking and rendering for game objects
-import Platform from "./platform";
-const Constants = require("../../shared/constants");
 
 export default class Handler {
     constructor() {

@@ -88,6 +88,7 @@ module.exports = Object.freeze({
         GAME_UPDATE: "update",
         KEYPRESS: "keypress",
         KEYUP: "keyup",
+        KEYDOWN: "keydown",
         CLICK: "click",
         GAME_OVER: "dead",
     },
