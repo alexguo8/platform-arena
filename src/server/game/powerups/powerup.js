@@ -2,7 +2,8 @@
 const shortid = require("shortid");
 const GameObject = require("../gameObject");
 const Constants = require("../../../shared/constants");
-const Type = require("../../../shared/objectTypes")
+const Type = require("../../../shared/objectTypes");
+const Rectangle = require("../rectangle");
 
 class Powerup extends GameObject {
     constructor(type, x, y, width, height, handler) {
@@ -10,6 +11,10 @@ class Powerup extends GameObject {
         this.handler = handler;
 
         this.cooldown = 0;
+    }
+
+    getBounds() {
+        return new Rectangle(this.x - 10, this.y - 10, this.width + 20, this.height + 20);
     }
    
     update(dt) {
