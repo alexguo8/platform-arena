@@ -1,10 +1,8 @@
 // The "current" state will always be RENDER_DELAY ms behind server time.
 // This makes gameplay smoother and lag less noticeable.
-const RENDER_DELAY = 50;
-const PLAYER_DELAY = 30;
+const RENDER_DELAY = 100;
 
 const gameUpdates = [];
-const playerUpdates = [];
 let lobbyUpdate = {};
 let lobbyStart = false;
 let gameStart = 0;
@@ -19,7 +17,6 @@ export function initState() {
 
 export function resetGameState() {
     gameUpdates.length = 0;
-    playerUpdates.length = 0;
     gameStart = 0;
     firstServerTimestamp = 0;
     lastPlayerUpdate = {};

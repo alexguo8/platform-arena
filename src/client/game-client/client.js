@@ -36,13 +36,13 @@ export class Client {
 
     update() {
         this.request = window.requestAnimationFrame(this.update);
-        //const { me } = getCurrentPlayerState();
+        const { me } = getCurrentPlayerState();
 
         const now = Date.now();
         const dt = (now - this.lastUpdateTime) / 1000;
         this.lastUpdateTime = now;
         
-        const { me, platforms } = getCurrentState();
+        const { platforms } = getCurrentState();
         if (!me || !platforms) {
             return;
         }
@@ -79,8 +79,8 @@ export class Client {
                 this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            this.handler.player.x = originalX + (this.handler.player.x - originalX) ;
-            this.handler.player.y = originalY + (this.handler.player.y - originalY);
+            this.handler.player.x = Math.round(originalX + (this.handler.player.x - originalX) * 0.3);
+            this.handler.player.y = Math.round(originalY + (this.handler.player.y - originalY));
             // if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0) {
             //     console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
             // }
