@@ -79,10 +79,12 @@ export class Client {
                 this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            if (this.handler.player.x - originalX > 0) {
-                this.handler.player.x = Math.max((originalX + (this.handler.player.x - originalX) * 0.11), me.x)
-            } else if (this.handler.player.x - originalX < 0) {
-                this.handler.player.x = Math.min((originalX + (this.handler.player.x - originalX) * 0.11), me.x)
+            if (Math.abs(me.x - this.handler.player.x) < 20 ) {
+                this.handler.player.x = me.x
+                
+                
+            } else {
+                this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.11)
             }
             //this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.11);
             //this.handler.player.y = (originalY + (this.handler.player.y - originalY));
