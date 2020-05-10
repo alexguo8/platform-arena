@@ -135,8 +135,8 @@ function renderPlayer(context, player, pos) {
         );
         context.globalAlpha = 1;
     }
-    // context.strokeStyle = "black"
-    // context.strokeRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT)
+    context.strokeStyle = "black"
+    context.strokeRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT)
 }
 
 function renderHealthBar(context, player, pos) {

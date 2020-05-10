@@ -113,7 +113,7 @@ export class Client {
         input.pressTime = dt;
         input.sequence = this.sequence;
         this.sequence++;
-        this.networkHandler.sendKeyDown(input, this.room);
+        //this.networkHandler.sendKeyDown(input, this.room);
         //this.handler.player.applyInput(input);
         this.pendingInputs.push(input);
     }
