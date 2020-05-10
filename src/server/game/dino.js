@@ -21,12 +21,14 @@ class Dino extends Player {
     basicShoot(dir) {
         if (this.powerup === Type.NO_POWERUP) {
             this.handler.addWeapon(new Bullet(Type.BULLET, 
-                this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
+                this.x + (this.width / 2) - (Constants.BULLET_WIDTH / 2), 
+                this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
                 Constants.BULLET_SPEED - 100, dir, this.id, this.handler));
         } else if (this.powerup === Type.REFLECT_POWERUP) {
             this.handler.addWeapon(new ReflectBullet(Type.BULLET,
-                this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2), 
+                this.x + (this.width / 2) - (Constants.BULLET_WIDTH / 2), 
+                this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
                 Constants.BULLET_SPEED - 100, dir, this.id, this.handler));
         }

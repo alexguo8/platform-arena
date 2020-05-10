@@ -7,8 +7,8 @@ module.exports = Object.freeze({
     PLAYER_GRAVITY: 3600,
     PLAYER_FIRE_COOLDOWN: 0.5,
 
-    BULLET_WIDTH: 32,
-    BULLET_HEIGHT: 10,
+    BULLET_WIDTH: 24,
+    BULLET_HEIGHT: 8,
     BULLET_SPEED: 600,
     BULLET_DAMAGE: 10,
 
