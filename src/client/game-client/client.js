@@ -79,11 +79,11 @@ export class Client {
                 this.handler.player.applyInput(i);
             })
             this.handler.update(dt);
-            // this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.1);
-            // this.handler.player.y = (originalY + (this.handler.player.y - originalY));
-            if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0) {
-                console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
-            }
+            this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.1);
+            //this.handler.player.y = (originalY + (this.handler.player.y - originalY));
+            // if (originalX - this.handler.player.x !== 0 || originalY - this.handler.player.y !== 0) {
+            //     console.log([originalX - this.handler.player.x, originalY - this.handler.player.y])
+            // }
         }
     
         render(this.context, me, this.handler.player);
@@ -114,8 +114,11 @@ export class Client {
         input.sequence = this.sequence;
         this.sequence++;
         this.networkHandler.sendKeyDown(input, this.room);
-        this.handler.player.applyInput(input);
         this.pendingInputs.push(input);
+
+        const originalX = this.handler.player.x;
+        this.handler.player.applyInput(input);
+        this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.1);
     }
 
     keyHandler(e) {
