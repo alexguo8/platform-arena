@@ -2,7 +2,7 @@ module.exports = Object.freeze({
     PLAYER_WIDTH: 32,
     PLAYER_HEIGHT: 32,
     PLAYER_MAX_HP: 100,
-    PLAYER_SPEED: 400,
+    PLAYER_SPEED: 300,
     PLAYER_JUMP: 1000,
     PLAYER_GRAVITY: 3600,
     PLAYER_FIRE_COOLDOWN: 0.5,
@@ -17,7 +17,7 @@ module.exports = Object.freeze({
 
     DRILL_WIDTH: 32,
     DRILL_HEIGHT: 24,
-    DRILL_SPEED: 300,
+    DRILL_SPEED: 400,
 
     BOMB_WIDTH: 32,
     BOMB_HEIGHT: 32,
