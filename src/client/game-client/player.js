@@ -41,7 +41,7 @@ export default class Player {
             this.faceRight = false;
         }
 
-        if (input.jumped && !this.inAir) {
+        if (input.jumped) {
             this.velY = -Constants.PLAYER_JUMP;
             this.inAir = true;
         }
