@@ -80,9 +80,9 @@ export class Client {
             })
             this.handler.update(dt);
             if (this.handler.player.x - originalX > 0) {
-                this.handler.player.x = Math.max((originalX + (this.handler.player.x - originalX) * 0.05), me.x)
+                this.handler.player.x = Math.max((originalX + (this.handler.player.x - originalX) * 0.09), me.x)
             } else if (this.handler.player.x - originalX < 0) {
-                this.handler.player.x = Math.min((originalX + (this.handler.player.x - originalX) * 0.05), me.x)
+                this.handler.player.x = Math.min((originalX + (this.handler.player.x - originalX) * 0.09), me.x)
             }
             //this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.11);
             //this.handler.player.y = (originalY + (this.handler.player.y - originalY));
@@ -123,7 +123,7 @@ export class Client {
 
         const originalX = this.handler.player.x;
         this.handler.player.applyInput(input);
-        this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.05);
+        this.handler.player.x = (originalX + (this.handler.player.x - originalX) * 0.09);
     }
 
     keyHandler(e) {
