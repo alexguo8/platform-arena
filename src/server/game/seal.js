@@ -30,7 +30,7 @@ class Seal extends Player {
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
                 Constants.BULLET_SPEED - 200, dir, this.id, this.handler));
         }
-        this.shootCooldown += 0.2;
+        this.shootCooldown += 0.1;
     }
    
     //Method to attack using special ability

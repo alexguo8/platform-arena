@@ -62,8 +62,9 @@ class Player extends GameObject {
             this.faceRight = false;
         }
 
-        if (input.jumped) {
+        if (input.jumped && !this.inAir) {
             this.velY = -Constants.PLAYER_JUMP;
+            this.inAir = true;
         }
         const displacementY = this.velY * input.pressTime + 
             (Constants.PLAYER_GRAVITY * Math.pow(input.pressTime, 2)) / 2;

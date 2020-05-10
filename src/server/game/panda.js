@@ -29,6 +29,7 @@ class Panda extends Player {
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
                 Constants.BULLET_SPEED, dir, this.id, this.handler));
         }
+        this.shootCooldown -= 0.1;
     }
    
     //Method to attack using special ability

@@ -21,14 +21,26 @@ class Eagle extends Player {
             this.handler.addWeapon(new Bullet(Type.BULLET, 
                 this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
-                Constants.BULLET_SPEED + 100, dir, this.id, this.handler));
+                Constants.BULLET_SPEED, dir, this.id, this.handler));
+            setTimeout(() => {
+                this.handler.addWeapon(new Bullet(Type.BULLET, 
+                    this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2),
+                    Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
+                    Constants.BULLET_SPEED, dir, this.id, this.handler));
+            }, 100);
         } else if (this.powerup === Type.REFLECT_POWERUP) {
             this.handler.addWeapon(new ReflectBullet(Type.BULLET,
                 this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2), 
                 Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
-                Constants.BULLET_SPEED + 100, dir, this.id, this.handler));
+                Constants.BULLET_SPEED, dir, this.id, this.handler));
+            setTimeout(() => {
+                this.handler.addWeapon(new ReflectBullet(Type.BULLET,
+                    this.x, this.y + (this.height / 2) - (Constants.BULLET_HEIGHT / 2), 
+                    Constants.BULLET_WIDTH, Constants.BULLET_HEIGHT, 
+                    Constants.BULLET_SPEED, dir, this.id, this.handler));
+            }, 100);
         }
-        this.shootCooldown -= 0.1;
+        this.shootCooldown += 0.2;
     }
    
     //Method to attack using special ability

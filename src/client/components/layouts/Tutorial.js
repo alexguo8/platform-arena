@@ -40,22 +40,22 @@ const Tutorial = () => {
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/pandaRight.png"} alt="Panda" />   
-                                &ensp;- Panda has a fast bullet with a high fire rate.
+                                &ensp;- Panda shoots a fast bullet with a high fire rate.
                                 Their special ability is to launch a bamboo storm.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/sealRight.png"} alt="Seal" /> 
-                                &ensp;- Seal has a very slow water bullet with a slow fire rate. 
+                                &ensp;- Seal shoots a very slow water bullet with a slow fire rate. 
                                 Their special ability is a laser.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/dinoRight.png"} alt="Dino" /> 
-                                &ensp;- Dino has a slow explosive bullet with a slow fire rate.
-                                Their special ability is a fire cloud 
+                                &ensp;- Dino shoots a slow explosive bullet with a normal fire rate.
+                                Their special ability is a fire cloud. 
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/eagleRight.png"} alt="Eagle" /> 
-                                &ensp;- Eagle has a very fast weaker bullet with a very high fire rate.
+                                &ensp;- Eagle shoots two fast weaker bullets with a slow fire rate.
                                 Their special ability is a teleporting bullet.
                             </p>
                         </div>
@@ -67,23 +67,23 @@ const Tutorial = () => {
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/drillPowerup.png"} alt="Drill" />   
-                                &ensp;- Drill breaks through platforms and explodes  
+                                &ensp;- Drill breaks through platforms and explodes.  
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/minePowerup.png"} alt="Mine" /> 
-                                &ensp;- Mine stays on the ground and explodes when stepped on
+                                &ensp;- Mine stays on the ground and explodes when stepped on.
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/bombPowerup.png"} alt="Bomb" /> 
-                                &ensp;- Bomb bounces around like a projectile and explodes 
+                                &ensp;- Bomb bounces around like a projectile and explodes. 
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/reflectPowerup.png"} alt="Reflect" /> 
-                                &ensp;- Reflecting bullets bounce around before disappearing 
+                                &ensp;- Reflecting bullets bounce around before disappearing. 
                             </p>
                             <p>
                                 <img src={process.env.PUBLIC_URL + "/assets/shield.png"} alt="Shield" /> 
-                                &ensp;- Shield blocks one attack
+                                &ensp;- Shield blocks one attack.
                             </p>
                         </div>
                     </div>
