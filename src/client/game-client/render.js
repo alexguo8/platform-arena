@@ -71,7 +71,7 @@ export function render(context, me, client) {
         }
     } else {
         if (others.length === 1) {
-            renderCrown(context, others[0]);
+            renderCrown(context, others[0], others[0]);
         }
     }
     others.forEach(p => {
